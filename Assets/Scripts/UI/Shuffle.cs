@@ -1,15 +1,25 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+
 
 namespace TopicTwister.Scripts.UI
 {
     public class Shuffle : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI textComponent;
-        
+        private TextMeshProUGUI _textComponent;
+        private Button _button;
+
+        private void Start()
+        {
+            _textComponent = GetComponentInChildren<TextMeshProUGUI>();
+            _button = GetComponentInChildren<Button>();
+        }
+
         public void ShuffleLetters()
         {
-            textComponent.text = GetRandomLetter();
+            _textComponent.text = GetRandomLetter();
+            _button.enabled = false;
         }
 
         private string GetRandomLetter()

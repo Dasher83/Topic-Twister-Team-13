@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 1108956264}
   - component: {fileID: 1108956266}
   - component: {fileID: 1108956265}
+  - component: {fileID: 675771582}
   m_Layer: 5
   m_Name: ShuffleButtonContainer
   m_TagString: Untagged
@@ -212,6 +213,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &675771582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108956263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f34e12320c59c45b504e5cafc7716e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1144444881
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,7 +237,6 @@ GameObject:
   - component: {fileID: 1144444885}
   - component: {fileID: 1144444884}
   - component: {fileID: 1144444883}
-  - component: {fileID: 3353469133921119660}
   m_Layer: 5
   m_Name: ShuffleButton
   m_TagString: Untagged
@@ -335,7 +347,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3353469133921119660}
+      - m_Target: {fileID: 675771582}
         m_TargetAssemblyTypeName: TopicTwister.Scripts.UI.Shuffle, Assembly-CSharp
         m_MethodName: ShuffleLetters
         m_Mode: 1
@@ -347,19 +359,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &3353469133921119660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1144444881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79f34e12320c59c45b504e5cafc7716e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textComponent: {fileID: 240032588}
 --- !u!1 &486081346777814585
 GameObject:
   m_ObjectHideFlags: 0
