@@ -9,7 +9,14 @@ namespace TopicTwister.Scripts.UI
         
         public void ShuffleLetters()
         {
-            textComponent.text = "A";
+            textComponent.text = GetRandomLetter();
+        }
+
+        private string GetRandomLetter()
+        {
+            int number = Random.Range(0, 26);
+            char letter = (char)(((int)'A') + number);
+            return $"{ letter }";
         }
     }
 }
