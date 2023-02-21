@@ -27,6 +27,9 @@
 .vs/
 .vsconfig
 
+# Raider cache directory
+.idea/
+
 # Gradle cache directory
 .gradle/
 

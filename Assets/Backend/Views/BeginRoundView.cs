@@ -1,6 +1,7 @@
 using TopicTwister.Backend.Shared.DTOs;
 using TopicTwister.Backend.Shared.Interfaces;
 using TMPro;
+using TopicTwister.Backend.Presenters;
 using UnityEngine;
 
 
@@ -15,10 +16,8 @@ namespace TopicTwister.Backend.Views
 
         private void Start()
         {
-            /* 
-             * Inyect dependency into _categoryPresenter here or in Awake method, 
-             * once a concrete class that realizes the ICategoryPresenter is implemented
-             */
+            _categoryPresenter = new CategoryPresenterStub();
+            
             _categories = _categoryPresenter.GetRandomCategories();
             for(int i = 0; i < _categoriesListObjectTransform.childCount; i++)
             {
