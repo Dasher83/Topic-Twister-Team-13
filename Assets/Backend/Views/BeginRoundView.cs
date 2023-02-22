@@ -2,6 +2,8 @@ using TopicTwister.Backend.Shared.DTOs;
 using TopicTwister.Backend.Shared.Interfaces;
 using TMPro;
 using TopicTwister.Backend.Presenters;
+using TopicTwister.Backend.Repositories;
+using TopicTwister.Backend.UseCases;
 using UnityEngine;
 
 
@@ -16,7 +18,7 @@ namespace TopicTwister.Backend.Views
 
         private void Start()
         {
-            _categoryPresenter = new CategoryPresenterStub();
+            _categoryPresenter = new CategoryPresenterStub(new GetNewRoundCategoriesUseCase(new CategoryRepositoryStub()));
             
             _categories = _categoryPresenter.GetRandomCategories();
             for(int i = 0; i < _categoriesListObjectTransform.childCount; i++)
