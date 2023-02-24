@@ -1,10 +1,14 @@
 {
-    "name": "EditModeTests",
-    "rootNamespace": "",
+    "name": "EditModeTests2",
+    "rootNamespace": "NewRoundTests",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Backend"
+        "NewRoundPresenters",
+        "NewRoundRepositories",
+        "NewRoundShared",
+        "NewRoundUseCases",
+        "NewRoundViews"
     ],
     "includePlatforms": [
         "Editor"
