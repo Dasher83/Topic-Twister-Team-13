@@ -4,11 +4,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "NewRoundPresenters",
-        "NewRoundRepositories",
-        "NewRoundShared",
-        "NewRoundUseCases",
-        "NewRoundViews"
+        "TopicTwister"
     ],
     "includePlatforms": [
         "Editor"
