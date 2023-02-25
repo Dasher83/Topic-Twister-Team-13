@@ -1,12 +1,12 @@
-using TopicTwister.Backend.Shared.DTOs;
-using TopicTwister.Backend.Shared.Interfaces;
+using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.NewRound.Shared.Interfaces;
 
 
-namespace TopicTwister.Backend.Repositories
+namespace TopicTwister.NewRound.Repositories
 {
     public class CategoryRepositoryStub : ICategoryRepository
     {
-        public CategoryDTO[] GetRandomCategories()
+        public CategoryDTO[] GetRandomCategories(int numberOfCategories)
         {
             CategoryDTO[] result = new[]{
                 new CategoryDTO("1", "Colores"  ),

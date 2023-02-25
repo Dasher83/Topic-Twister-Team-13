@@ -1,8 +1,8 @@
-using TopicTwister.Backend.Shared.DTOs;
-using TopicTwister.Backend.Shared.Interfaces;
+using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.NewRound.Shared.Interfaces;
 
 
-namespace TopicTwister.Backend.UseCases
+namespace TopicTwister.NewRound.UseCases
 {
     public class GetNewRoundCategoriesUseCase : IGetNewRoundCategoriesUseCase
     {
@@ -13,9 +13,9 @@ namespace TopicTwister.Backend.UseCases
             _categoryRepository = categoryRepository;
         }
 
-        public CategoryDTO[] GetRandomCategories()
+        public CategoryDTO[] GetRandomCategories(int numberOfCategories)
         {
-            return _categoryRepository.GetRandomCategories();
+            return _categoryRepository.GetRandomCategories(numberOfCategories);
         }
     }
 }

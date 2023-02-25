@@ -1,10 +1,10 @@
-using TopicTwister.Backend.Shared.DTOs;
+using TopicTwister.NewRound.Shared.DTOs;
 
 
-namespace TopicTwister.Backend.Shared.Interfaces
+namespace TopicTwister.NewRound.Shared.Interfaces
 {
     public interface ICategoryRepository
     {
-        CategoryDTO[] GetRandomCategories();
+        CategoryDTO[] GetRandomCategories(int numberOfCategories);
     }
 }

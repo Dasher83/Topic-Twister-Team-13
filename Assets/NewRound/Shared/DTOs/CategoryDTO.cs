@@ -1,6 +1,4 @@
-using Mono.Cecil.Cil;
-
-namespace TopicTwister.Backend.Shared.DTOs
+namespace TopicTwister.NewRound.Shared.DTOs
 {
     public class CategoryDTO
     {

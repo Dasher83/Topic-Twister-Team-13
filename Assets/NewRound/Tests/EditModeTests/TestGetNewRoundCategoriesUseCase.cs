@@ -1,8 +1,9 @@
 using NUnit.Framework;
-using TopicTwister.Backend.Repositories;
-using TopicTwister.Backend.Shared.DTOs;
-using TopicTwister.Backend.Shared.Interfaces;
-using TopicTwister.Backend.UseCases;
+using TopicTwister.NewRound.Repositories;
+using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.NewRound.Shared.Interfaces;
+using TopicTwister.NewRound.UseCases;
+using TopicTwister.Shared;
 
 
 public class TestGetNewRoundCategoriesUseCase
@@ -12,7 +13,7 @@ public class TestGetNewRoundCategoriesUseCase
     {
         IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryStub());
 
-        CategoryDTO[] actualResult = useCase.GetRandomCategories();
+        CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
         
         CategoryDTO[] expectedResult = new[]{
                 new CategoryDTO("1", "Colores"  ),
