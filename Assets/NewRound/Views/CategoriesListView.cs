@@ -16,13 +16,10 @@ namespace TopicTwister.NewRound.Views
         private void Start()
         {
             _categoryPresenter = new CategoryPresenter(this);
+            GetRandomCategoriesAction action = new ActionProvider<GetRandomCategoriesAction>().Provide();
 
-            GetRandomCategoriesAction getRandomCategoriesAction =
-                (GetRandomCategoriesAction)new ActionsProvider().ProvideAction(
-                    typeof(GetRandomCategoriesAction));
-
-            getRandomCategoriesAction.CategoryPresenter = _categoryPresenter;
-            _categoryPresenter.Action = getRandomCategoriesAction;
+            action.CategoryPresenter = _categoryPresenter;
+            _categoryPresenter.Action = action;
             _categoryPresenter.GetRandomCategories(Constants.Categories.CategoriesPerRound);
         }
 
