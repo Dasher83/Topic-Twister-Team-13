@@ -11,11 +11,12 @@ namespace TopicTwister.NewRound.Actions
         private ICategoryPresenter _categoryPresenter;
         private ICategoriesService _categoriesService;
 
-        public GetRandomCategoriesAction(ICategoryPresenter categoryPresenter, ICategoriesService categoriesService)
+        public GetRandomCategoriesAction(ICategoriesService categoriesService)
         {
-            _categoryPresenter = categoryPresenter;
             _categoriesService = categoriesService;
         }
+
+        public ICategoryPresenter CategoryPresenter { set { _categoryPresenter = value; } }
 
         public void Execute()
         {
