@@ -14,8 +14,6 @@ namespace TopicTwister.NewRound.Views
 {
     public class CategoriesListView : MonoBehaviour, ICategoriesListView
     {
-        [SerializeField] private Transform _categoriesListObjectTransform;
-
         private ICategoryPresenter _categoryPresenter;
 
         private void Start()
@@ -36,9 +34,9 @@ namespace TopicTwister.NewRound.Views
 
         public void UpdateCategoriesList(CategoryDTO[] categories)
         {
-            for (int i = 0; i < _categoriesListObjectTransform.childCount; i++)
+            for (int i = 0; i < this.gameObject.transform.childCount; i++)
             {
-                _categoriesListObjectTransform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = categories[i].Name;
+                this.gameObject.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = categories[i].Name;
             }
         }
     }

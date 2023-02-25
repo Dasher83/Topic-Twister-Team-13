@@ -370,7 +370,6 @@ GameObject:
   - component: {fileID: 7971557318014932243}
   - component: {fileID: 5245176507555839607}
   - component: {fileID: 2637597647208966369}
-  - component: {fileID: 2461885152420655479}
   m_Layer: 5
   m_Name: BeginRoundView
   m_TagString: Untagged
@@ -439,19 +438,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2461885152420655479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486081346777814585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa9c675320ddd4e469e8b6b70ba4ad7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _categoriesListObjectTransform: {fileID: 7971557317311405425}
 --- !u!1 &7971557317311405424
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,6 +450,7 @@ GameObject:
   - component: {fileID: 7971557317311405427}
   - component: {fileID: 7971557317311405426}
   - component: {fileID: 7028650233558278006}
+  - component: {fileID: 4743106564019198250}
   m_Layer: 5
   m_Name: CategoryList
   m_TagString: Untagged
@@ -560,6 +547,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &4743106564019198250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7971557317311405424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9c675320ddd4e469e8b6b70ba4ad7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8862155505892269844
 GameObject:
   m_ObjectHideFlags: 0
