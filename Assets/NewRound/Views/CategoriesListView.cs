@@ -1,8 +1,6 @@
 using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared;
-using TopicTwister.NewRound.Actions;
-using TopicTwister.Shared.Providers;
 using TMPro;
 using UnityEngine;
 using TopicTwister.NewRound.Presenters;
@@ -16,10 +14,6 @@ namespace TopicTwister.NewRound.Views
         private void Start()
         {
             _categoryPresenter = new CategoryPresenter(this);
-            GetRandomCategoriesAction action = new ActionProvider<GetRandomCategoriesAction>().Provide();
-
-            action.CategoryPresenter = _categoryPresenter;
-            _categoryPresenter.Action = action;
             _categoryPresenter.GetRandomCategories(Constants.Categories.CategoriesPerRound);
         }
 

@@ -1,7 +1,8 @@
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
-
+using TopicTwister.NewRound.Actions;
+using TopicTwister.Shared.Providers;
 
 namespace TopicTwister.NewRound.Presenters
 {
@@ -15,6 +16,9 @@ namespace TopicTwister.NewRound.Presenters
         public CategoryPresenter(ICategoriesListView categoriesListView)
         {
             _categoriesListView = categoriesListView;
+            GetRandomCategoriesAction action = new ActionProvider<GetRandomCategoriesAction>().Provide();
+            action.CategoryPresenter = this;
+            this.Action = action;
         }
         
         public IAction Action { set { _getRandomCategoriesAction = value; } }
