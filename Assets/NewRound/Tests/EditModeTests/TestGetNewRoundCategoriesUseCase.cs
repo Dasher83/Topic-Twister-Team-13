@@ -27,7 +27,7 @@ public class TestGetNewRoundCategoriesUseCase
     }
     
     [Test]
-    public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsFiveElements()
+    public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsLengthOfFive()
     {
         IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryScriptable());
 
@@ -36,6 +36,21 @@ public class TestGetNewRoundCategoriesUseCase
         int expectedResultLength = 5;
 
         Assert.AreEqual(expectedResultLength, actualResult.Length);
+    }
+
+    [Test]
+    public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsFiveElements()
+    {
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryScriptable());
+
+        CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
+
+        string[] expectedResult = { "Colores", "Animales", "Paises", "Plantas", "Peliculas" };
+
+        for(int i = 0; i < actualResult.Length; i++)
+        {
+            Assert.AreEqual(expectedResult[i], actualResult[i].Name);
+        }
     }
 }
 
