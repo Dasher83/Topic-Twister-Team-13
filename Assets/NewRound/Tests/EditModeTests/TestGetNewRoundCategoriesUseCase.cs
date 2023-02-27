@@ -9,7 +9,7 @@ using TopicTwister.Shared;
 public class TestGetNewRoundCategoriesUseCase
 {
     [Test]
-    public void TestGetNewRoundCategoriesUseCaseSimplePasses()
+    public void TestGetNewRoundCategoriesUseCaseSimplePassesSTUB()
     {
         IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryStub());
 
@@ -24,6 +24,18 @@ public class TestGetNewRoundCategoriesUseCase
             };
 
         Assert.AreEqual(expectedResult, actualResult);
+    }
+    
+    [Test]
+    public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsFiveElements()
+    {
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryScriptable());
+
+        CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
+
+        int expectedResultLength = 5;
+
+        Assert.AreEqual(expectedResultLength, actualResult.Length);
     }
 }
 
