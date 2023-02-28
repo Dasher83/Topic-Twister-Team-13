@@ -29,7 +29,7 @@ public class TestGetNewRoundCategoriesUseCase
     [Test]
     public void TestGetNewRoundCategoriesUseCaseWithJsonReturnsLengthOfFive()
     {
-        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJsonStub());
 
         CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
 
@@ -41,7 +41,7 @@ public class TestGetNewRoundCategoriesUseCase
     [Test]
     public void TestGetNewRoundCategoriesUseCaseWithJsonReturnsFiveElements()
     {
-        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJsonStub());
 
         CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
 
@@ -56,11 +56,32 @@ public class TestGetNewRoundCategoriesUseCase
     [Test]
     public void TestGetNewRoundCategoriesUseCaseWithJsonAndRandomness()
     {
-        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJson());
 
         CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
+        Assert.IsTrue(new CategoryRepositoryJson().Exists(actualResult.Select(c => c.Name).ToArray()));
+        int cycles = 100;
 
-        Assert.IsTrue(new CategoryRepositoryJSON().Exists(actualResult.Select(c => c.Name).ToArray()));
+        for (int i = 0; i < cycles; i++)
+        {
+            CategoryDTO[] duplicateResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
+            Assert.IsTrue(new CategoryRepositoryJson().Exists(actualResult.Select(c => c.Name).ToArray()));
+
+            try
+            {
+                Assert.IsTrue(!actualResult.SequenceEqual(duplicateResult));
+            }
+            catch(AssertionException ex)
+            {
+                if(i == cycles - 1)
+                {
+                    throw ex;
+                }
+                continue;
+            }
+
+            break;
+        }
     }
 }
 

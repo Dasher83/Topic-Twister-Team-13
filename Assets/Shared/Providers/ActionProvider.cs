@@ -17,7 +17,7 @@ namespace TopicTwister.Shared.Providers
                 new GetRandomCategoriesAction(
                     categoriesService: new CategoriesService(
                         new GetNewRoundCategoriesUseCase(
-                            categoryRepository: new CategoryRepositoryStub())))
+                            categoryRepository: new CategoryRepositoryJson())))
             }
         };
 

@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace TopicTwister.NewRound.Repositories
 {
-    public class CategoryRepositoryJson : ICategoryRepository
+    public class CategoryRepositoryJsonStub : ICategoryRepository
     {
         private const string CategoryResourceName = "Category";
 
         private readonly List<CategoryDTO> _categories;
 
-        public CategoryRepositoryJson()
+        public CategoryRepositoryJsonStub()
         {
             string data = Resources.Load<TextAsset>(CategoryResourceName).text;
         
@@ -23,7 +23,7 @@ namespace TopicTwister.NewRound.Repositories
 
         public CategoryDTO[] GetRandomCategories(int numberOfCategories)
         {
-            return _categories.OrderBy(c => new System.Random().Next()).Take(numberOfCategories).ToArray();
+            return _categories.Take(numberOfCategories).ToArray();
         }
 
         public bool Exists(string name)
