@@ -1,0 +1,24 @@
+{
+  "_categories": [
+    {
+      "_id": "1",
+      "_name": "Colores"
+    },
+    {
+      "_id": "2",
+      "_name": "Animales"
+    },
+    {
+      "_id": "3",
+      "_name": "Países"
+    },
+    {
+      "_id": "4",
+      "_name": "Plantas"
+    },
+    {
+      "_id": "5",
+      "_name": "Películas"
+    }
+  ]
+}

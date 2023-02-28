@@ -29,7 +29,7 @@ public class TestGetNewRoundCategoriesUseCase
     [Test]
     public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsLengthOfFive()
     {
-        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryScriptable());
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
 
         CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
 
@@ -41,11 +41,11 @@ public class TestGetNewRoundCategoriesUseCase
     [Test]
     public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsFiveElements()
     {
-        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryScriptable());
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
 
         CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
 
-        string[] expectedResult = { "Colores", "Animales", "Paises", "Plantas", "Peliculas" };
+        string[] expectedResult = { "Colores", "Animales", "Países", "Plantas", "Películas" };
 
         for(int i = 0; i < actualResult.Length; i++)
         {

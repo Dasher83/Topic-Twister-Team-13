@@ -1,9 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+
 namespace TopicTwister.NewRound.Shared.DTOs
 {
+    [Serializable] 
+    public class CategoriesCollection 
+    {
+        [SerializeField]
+        private CategoryDTO[] _categories;
+
+        public List<CategoryDTO> Categories => _categories.ToList();
+    }
+    
+    
+    
+    [Serializable]
     public class CategoryDTO
     {
-        private readonly string _id;
-        private readonly string _name;
+        [SerializeField]
+        private string _id;
+        
+        [SerializeField]
+        private string _name;
 
         public string Id => _id;
         public string Name => _name;
