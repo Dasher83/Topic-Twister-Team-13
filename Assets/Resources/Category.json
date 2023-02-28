@@ -19,6 +19,43 @@
     {
       "_id": "5",
       "_name": "Películas"
+    },
+    {
+      "_id": "6",
+      "_name": "Frutas"
+    },
+    {
+      "_id": "7",
+      "_name": "Monedas"
+    },
+    {
+      "_id": "8",
+      "_name": "Objetos"
+    },
+    {
+      "_id": "9",
+      "_name": "Bandas musicales"
+    },
+    {
+      "_id": "10",
+      "_name": "Profesiones"
+    },
+    {
+      "_id": "11",
+      "_name": "Superpoderes"
+    },
+    {
+      "_id": "12",
+      "_name": "Lenguajes"
+    },
+    {
+      "_id": "13",
+      "_name": "Emociones"
+    },
+    {
+      "_id": "14",
+      "_name": "Elementos de cocina"
     }
+
   ]
 }

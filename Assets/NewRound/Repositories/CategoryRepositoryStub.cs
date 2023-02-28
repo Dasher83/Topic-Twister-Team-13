@@ -6,6 +6,16 @@ namespace TopicTwister.NewRound.Repositories
 {
     public class CategoryRepositoryStub : ICategoryRepository
     {
+        public bool Exists(string name)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Exists(string[] names)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public CategoryDTO[] GetRandomCategories(int numberOfCategories)
         {
             CategoryDTO[] result = new[]{

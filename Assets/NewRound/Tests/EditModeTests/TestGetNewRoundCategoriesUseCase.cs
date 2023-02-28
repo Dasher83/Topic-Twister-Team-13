@@ -4,7 +4,7 @@ using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared;
-
+using System.Linq;
 
 public class TestGetNewRoundCategoriesUseCase
 {
@@ -27,7 +27,7 @@ public class TestGetNewRoundCategoriesUseCase
     }
     
     [Test]
-    public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsLengthOfFive()
+    public void TestGetNewRoundCategoriesUseCaseWithJsonReturnsLengthOfFive()
     {
         IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
 
@@ -39,7 +39,7 @@ public class TestGetNewRoundCategoriesUseCase
     }
 
     [Test]
-    public void TestGetNewRoundCategoriesUseCaseWithScriptablesReturnsFiveElements()
+    public void TestGetNewRoundCategoriesUseCaseWithJsonReturnsFiveElements()
     {
         IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
 
@@ -51,6 +51,16 @@ public class TestGetNewRoundCategoriesUseCase
         {
             Assert.AreEqual(expectedResult[i], actualResult[i].Name);
         }
+    }
+
+    [Test]
+    public void TestGetNewRoundCategoriesUseCaseWithJsonAndRandomness()
+    {
+        IGetNewRoundCategoriesUseCase useCase = new GetNewRoundCategoriesUseCase(new CategoryRepositoryJSON());
+
+        CategoryDTO[] actualResult = useCase.GetRandomCategories(Constants.Categories.CategoriesPerRound);
+
+        Assert.IsTrue(new CategoryRepositoryJSON().Exists(actualResult.Select(c => c.Name).ToArray()));
     }
 }
 
