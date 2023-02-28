@@ -6,17 +6,6 @@ using UnityEngine;
 
 namespace TopicTwister.NewRound.Shared.DTOs
 {
-    [Serializable] 
-    public class CategoriesCollection 
-    {
-        [SerializeField]
-        private CategoryDTO[] _categories;
-
-        public List<CategoryDTO> Categories => _categories.ToList();
-    }
-    
-    
-    
     [Serializable]
     public class CategoryDTO
     {

@@ -1,24 +1,27 @@
-using System;
 using System.Collections.Generic;
 using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
+using TopicTwister.NewRound.Shared.Serialization;
 using UnityEngine;
 
-public class CategoryRepositoryJSON : ICategoryRepository
+namespace TopicTwister.NewRound.Repositories
 {
-    private const string CategoryResourceName = "Category";
-
-    private readonly List<CategoryDTO> _categories;
-
-    public CategoryRepositoryJSON()
+    public class CategoryRepositoryJSON : ICategoryRepository
     {
-        string data = Resources.Load<TextAsset>(CategoryResourceName).text;
+        private const string CategoryResourceName = "Category";
+
+        private readonly List<CategoryDTO> _categories;
+
+        public CategoryRepositoryJSON()
+        {
+            string data = Resources.Load<TextAsset>(CategoryResourceName).text;
         
-        _categories = JsonUtility.FromJson<CategoriesCollection>(data).Categories;
-    }
+            _categories = JsonUtility.FromJson<CategoriesCollection>(data).Categories;
+        }
 
-    public CategoryDTO[] GetRandomCategories(int numberOfCategories)
-    {
-        return _categories.ToArray();
+        public CategoryDTO[] GetRandomCategories(int numberOfCategories)
+        {
+            return _categories.ToArray();
+        }
     }
 }
