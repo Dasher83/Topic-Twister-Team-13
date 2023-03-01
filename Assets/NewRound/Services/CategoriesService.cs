@@ -2,18 +2,24 @@ using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
 
 
-public class CategoriesService : ICategoriesService
+
+namespace TopicTwister.NewRound.Services
 {
-    private IGetNewRoundCategoriesUseCase _useCase;
-
-    public CategoriesService(IGetNewRoundCategoriesUseCase useCase)
+    public class CategoriesService : ICategoriesService
     {
-        _useCase = useCase;
-    }
+        private IGetNewRoundCategoriesUseCase _useCase;
 
-    public CategoryDTO[] GetRandomCategories(int numberOfCategories)
-    {
-        CategoryDTO[] categories = _useCase.GetRandomCategories(numberOfCategories);
-        return categories;
+        
+        private  CategoriesService(){}
+        public CategoriesService(IGetNewRoundCategoriesUseCase useCase)
+        {
+            _useCase = useCase;
+        }
+
+        public CategoryDTO[] GetRandomCategories(int numberOfCategories)
+        {
+            CategoryDTO[] categories = _useCase.GetRandomCategories(numberOfCategories);
+            return categories;
+        }
     }
 }
