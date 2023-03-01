@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TopicTwister.NewRound.Shared.Interfaces
 {
-    public interface IShuffleLetterService
+    public interface ILetterService
     {
         string GetRandomLetter();
     }

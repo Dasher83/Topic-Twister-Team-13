@@ -10,8 +10,10 @@ namespace TopicTwister.NewRound.UseCases
     {
         public string GetRandomLetter()
         {
-            // Hacer sorteo de letra
-            throw new System.NotImplementedException();
+            /*int number = Random.Range(0, 26);
+            char letter = (char)(((int)'A') + number);
+            return $"{ letter }";*/
+            return " ";
         }
     }
 }

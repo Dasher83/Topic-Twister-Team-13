@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TopicTwister.NewRound.Services
 {
-    public class LetterService : IShuffleLetterService
+    public class LetterService : ILetterService
     {
         private IShuffleLetterUseCase _useCase;
 

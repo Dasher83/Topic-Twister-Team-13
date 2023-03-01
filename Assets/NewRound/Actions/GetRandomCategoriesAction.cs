@@ -11,6 +11,8 @@ namespace TopicTwister.NewRound.Actions
         private ICategoryPresenter _categoryPresenter;
         private ICategoriesService _categoriesService;
 
+        private GetRandomCategoriesAction(){}
+        
         public GetRandomCategoriesAction(ICategoriesService categoriesService)
         {
             _categoriesService = categoriesService;
