@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using NUnit.Framework;
-using TopicTwister.NewRound.Repositories;
-using TopicTwister.NewRound.Shared.DTOs;
+using System;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.UseCases;
-using TopicTwister.Shared;
 
 
 public class TestGetRandomLetterUseCase 
@@ -24,6 +19,15 @@ public class TestGetRandomLetterUseCase
 
             Assert.AreEqual(expectedLength, actualResultLength);
         }
-        
+
+        [Test]
+        public void test_get_new_letter_use_case_returns_letter()
+        {
+            IShuffleLetterUseCase useCase = new ShuffleLetterUseCase();
+
+            string actualResult = useCase.GetRandomLetter();
+
+            Assert.IsTrue(Char.IsLetter(actualResult[0]));
+        }
     }
 

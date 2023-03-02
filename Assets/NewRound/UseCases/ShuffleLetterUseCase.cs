@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TopicTwister.NewRound.Shared.Interfaces;
-using UnityEngine;
 
 
 namespace TopicTwister.NewRound.UseCases
@@ -13,7 +10,7 @@ namespace TopicTwister.NewRound.UseCases
             /*int number = Random.Range(0, 26);
             char letter = (char)(((int)'A') + number);
             return $"{ letter }";*/
-            return " ";
+            return "á";
         }
     }
 }
