@@ -9,7 +9,7 @@ using TopicTwister.NewRound.UseCases;
 public class TestGetRandomLetterUseCase 
 {
     [Test]
-    public void TestGetNewLetterUseCaseSimplePasses()
+    public void test_get_new_letter_use_case_simple_passes()
     {
         IShuffleLetterUseCase useCase = new ShuffleLetterUseCase();
 
@@ -39,10 +39,42 @@ public class TestGetRandomLetterUseCase
 
         string actualResult = useCase.GetRandomLetter();
 
-        Assert.AreEqual(IsNormalizedLetter(actualResult), actualResult);
+        Assert.AreEqual(GetNormalizedString(actualResult), actualResult);
     }
 
-    private string IsNormalizedLetter(string text)
+    [Test]
+    public void test_get_new_letter_use_case_returns_random_letter()
+    {
+        IShuffleLetterUseCase useCase = new ShuffleLetterUseCase();
+
+        string actualResult = useCase.GetRandomLetter();
+
+        int cycles = 100;
+
+        for (int i = 0; i < cycles; i++)
+        {
+            string duplicateResult = useCase.GetRandomLetter();
+
+            try
+            {
+                Assert.IsTrue(String.CompareOrdinal(actualResult, duplicateResult) != 0);
+            }
+            catch(AssertionException ex)
+            {
+                if(i == cycles - 1)
+                {
+                    throw ex;
+                }
+                continue;
+            }
+
+            break;
+        }
+    }
+    
+    
+    
+    private string GetNormalizedString(string text)
     {
         var normalizedString = text.Normalize(NormalizationForm.FormD);
         var stringBuilder = new StringBuilder(capacity: normalizedString.Length);
