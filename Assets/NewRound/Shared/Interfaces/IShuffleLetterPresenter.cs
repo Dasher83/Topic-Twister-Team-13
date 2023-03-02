@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface IShuffleLetterPresenter
+namespace TopicTwister.NewRound.Shared.Interfaces
 {
-    void GetRandomLetter();
+    public interface IShuffleLetterPresenter
+    {
+        void GetRandomLetter();
 
-    void ShowLetter(string letter);
+        void ShowLetter(string letter);
+    }
 }

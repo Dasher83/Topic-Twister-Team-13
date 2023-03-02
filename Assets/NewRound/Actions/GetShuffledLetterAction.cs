@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.Interfaces;
-using UnityEngine;
 
 
 namespace TopicTwister.NewRound.Actions
@@ -10,7 +7,7 @@ namespace TopicTwister.NewRound.Actions
     public class GetShuffledLetterAction : IAction
     {
         private IShuffleLetterPresenter _shuffleLetterPresenter;
-        private ILetterService _letterService;
+        private readonly ILetterService _letterService;
 
         private GetShuffledLetterAction(){}
         

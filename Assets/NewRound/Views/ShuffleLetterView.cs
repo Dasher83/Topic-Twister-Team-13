@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using TopicTwister.NewRound.Presenters;
 using TopicTwister.NewRound.Shared.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 namespace TopicTwister.NewRound.Views
@@ -16,14 +15,14 @@ namespace TopicTwister.NewRound.Views
         
         void Start()
         {
-            _textComponent = GetComponentInChildren<TextMeshProUGUI>();;
             _button = GetComponentInChildren<Button>();
+            _textComponent = GetComponentInChildren<TextMeshProUGUI>();
+            _shuffleLetterPresenter = new ShuffleLetterPresenter(this);
         }
 
-        // Update is called once per frame
-        void Update()
+        public void GetRandomLetter()
         {
-
+            _shuffleLetterPresenter.GetRandomLetter();
         }
 
         public void ShowLetter(string letter)
