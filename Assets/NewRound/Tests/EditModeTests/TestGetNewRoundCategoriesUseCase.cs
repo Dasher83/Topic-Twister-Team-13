@@ -1,9 +1,9 @@
 using TopicTwister.NewRound.Repositories;
-using NUnit.Framework;
 using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.UseCases;
-using TopicTwister.Shared;
+using TopicTwister.NewRound.Shared;
+using NUnit.Framework;
 using System.Linq;
 
 public class TestGetNewRoundCategoriesUseCase

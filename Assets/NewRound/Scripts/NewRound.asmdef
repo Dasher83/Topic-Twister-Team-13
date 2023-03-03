@@ -1,8 +1,9 @@
 {
-    "name": "TopicTwister",
-    "rootNamespace": "",
+    "name": "NewRound",
+    "rootNamespace": "TopicTwister.NewRound",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "Unity.TextMeshPro",
+        "Shared"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -10,9 +11,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-    ],
+    "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
 }

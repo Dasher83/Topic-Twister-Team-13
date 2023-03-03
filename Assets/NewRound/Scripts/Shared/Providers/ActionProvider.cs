@@ -7,7 +7,7 @@ using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.Interfaces;
 
 
-namespace TopicTwister.Shared.Providers
+namespace TopicTwister.NewRound.Shared.Providers
 {
     public class ActionProvider<T> where T : IAction
     {

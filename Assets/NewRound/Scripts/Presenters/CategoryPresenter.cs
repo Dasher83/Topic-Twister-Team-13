@@ -2,7 +2,7 @@ using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.NewRound.Actions;
-using TopicTwister.Shared.Providers;
+using TopicTwister.NewRound.Shared.Providers;
 
 
 namespace TopicTwister.NewRound.Presenters

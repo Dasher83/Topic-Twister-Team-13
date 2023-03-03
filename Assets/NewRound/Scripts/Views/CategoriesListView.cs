@@ -1,9 +1,10 @@
 using TopicTwister.NewRound.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
-using TopicTwister.Shared;
+using TopicTwister.NewRound.Shared;
+using TopicTwister.NewRound.Presenters;
 using TMPro;
 using UnityEngine;
-using TopicTwister.NewRound.Presenters;
+
 
 namespace TopicTwister.NewRound.Views
 {

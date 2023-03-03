@@ -1,4 +1,4 @@
-namespace TopicTwister.Shared
+namespace TopicTwister.NewRound.Shared
 {
     public static class Constants
     {

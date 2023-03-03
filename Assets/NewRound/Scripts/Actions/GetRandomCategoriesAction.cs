@@ -1,6 +1,6 @@
 using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.NewRound.Shared;
 using TopicTwister.NewRound.Shared.Interfaces;
-using TopicTwister.Shared;
 using TopicTwister.Shared.Interfaces;
 
 
