@@ -9,7 +9,7 @@ using TopicTwister.NewRound.UseCases;
 public class TestGetRandomLetterUseCase 
 {
     [Test]
-    public void test_get_new_letter_use_case_simple_passes()
+    public void Test_get_new_letter_use_case_simple_passes()
     {
         IShuffleLetterUseCase useCase = new ShuffleLetterUseCase();
 
@@ -23,7 +23,7 @@ public class TestGetRandomLetterUseCase
     }
 
     [Test]
-    public void test_get_new_letter_use_case_returns_letter()
+    public void Test_get_new_letter_use_case_returns_letter()
     {
         IShuffleLetterUseCase useCase = new ShuffleLetterUseCase();
 
@@ -33,7 +33,7 @@ public class TestGetRandomLetterUseCase
     }
 
     [Test]
-    public void test_get_new_letter_use_case_returns_normalize_letter()
+    public void Test_get_new_letter_use_case_returns_normalize_letter()
     {
         IShuffleLetterUseCase useCase = new ShuffleLetterUseCase();
 
@@ -43,7 +43,7 @@ public class TestGetRandomLetterUseCase
     }
 
     [Test]
-    public void test_get_new_letter_use_case_returns_random_letter()
+    public void Test_get_new_letter_use_case_returns_random_letter()
     {
         IShuffleLetterUseCase useCase = new ShuffleLetterUseCase();
 
