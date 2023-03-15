@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TopicTwister.Shared.Interfaces;
 using UnityEngine;
+
 
 namespace Assets.PlayRound.Scripts.Commands
 {
-    public class FocusInputWidget : MonoBehaviour , ICommand
+    public class FocusInputCommand : MonoBehaviour , ICommand
     {
        
         

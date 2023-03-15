@@ -1,7 +1,9 @@
 
-
-public interface ICommand
+namespace TopicTwister.Shared.Interfaces
 {
+    public interface ICommand
+    {
 
-    void Execute(); 
+        void Execute();
+    }
 }
