@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &108632484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7582015829761001622, guid: e013361183f7f034f81553646a267111, type: 3}
+  m_PrefabInstance: {fileID: 5488925151586713498}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9ba9dd675e6424293d3dcb5394e8b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &141717496
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,6 +399,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 141717500}
     m_Modifications:
+    - target: {fileID: 176502326132442676, guid: e013361183f7f034f81553646a267111, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 108632484}
     - target: {fileID: 486081346777814585, guid: e013361183f7f034f81553646a267111, type: 3}
       propertyPath: m_Name
       value: PlayRoundView
@@ -408,6 +423,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1114745112777774047, guid: e013361183f7f034f81553646a267111, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 108632484}
+    - target: {fileID: 3481070011230925239, guid: e013361183f7f034f81553646a267111, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 108632484}
     - target: {fileID: 3777188001609552292, guid: e013361183f7f034f81553646a267111, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -472,6 +495,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7025171703126579574, guid: e013361183f7f034f81553646a267111, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 108632484}
+    - target: {fileID: 7490135867605143039, guid: e013361183f7f034f81553646a267111, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 108632484}
     - target: {fileID: 7582015828392110542, guid: e013361183f7f034f81553646a267111, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

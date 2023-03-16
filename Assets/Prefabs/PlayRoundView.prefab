@@ -7302,7 +7302,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9ba9dd675e6424293d3dcb5394e8b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textField: {fileID: 5488925152903005025}
 --- !u!1 &7582015829549836437
 GameObject:
   m_ObjectHideFlags: 0
@@ -9649,6 +9648,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 7582015829761001622}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
 --- !u!224 &6515994866920102669 stripped
@@ -9751,6 +9754,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 7582015829761001622}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
 --- !u!224 &6692723278046465924 stripped
@@ -9853,6 +9860,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 7582015829761001622}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
 --- !u!224 &818568835402167244 stripped
@@ -9955,6 +9966,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 7582015829761001622}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
 --- !u!224 &4134327898529154127 stripped
@@ -9962,17 +9977,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6385028965520687929, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
   m_PrefabInstance: {fileID: 7060583541240858486}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5488925152903005025 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3301330985082946583, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
-  m_PrefabInstance: {fileID: 7060583541240858486}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7851861549034427037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10068,6 +10072,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _keyboardController
+      value: 
+      objectReference: {fileID: 7582015829761001622}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
 --- !u!224 &3777188001609552292 stripped

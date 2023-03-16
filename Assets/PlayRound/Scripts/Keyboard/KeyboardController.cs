@@ -2,30 +2,37 @@
 using UnityEngine;
 
 
-namespace Assets.PlayRound.Scripts.Keyboard
+namespace TopicTwister.PlayRound.Scripts.Keyboard
 {
     public class KeyboardController : MonoBehaviour
     {
-        public TextMeshProUGUI textField; 
+        private TextMeshProUGUI _textField;
 
-        private string _currentInput = "";
+        private string _currentInput;
+
+        public TextMeshProUGUI TextField {
+            set
+            {
+                _textField = value;
+                _currentInput = _textField.text;
+            }
+        }
 
         public void Start()
         {
-            _currentInput = textField.text;
+            _currentInput = "";
         }
-
 
         public void AddLetter(string letter)
         {
             _currentInput += letter; 
-            textField.text = _currentInput;
+            _textField.text = _currentInput;
         }
 
         public void EreaseLetter()
         {
             _currentInput = _currentInput.Substring(0, _currentInput.Length - 1);
-            textField.text = _currentInput;
+            _textField.text = _currentInput;
         }
 
         public void AddSpace()
