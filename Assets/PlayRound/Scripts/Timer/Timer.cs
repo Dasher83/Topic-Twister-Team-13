@@ -2,28 +2,31 @@ using TMPro;
 using UnityEngine;
 
 
-public class Timer : MonoBehaviour
+namespace TopicTwister.PlayRound.Scripts.Timer
 {
-    private TextMeshProUGUI _timerText;
-    private float _numericTime;
-
-    void Start()
+    public class Timer : MonoBehaviour
     {
-        _timerText = GetComponentInChildren<TextMeshProUGUI>();
-        _numericTime = float.Parse(_timerText.text);
-    }
+        private TextMeshProUGUI _timerText;
+        private float _numericTime;
 
+        void Start()
+        {
+            _timerText = GetComponentInChildren<TextMeshProUGUI>();
+            _numericTime = float.Parse(_timerText.text);
+        }
 
-    void Update()
-    {
-        CountDown();
-    }
+        void Update()
+        {
+            CountDown();
+        }
 
-    private void CountDown()
-    {
-        if (_timerText.text == "0") return;
-        
-        _numericTime -= Time.deltaTime;
-        _timerText.text = string.Format("{0:0}", _numericTime);
+        private void CountDown()
+        {
+            if (_timerText.text == "0") return;
+
+            _numericTime -= Time.deltaTime;
+            _timerText.text = string.Format("{0:0}", _numericTime);
+        }
     }
 }
+
