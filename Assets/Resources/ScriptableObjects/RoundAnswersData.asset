@@ -12,6 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6716bad4e119a1549ba351fcdb7bd5a1, type: 3}
   m_Name: RoundAnswersData
   m_EditorClassIdentifier: 
-  roundAnswers:
-  - categoryId: 
-    userInput: 
+  _roundAnswers:
+  - _categoryId: Categoria
+    _userInput: "\u200B"
+  - _categoryId: Categoria
+    _userInput: "\u200B"
+  - _categoryId: Categoria
+    _userInput: "\u200B"
+  - _categoryId: Categoria
+    _userInput: "\u200B"
+  - _categoryId: Categoria
+    _userInput: "\u200B"

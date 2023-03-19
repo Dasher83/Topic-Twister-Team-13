@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3301330985082946583}
   m_Layer: 5
   m_Name: UserInput
-  m_TagString: Untagged
+  m_TagString: UserInput
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 3301330986074301113}
   m_Layer: 5
   m_Name: Category
-  m_TagString: Untagged
+  m_TagString: CategoryName
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -285,7 +285,7 @@ GameObject:
   - component: {fileID: 7174010714716504386}
   m_Layer: 5
   m_Name: CategoryInput
-  m_TagString: UserInput
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-
 namespace TopicTwister.PlayRound.Scripts.Timer
 {
     public class Timer : MonoBehaviour

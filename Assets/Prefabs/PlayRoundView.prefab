@@ -8930,6 +8930,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7582015830160536880}
   - component: {fileID: 7582015830160536881}
+  - component: {fileID: 933489458}
   m_Layer: 5
   m_Name: CategoryInputList
   m_TagString: Untagged
@@ -8988,6 +8989,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &933489458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7582015830160536887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ab5354cc4e9a8408ac59aaa55bdc1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _roundAnswersData: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
+  _currentTimer: {fileID: 21552979}
+  _stopButton: {fileID: 5488925151586713500}
 --- !u!1 &7582015830209329018
 GameObject:
   m_ObjectHideFlags: 0

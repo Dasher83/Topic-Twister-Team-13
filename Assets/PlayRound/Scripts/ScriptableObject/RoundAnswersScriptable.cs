@@ -1,24 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
+using TopicTwister.Shared.Structs;
 using UnityEngine;
-using System;
 
 [CreateAssetMenu(fileName = "RoundAnswersData", menuName = "ScriptableObjects/RoundAnswers", order = 1)]
 public class RoundAnswersScriptable : ScriptableObject
 {
-    [SerializeField]
-   private List<RoundAnswer> roundAnswers = new List<RoundAnswer>();
+    [SerializeField] private List<RoundAnswer> _roundAnswers = new List<RoundAnswer>();
 
+    public void AddAnswers(RoundAnswer[] roundAnswers)
+    {
+        foreach (RoundAnswer roundAnswer in roundAnswers)
+        {
+            _roundAnswers.Add(roundAnswer);
+        }
+    }
 
-}
-
-
-[Serializable]
-public struct RoundAnswer
-{
-    [SerializeField]
-    private string categoryId;
-    
-    [SerializeField]
-    private string userInput;
+    public void ClearAnswers()
+    {
+        _roundAnswers.Clear();
+    }
 }
