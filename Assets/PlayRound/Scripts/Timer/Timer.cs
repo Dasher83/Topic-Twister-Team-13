@@ -11,12 +11,28 @@ namespace TopicTwister.PlayRound.Scripts.Timer
         private float _numericTime;
         public UnityEvent timedOut = new UnityEvent();
         private bool _invokedTimedOut;
+        [SerializeField] private StopButton.StopButton stopButton;
 
         void Start()
         {
             _timerText = GetComponentInChildren<TextMeshProUGUI>();
             _numericTime = float.Parse(_timerText.text);
             _invokedTimedOut = false;
+            stopButton.InterruptRound.AddListener(InterruptRoundEventHandler);
+        }
+
+        private float NumericTime
+        {
+            get
+            {
+                return _numericTime;
+            }
+
+            set
+            {
+                _numericTime = value;
+                UpdateTimerText();
+            }
         }
 
         void Update()
@@ -34,11 +50,16 @@ namespace TopicTwister.PlayRound.Scripts.Timer
 
         private void CountDown()
         {
-            _numericTime -= Time.deltaTime;
-            _timerText.text = string.Format("{0:0}", _numericTime);
+            NumericTime -= Time.deltaTime;
         }
         
-        
+        private void InterruptRoundEventHandler()
+        {
+            NumericTime = 0;
+            _invokedTimedOut = true;
+        }
+
+        private void UpdateTimerText() => _timerText.text = string.Format("{0:0}", _numericTime);
     }
 }
 

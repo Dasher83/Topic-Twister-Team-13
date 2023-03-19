@@ -7,7 +7,8 @@ namespace TopicTwister.PlayRound.Scripts.Keyboard
     public class KeyboardController : MonoBehaviour
     {
         private TextMeshProUGUI _textField;
-        public Timer.Timer currentTimer;
+        [SerializeField] private Timer.Timer currentTimer;
+        [SerializeField] private StopButton.StopButton stopButton;
 
         private string _currentInput;
 
@@ -25,7 +26,8 @@ namespace TopicTwister.PlayRound.Scripts.Keyboard
         {
             _currentInput = "";
             _blockKeyboard = false;
-            currentTimer.timedOut.AddListener(TimedOutEventHandler);
+            currentTimer.timedOut.AddListener(InputEndEventHandler);
+            stopButton.InterruptRound.AddListener(InputEndEventHandler);
         }
 
         public void AddLetter(string letter)
@@ -48,7 +50,7 @@ namespace TopicTwister.PlayRound.Scripts.Keyboard
             _currentInput += " ";
         }
 
-        private void TimedOutEventHandler()
+        private void InputEndEventHandler()
         {
             _blockKeyboard = true;
         }

@@ -6707,6 +6707,7 @@ GameObject:
   - component: {fileID: 7582015829211375651}
   - component: {fileID: 7582015829211375650}
   - component: {fileID: 7582015829211375649}
+  - component: {fileID: 5488925151586713500}
   m_Layer: 5
   m_Name: Stop
   m_TagString: Untagged
@@ -6815,6 +6816,34 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 7582015829211375650}
   m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5488925151586713500}
+        m_TargetAssemblyTypeName: TopicTwister.PlayRound.Scripts.StopButton.StopButton,
+          PlayRound
+        m_MethodName: OnInterruptRound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5488925151586713500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7582015829211375655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf1be03918cc24441b993a94392233b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InterruptRound:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &7582015829212432257
@@ -7303,6 +7332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTimer: {fileID: 21552979}
+  stopButton: {fileID: 5488925151586713500}
 --- !u!1 &7582015829549836437
 GameObject:
   m_ObjectHideFlags: 0
@@ -8812,6 +8842,7 @@ MonoBehaviour:
   timedOut:
     m_PersistentCalls:
       m_Calls: []
+  stopButton: {fileID: 5488925151586713500}
 --- !u!1 &7582015830159841724
 GameObject:
   m_ObjectHideFlags: 0

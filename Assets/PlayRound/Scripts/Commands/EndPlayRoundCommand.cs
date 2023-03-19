@@ -7,9 +7,6 @@ namespace Assets.PlayRound.Scripts.Commands
 {
     public class EndPlayRoundCommand : MonoBehaviour, ICommand
     {
-
-        
-
         public void Execute()
         {
             throw new System.NotImplementedException();
