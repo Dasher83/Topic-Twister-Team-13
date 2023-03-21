@@ -1,4 +1,5 @@
 using TMPro;
+using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
 using UnityEngine;
 

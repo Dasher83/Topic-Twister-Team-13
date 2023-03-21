@@ -14,5 +14,8 @@ namespace TopicTwister.Shared.Structs
             _categoryId = categoryId;
             _userInput = userInput;
         }
+
+        public string CategoryId =>  _categoryId;
+        public string UserInput => _userInput;
     }
 }

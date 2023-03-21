@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: RoundAnswersData
   m_EditorClassIdentifier: 
   _roundAnswers:
-  - _categoryId: Categoria
-    _userInput: "\u200B"
-  - _categoryId: Categoria
-    _userInput: "\u200B"
-  - _categoryId: Categoria
-    _userInput: "\u200B"
-  - _categoryId: Categoria
-    _userInput: "\u200B"
-  - _categoryId: Categoria
-    _userInput: "\u200B"
+  - _categoryId: q
+    _userInput: asdasd
+  - _categoryId: w
+    _userInput: asd
+  - _categoryId: Categoriaa
+    _userInput: awwaw
+  - _categoryId: addddd
+    _userInput: tomen awa
+  - _categoryId: Categoria2
+    _userInput: ddd

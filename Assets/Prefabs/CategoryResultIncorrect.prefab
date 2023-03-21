@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 1572051465002205978}
   - component: {fileID: 1572051465002205977}
   m_Layer: 5
-  m_Name: CategoyText
+  m_Name: Category
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 1572051465128662337}
   - component: {fileID: 1572051465128662336}
   m_Layer: 5
-  m_Name: AnswerText
+  m_Name: Answer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
