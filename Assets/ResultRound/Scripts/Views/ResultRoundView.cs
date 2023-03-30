@@ -1,9 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
+using TopicTwister.ResultRound.Shared.Interfaces;
+
 
 namespace TopicTwister.ResultRound.Views
 {

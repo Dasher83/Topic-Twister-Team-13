@@ -1,18 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
+using TopicTwister.ResultRound.Shared.Interfaces;
 
-public class ResultRoundPresenter : MonoBehaviour
+
+namespace TopicTwister.ResultRound.Presenters
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ResultRoundPresenter
     {
-        
-    }
+        private readonly IResultRoundView _resultRoundView;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public ResultRoundPresenter(IResultRoundView resultRoundView)
+        {
+            _resultRoundView = resultRoundView;
+            //_resultRoundView.OnLoad += OnLoadHandler;
+        }
+
+        ~ResultRoundPresenter()
+        {
+            //this._resultRoundView.OnLoad -= OnLoadHandler;
+        }
+
+        private void OnLoadHandler()
+        {
+            Console.WriteLine("OnLoad event received.");
+        }
     }
 }
