@@ -11,12 +11,12 @@ namespace TopicTwister.ResultRound.Presenters
         public ResultRoundPresenter(IResultRoundView resultRoundView)
         {
             _resultRoundView = resultRoundView;
-            //_resultRoundView.OnLoad += OnLoadHandler;
+            _resultRoundView.OnLoad += OnLoadHandler;
         }
 
         ~ResultRoundPresenter()
         {
-            //this._resultRoundView.OnLoad -= OnLoadHandler;
+            this._resultRoundView.OnLoad -= OnLoadHandler;
         }
 
         private void OnLoadHandler()

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using TopicTwister.ResultRound.Presenters;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
 using TopicTwister.ResultRound.Shared.Interfaces;
@@ -10,6 +12,7 @@ namespace TopicTwister.ResultRound.Views
 {
     public class ResultRoundView : MonoBehaviour, IResultRoundView
     {
+        public event Action OnLoad;
 
         [SerializeField]
         private Transform categoryResultList;
@@ -18,18 +21,14 @@ namespace TopicTwister.ResultRound.Views
         private RoundAnswersScriptable roundAnswer;
 
         private List<RoundAnswer> resultRoundViewList;
-
-
+        private ResultRoundPresenter _resultRoundPresenter;
+            
         void Start()
         {
             LoadCategoryResultList();
+            _resultRoundPresenter = new ResultRoundPresenter(resultRoundView: this);
+            OnLoad?.Invoke();
         }
-
-        void Update()
-        {
-        
-        }
-        
         
         public void LoadCategoryResultList()
         {
