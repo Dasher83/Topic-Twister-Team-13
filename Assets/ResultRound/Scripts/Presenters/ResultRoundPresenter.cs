@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using TopicTwister.ResultRound.Shared.Interfaces;
+using TopicTwister.ResultRound.Shared.Structs;
 
 
 namespace TopicTwister.ResultRound.Presenters
 {
-    public class ResultRoundPresenter
+    public class ResultRoundPresenter : IResultRoundPresenter
     {
         private readonly IResultRoundView _resultRoundView;
 
@@ -22,6 +24,15 @@ namespace TopicTwister.ResultRound.Presenters
         private void OnLoadHandler()
         {
             Console.WriteLine("OnLoad event received.");
+        }
+        
+        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswerToEvaluateStruct answerToEvaluate)
+        {
+            List<EvaluatedAnswerStruct> evaluatedAnswers;
+            
+             //TODO return evaluatedAnswers;
+             
+            throw new NotImplementedException();
         }
     }
 }
