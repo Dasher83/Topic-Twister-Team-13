@@ -6,6 +6,6 @@ namespace TopicTwister.ResultRound.Shared.Interfaces
 {
     public interface IResultRoundPresenter
     {
-        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswerToEvaluateStruct answerToEvaluate);
+        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate);
     }
 }

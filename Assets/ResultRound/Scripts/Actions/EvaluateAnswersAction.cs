@@ -26,6 +26,9 @@ namespace TopicTwister.ResultRound.Actions
         public void Execute()
         {
             if (_roundAnswers == null || _roundAnswers.Count == 0) throw new ArgumentNullException();
+            
+            
+            
             throw new System.NotImplementedException();
         }
     }

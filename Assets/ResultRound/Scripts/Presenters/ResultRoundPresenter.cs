@@ -26,7 +26,7 @@ namespace TopicTwister.ResultRound.Presenters
             Console.WriteLine("OnLoad event received.");
         }
         
-        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswerToEvaluateStruct answerToEvaluate)
+        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate)
         {
             List<EvaluatedAnswerStruct> evaluatedAnswers;
             
