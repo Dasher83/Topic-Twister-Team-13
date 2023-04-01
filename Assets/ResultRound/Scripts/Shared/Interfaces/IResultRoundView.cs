@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using TopicTwister.ResultRound.Shared.Structs;
 
 
 namespace TopicTwister.ResultRound.Shared.Interfaces
@@ -7,5 +9,6 @@ namespace TopicTwister.ResultRound.Shared.Interfaces
     {
         void LoadCategoryResultList();
         event Action OnLoad;
+        public void EvaluateAnswers(List<EvaluatedAnswerStruct> evaluatedAnswers);
     }
 }

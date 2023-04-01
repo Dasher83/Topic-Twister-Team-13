@@ -9,27 +9,40 @@ namespace TopicTwister.ResultRound.Actions
 {
     public class EvaluateAnswersAction : IAction
     {
-        private readonly IResultRoundPresenter _resultRoundPresenter;
+        private IResultRoundPresenter _resultRoundPresenter;
         private List<RoundAnswer> _roundAnswers;
+        private char _initialLetter;
 
         public List<RoundAnswer> RoundAnswers
         {
             set => _roundAnswers = value;
         }
 
-        public EvaluateAnswersAction(IResultRoundPresenter resultRoundPresenter)
+        public char InitialLetter
         {
-            _resultRoundPresenter = resultRoundPresenter;
+            set => _initialLetter = value;
+        }
+
+        public IResultRoundPresenter ResultRoundPresenter
+        {
+            set => _resultRoundPresenter = value;
+        }
+
+        public EvaluateAnswersAction()
+        {
+            // Todo: inject service
         }
         
         //Recibir struct del SO con los datos
         public void Execute()
         {
             if (_roundAnswers == null || _roundAnswers.Count == 0) throw new ArgumentNullException();
-            
-            
-            
-            throw new System.NotImplementedException();
+            if (_resultRoundPresenter == null) throw new ArgumentNullException();
+
+            // Todo: call gateway service 
+
+            // Todo: pass a value here from the gateway service returns
+            _resultRoundPresenter.EvaluatedAnswers = null;
         }
     }
 }

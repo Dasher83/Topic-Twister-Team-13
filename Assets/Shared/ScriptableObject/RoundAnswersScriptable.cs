@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TopicTwister.Shared.Structs;
 using UnityEngine;
 
+
 namespace TopicTwister.Shared.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "RoundAnswersData", menuName = "ScriptableObjects/RoundAnswers", order = 1)]

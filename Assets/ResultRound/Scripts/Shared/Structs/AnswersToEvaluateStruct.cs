@@ -1,4 +1,5 @@
-using System.Collections.Specialized;
+using System.Collections.Generic;
+using TopicTwister.Shared.Structs;
 
 
 namespace TopicTwister.ResultRound.Shared.Structs
@@ -6,12 +7,12 @@ namespace TopicTwister.ResultRound.Shared.Structs
     public struct AnswersToEvaluateStruct
     {
         public readonly char initialLetter;
-        public readonly OrderedDictionary categoryToAnswerMap;
+        public readonly List<RoundAnswer> roundAnswers;
 
-        private AnswersToEvaluateStruct(char initialLetter, OrderedDictionary categoryToAnswerMap)
+        public AnswersToEvaluateStruct(char initialLetter, List<RoundAnswer> roundAnswers)
         {
             this.initialLetter = initialLetter;
-            this.categoryToAnswerMap = categoryToAnswerMap;
+            this.roundAnswers = roundAnswers;
         }
     }
 }
