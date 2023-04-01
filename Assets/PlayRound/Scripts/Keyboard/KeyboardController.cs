@@ -1,10 +1,9 @@
-﻿using Assets.PlayRound.Scripts.Interfaces;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace TopicTwister.PlayRound.Scripts.Keyboard
 {
-    public class KeyboardController : MonoBehaviour, ISubjcet
+    public class KeyboardController : MonoBehaviour
     {
         private TextMeshProUGUI _textField;
         [SerializeField] private Timer.Timer currentTimer;
@@ -53,11 +52,6 @@ namespace TopicTwister.PlayRound.Scripts.Keyboard
         private void InputEndEventHandler()
         {
             _blockKeyboard = true;
-        }
-
-        public void MetodoEscuchando()
-        {
-            Debug.Log("Escuchando desde el keyboard");
         }
     }
 }
