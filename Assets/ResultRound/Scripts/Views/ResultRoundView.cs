@@ -55,7 +55,7 @@ namespace TopicTwister.ResultRound.Views
                         {
                             _answerResultImage = _answerImageResultReferences.incorrectAnswer;
                         }
-                        categoryResultList.transform.GetChild(i).GetComponentInChildren<Image>().sprite = _answerResultImage;
+                        categoryResultList.transform.GetChild(i).Find("Result").gameObject.GetComponent<Image>().sprite = _answerResultImage;
                     }
                 }
             }

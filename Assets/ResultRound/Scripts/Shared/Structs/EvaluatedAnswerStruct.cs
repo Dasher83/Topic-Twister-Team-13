@@ -6,7 +6,7 @@ namespace TopicTwister.ResultRound.Shared.Structs
         public readonly string answer;
         public readonly bool isCorrect;
 
-        private EvaluatedAnswerStruct(string category, string answer, bool isCorrect)
+        public EvaluatedAnswerStruct(string category, string answer, bool isCorrect)
         {
             this.category = category;
             this.answer = answer;
