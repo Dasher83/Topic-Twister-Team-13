@@ -12,7 +12,7 @@ namespace TopicTwister.ResultRound.Shared.Providers
         {
             {
                 typeof(EvaluateAnswersAction),
-                new EvaluateAnswersAction(new AnswersEvaluationService())
+                new EvaluateAnswersAction(new AnswersEvaluationServiceFake())
             }
         };
 

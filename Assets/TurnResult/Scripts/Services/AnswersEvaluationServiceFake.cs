@@ -4,7 +4,7 @@ using TopicTwister.Shared.Structs;
 using UnityEngine;
 
 
-public class AnswersEvaluationService : IAnswersEvaluationService
+public class AnswersEvaluationServiceFake : IAnswersEvaluationService
 {
     private List<EvaluatedAnswerStruct> evaluatedAnswerStructs;
     private bool isCorrect;
