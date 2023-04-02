@@ -1273,8 +1273,9 @@ GameObject:
   - component: {fileID: 1787228863765136472}
   - component: {fileID: 8403081408533680846}
   - component: {fileID: 5766612003889703878}
+  - component: {fileID: 8922730258286285478}
   m_Layer: 5
-  m_Name: ResultRoundView
+  m_Name: TurnResultView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1367,6 +1368,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &8922730258286285478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6249298053639941142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b956ca12435482448bec183d59555d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  categoryResultList: {fileID: 4125196279930572575}
+  roundAnswer: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
+  _answerImageResultReferences: {fileID: 11400000, guid: a81fb45d5eeb7cb449b8d084b8020325, type: 2}
+  _initialLetter: 65
 --- !u!1001 &1805822780515483204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1468,7 +1485,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2319413634421479084, guid: ce6b130f744004a44a31f7e4f73bcc4d, type: 3}
       propertyPath: m_Name
-      value: CategoryText
+      value: Category
       objectReference: {fileID: 0}
     - target: {fileID: 2319413634462466290, guid: ce6b130f744004a44a31f7e4f73bcc4d, type: 3}
       propertyPath: m_text

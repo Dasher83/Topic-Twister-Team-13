@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace TopicTwister.ResultRound.Views
 {
-    public class ResultRoundView : MonoBehaviour, IResultRoundView
+    public class TurnResultView : MonoBehaviour, IResultRoundView
     {
         public event Action OnLoad;
 
