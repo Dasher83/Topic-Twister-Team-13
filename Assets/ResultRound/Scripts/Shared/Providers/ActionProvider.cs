@@ -12,7 +12,7 @@ namespace TopicTwister.ResultRound.Shared.Providers
         {
             {
                 typeof(EvaluateAnswersAction),
-                new EvaluateAnswersAction(/*Todo: complete dependency inyection*/)
+                new EvaluateAnswersAction(new AnswersEvaluationService())
             }
         };
 

@@ -7,8 +7,8 @@ namespace TopicTwister.ResultRound.Shared.Interfaces
 {
     public interface IResultRoundView
     {
-        void LoadCategoryResultList();
         event Action OnLoad;
         public void EvaluateAnswers(List<EvaluatedAnswerStruct> evaluatedAnswers);
+        public AnswersToEvaluateStruct GetAnswersToEvaluate();
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TopicTwister.ResultRound.Shared.Interfaces;
+using TopicTwister.ResultRound.Shared.Structs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Structs;
 
@@ -10,6 +11,7 @@ namespace TopicTwister.ResultRound.Actions
     public class EvaluateAnswersAction : IAction
     {
         private IResultRoundPresenter _resultRoundPresenter;
+        private readonly IAnswersEvaluationService _answersEvaluationService;
         private List<RoundAnswer> _roundAnswers;
         private char _initialLetter;
 
@@ -28,21 +30,19 @@ namespace TopicTwister.ResultRound.Actions
             set => _resultRoundPresenter = value;
         }
 
-        public EvaluateAnswersAction()
+        public EvaluateAnswersAction(IAnswersEvaluationService answersEvaluationService)
         {
-            // Todo: inject service
+            _answersEvaluationService = answersEvaluationService;
         }
         
-        //Recibir struct del SO con los datos
         public void Execute()
         {
             if (_roundAnswers == null || _roundAnswers.Count == 0) throw new ArgumentNullException();
             if (_resultRoundPresenter == null) throw new ArgumentNullException();
 
-            // Todo: call gateway service 
-
-            // Todo: pass a value here from the gateway service returns
-            _resultRoundPresenter.EvaluatedAnswers = null;
+            AnswersToEvaluateStruct answersEvaluationService = new AnswersToEvaluateStruct(_initialLetter, _roundAnswers);
+            
+            _resultRoundPresenter.EvaluatedAnswers = _answersEvaluationService.EvaluateAnswers(answersEvaluationService);
         }
     }
 }

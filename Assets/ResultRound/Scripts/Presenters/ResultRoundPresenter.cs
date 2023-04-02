@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TopicTwister.ResultRound.Actions;
 using TopicTwister.ResultRound.Shared.Interfaces;
@@ -37,8 +36,7 @@ namespace TopicTwister.ResultRound.Presenters
 
         private void OnLoadHandler()
         {
-            // Todo: connect it to the proper method please, or call it inside this one for readability
-            Console.WriteLine("OnLoad event received.");
+            EvaluateAnswers(_resultRoundView.GetAnswersToEvaluate());
         }
         
         public void EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate)

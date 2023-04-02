@@ -25,7 +25,10 @@ namespace TopicTwister.ResultRound.Views
         [SerializeField]
         private AnswerImageResultScriptable _answerImageResultReferences;
 
-        private List<RoundAnswer> resultRoundViewList;
+        [SerializeField]
+        private char _initialLetter; //TODO get initial letter from scene
+        
+        private List<RoundAnswer> _resultRoundViewList;
         private ResultRoundPresenter _resultRoundPresenter;
         private Sprite _answerResultImage;
 
@@ -58,14 +61,19 @@ namespace TopicTwister.ResultRound.Views
             }
         }
 
+        public AnswersToEvaluateStruct GetAnswersToEvaluate()
+        {
+            return new AnswersToEvaluateStruct(_initialLetter, _resultRoundViewList);
+        }
+
         public void LoadCategoryResultList()
         {
-           resultRoundViewList = roundAnswer.GetRoundAnswers();
+            _resultRoundViewList = roundAnswer.GetRoundAnswers();
 
             for(int i = 0; i < categoryResultList.childCount; i++)
             {
-                categoryResultList.transform.GetChild(i).Find("Category").gameObject.GetComponent<TextMeshProUGUI>().text = resultRoundViewList[i].CategoryId;
-                categoryResultList.transform.GetChild(i).Find("Answer").gameObject.GetComponent<TextMeshProUGUI>().text = resultRoundViewList[i].UserInput;
+                categoryResultList.transform.GetChild(i).Find("Category").gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].CategoryId;
+                categoryResultList.transform.GetChild(i).Find("Answer").gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].UserInput;
             }
         }
     }
