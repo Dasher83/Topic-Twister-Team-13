@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TopicTwister.Shared.ScriptableObjects
 {
-    [CreateAssetMenu(fileName = "RoundAnswersData", menuName = "ScriptableObjects/RoundAnswers", order = 1)]
+    [CreateAssetMenu(fileName = "RoundAnswersData", menuName = "ScriptableObjects/RoundAnswers")]
     public class RoundAnswersScriptable : ScriptableObject
     {
         [SerializeField] private List<RoundAnswer> _roundAnswers = new List<RoundAnswer>();

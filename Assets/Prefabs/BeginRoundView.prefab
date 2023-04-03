@@ -225,6 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1edcd133f5900040aaf92427d74161a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _eventContainer: {fileID: 11400000, guid: 2592076e7609bbd4eb64a77779492440, type: 2}
 --- !u!1 &1144444881
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,6 +373,7 @@ GameObject:
   - component: {fileID: 5245176507555839607}
   - component: {fileID: 2637597647208966369}
   - component: {fileID: 1900302825}
+  - component: {fileID: 168432084}
   m_Layer: 5
   m_Name: BeginRoundView
   m_TagString: Untagged
@@ -467,6 +469,23 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &168432084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486081346777814585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5defb3eb6c78f3a418f24e290978a33a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
+  _eventContainer: {fileID: 11400000, guid: 2592076e7609bbd4eb64a77779492440, type: 2}
+  _roundNumber: {fileID: 6749571803109359043}
+  _categoryListRoot: {fileID: 7971557317311405425}
+  _initialLetter: {fileID: 240032588}
 --- !u!1 &3450023297061710014
 GameObject:
   m_ObjectHideFlags: 0
