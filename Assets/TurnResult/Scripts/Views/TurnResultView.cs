@@ -31,6 +31,7 @@ namespace TopicTwister.ResultRound.Views
         private List<RoundAnswer> _resultRoundViewList;
         private ResultRoundPresenter _resultRoundPresenter;
         private Sprite _answerResultImage;
+        private EvaluatedAnswerStruct _evaluatedAnswer;
 
         void Start()
         {
@@ -43,20 +44,21 @@ namespace TopicTwister.ResultRound.Views
         {
             for (int i = 0; i < categoryResultList.childCount; i++)
             {
-                foreach (EvaluatedAnswerStruct evaluatedAnswer in evaluatedAnswers)
+                _evaluatedAnswer = evaluatedAnswers.Find(evaluatedAnswer => evaluatedAnswer.order == i);
+
+                if (categoryResultList.transform.GetChild(i).Find("Category")
+                    .gameObject.GetComponent<TextMeshProUGUI>().text == _evaluatedAnswer.category)
                 {
-                    if (categoryResultList.transform.GetChild(i).Find("Category").gameObject.GetComponent<TextMeshProUGUI>().text == evaluatedAnswer.category)
+                    if (_evaluatedAnswer.isCorrect)
                     {
-                        if (evaluatedAnswer.isCorrect)
-                        {
-                            _answerResultImage = _answerImageResultReferences.correctAnswer;
-                        }
-                        else
-                        {
-                            _answerResultImage = _answerImageResultReferences.incorrectAnswer;
-                        }
-                        categoryResultList.transform.GetChild(i).Find("Result").gameObject.GetComponent<Image>().sprite = _answerResultImage;
+                        _answerResultImage = _answerImageResultReferences.correctAnswer;
                     }
+                    else
+                    {
+                        _answerResultImage = _answerImageResultReferences.incorrectAnswer;
+                    }
+                    categoryResultList.transform.GetChild(i).Find("Result")
+                        .gameObject.GetComponent<Image>().sprite = _answerResultImage;
                 }
             }
         }
@@ -72,8 +74,10 @@ namespace TopicTwister.ResultRound.Views
 
             for(int i = 0; i < categoryResultList.childCount; i++)
             {
-                categoryResultList.transform.GetChild(i).Find("Category").gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].CategoryId;
-                categoryResultList.transform.GetChild(i).Find("Answer").gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].UserInput;
+                categoryResultList.transform.GetChild(i).Find("Category")
+                    .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].CategoryId;
+                categoryResultList.transform.GetChild(i).Find("Answer")
+                    .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].UserInput;
             }
         }
     }

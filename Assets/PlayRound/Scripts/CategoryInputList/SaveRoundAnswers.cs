@@ -28,7 +28,7 @@ namespace TopicTwister.PlayRound.Scripts.CategoryInputList
             {
                 string categoryId = childTransform.Find("Category").gameObject.GetComponent<TextMeshProUGUI>().text;
                 string userInput = childTransform.Find("UserInput").gameObject.GetComponent<TextMeshProUGUI>().text;
-                roundAnswers[index] = new RoundAnswer(categoryId, userInput);
+                roundAnswers[index] = new RoundAnswer(categoryId, userInput, order: index);
                 index++;
             }
 

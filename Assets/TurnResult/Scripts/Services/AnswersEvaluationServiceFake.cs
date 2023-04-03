@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
 using TopicTwister.ResultRound.Shared.Structs;
-using TopicTwister.Shared.Structs;
 using UnityEngine;
 
 
@@ -13,13 +13,18 @@ public class AnswersEvaluationServiceFake : IAnswersEvaluationService
     {
         evaluatedAnswerStructs = new List<EvaluatedAnswerStruct>();
 
-        foreach (RoundAnswer roundAnswer in answerToEvaluate.roundAnswers)
+        for(int i = 0; i < answerToEvaluate.roundAnswers.Count; i++)
         {
             isCorrect = Random.Range(0f, 1f) > 0.5f;
 
-            evaluatedAnswerStructs.Add(new EvaluatedAnswerStruct(roundAnswer.CategoryId, roundAnswer.UserInput, isCorrect));
+            evaluatedAnswerStructs.Add(
+                new EvaluatedAnswerStruct(
+                    answerToEvaluate.roundAnswers[i].CategoryId,
+                    answerToEvaluate.roundAnswers[i].UserInput,
+                    isCorrect,
+                    order: answerToEvaluate.roundAnswers[i].Order));
         }
         
-        return evaluatedAnswerStructs;
+        return evaluatedAnswerStructs.OrderBy(item => item.order).ToList();
     }
 }
