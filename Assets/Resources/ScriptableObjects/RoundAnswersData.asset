@@ -13,13 +13,18 @@ MonoBehaviour:
   m_Name: RoundAnswersData
   m_EditorClassIdentifier: 
   _roundAnswers:
-  - _categoryId: q
-    _userInput: asdasd
-  - _categoryId: w
-    _userInput: asd
-  - _categoryId: Categoriaa
-    _userInput: awwaw
-  - _categoryId: addddd
-    _userInput: tomen awa
-  - _categoryId: Categoria2
-    _userInput: ddd
+  - _categoryId: Categoria 1
+    _userInput: "\u200BAGUS"
+    _order: 0
+  - _categoryId: Categoria 2
+    _userInput: MARI
+    _order: 1
+  - _categoryId: Categoria 3
+    _userInput: "\u200BFER"
+    _order: 2
+  - _categoryId: Categoria 4
+    _userInput: "\u200BDAMIAN"
+    _order: 3
+  - _categoryId: Categoria 5
+    _userInput: "\u200BCHATGPT"
+    _order: 4
