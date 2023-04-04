@@ -1,7 +1,8 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace TopicTwister.PlayRound.Scripts.Keyboard
+
+namespace TopicTwister.PlayTurn.Keyboard
 {
     public class KeyboardController : MonoBehaviour
     {

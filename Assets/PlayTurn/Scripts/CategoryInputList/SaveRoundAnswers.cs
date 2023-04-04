@@ -3,7 +3,7 @@ using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
 using UnityEngine;
 
-namespace TopicTwister.PlayRound.Scripts.CategoryInputList
+namespace TopicTwister.PlayTurn.CategoryInputList
 {
     public class SaveRoundAnswers : MonoBehaviour
     {

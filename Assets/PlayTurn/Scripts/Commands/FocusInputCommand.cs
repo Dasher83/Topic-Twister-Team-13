@@ -1,10 +1,10 @@
 ﻿using TopicTwister.Shared.Interfaces;
-using TopicTwister.PlayRound.Scripts.Keyboard;
+using TopicTwister.PlayTurn.Keyboard;
 using TMPro;
 using UnityEngine;
 
 
-namespace TopicTwister.PlayRound.Scripts.Commands
+namespace TopicTwister.PlayTurn.Commands
 {
     public class FocusInputCommand : MonoBehaviour , ICommand
     {

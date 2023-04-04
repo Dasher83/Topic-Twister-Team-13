@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace TopicTwister.PlayRound.Scripts.StopButton
+namespace TopicTwister.PlayTurn.StopButton
 {
     public class StopButton : MonoBehaviour
     {
