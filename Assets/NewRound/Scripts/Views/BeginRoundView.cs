@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using TopicTwister.NewRound.Shared.ScriptableObjects;
-using TopicTwister.Shared;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
@@ -15,7 +14,7 @@ namespace TopicTwister.NewRound.Views
         [SerializeField]
         private NewRoundScriptable _newRoundData;
         [SerializeField]
-        private InitialLetterRevealedEventScriptable _eventContainer;
+        private InitialLetterRevealedEventScriptable _InitialLetterRevealedEventContainer;
         [SerializeField]
         private TextMeshProUGUI _roundNumber;
         [SerializeField]
@@ -23,11 +22,11 @@ namespace TopicTwister.NewRound.Views
         [SerializeField]
         private TextMeshProUGUI _initialLetter;
         [SerializeField]
-        private CustomSceneManager _sceneManager;
+        private LoadSceneEventScriptable _loadSceneEventContainer;
 
         private void Start()
         {
-            _eventContainer.InitialLetterRevealed += InitialLetterRevealedEventHandler;
+            _InitialLetterRevealedEventContainer.InitialLetterRevealed += InitialLetterRevealedEventHandler;
         }
 
         private void InitialLetterRevealedEventHandler()
@@ -44,7 +43,7 @@ namespace TopicTwister.NewRound.Views
             }
 
             _newRoundData.Initialize(categories, initialLetter, roundNumber);
-            _sceneManager.ChangeScene(Scenes.PlayTurn, transitionTime: 2f);
+            _loadSceneEventContainer.LoadSceneWithDelay?.Invoke(Scenes.PlayTurn, 2f);
         }
     }
 }

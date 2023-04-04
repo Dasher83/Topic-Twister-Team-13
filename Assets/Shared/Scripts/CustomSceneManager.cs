@@ -1,12 +1,22 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine;
+using TopicTwister.Shared.ScriptableObjects;
 
 
 namespace TopicTwister.Shared
 {
     public class CustomSceneManager : MonoBehaviour
     {
+        [SerializeField]
+        private LoadSceneEventScriptable _eventContainer;
+
+        private void Start()
+        {
+            _eventContainer.LoadSceneWithoutDelay += ChangeScene;
+            _eventContainer.LoadSceneWithDelay += ChangeScene;
+        }
+
         public void ChangeScene(string sceneName)
         {
             SceneManager.LoadScene(sceneName);

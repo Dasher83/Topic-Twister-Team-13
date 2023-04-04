@@ -482,11 +482,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
-  _eventContainer: {fileID: 11400000, guid: 2592076e7609bbd4eb64a77779492440, type: 2}
+  _InitialLetterRevealedEventContainer: {fileID: 11400000, guid: 2592076e7609bbd4eb64a77779492440, type: 2}
   _roundNumber: {fileID: 6749571803109359043}
   _categoryListRoot: {fileID: 7971557317311405425}
   _initialLetter: {fileID: 240032588}
-  _sceneManager: {fileID: 0}
+  _loadSceneEventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
 --- !u!1 &3450023297061710014
 GameObject:
   m_ObjectHideFlags: 0
