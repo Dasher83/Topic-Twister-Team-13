@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using TopicTwister.NewRound.Shared.ScriptableObjects;
+using TopicTwister.Shared;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 
@@ -20,6 +22,8 @@ namespace TopicTwister.NewRound.Views
         private Transform _categoryListRoot;
         [SerializeField]
         private TextMeshProUGUI _initialLetter;
+        [SerializeField]
+        private CustomSceneManager _sceneManager;
 
         private void Start()
         {
@@ -40,6 +44,7 @@ namespace TopicTwister.NewRound.Views
             }
 
             _newRoundData.Initialize(categories, initialLetter, roundNumber);
+            _sceneManager.ChangeScene(Scenes.PlayTurn, transitionTime: 2f);
         }
     }
 }

@@ -486,6 +486,7 @@ MonoBehaviour:
   _roundNumber: {fileID: 6749571803109359043}
   _categoryListRoot: {fileID: 7971557317311405425}
   _initialLetter: {fileID: 240032588}
+  _sceneManager: {fileID: 0}
 --- !u!1 &3450023297061710014
 GameObject:
   m_ObjectHideFlags: 0
