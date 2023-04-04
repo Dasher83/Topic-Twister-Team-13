@@ -1,4 +1,5 @@
 using TMPro;
+using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
 using UnityEngine;
@@ -8,13 +9,13 @@ namespace TopicTwister.PlayTurn.CategoryInputList
     public class SaveRoundAnswers : MonoBehaviour
     {
         [SerializeField] private RoundAnswersScriptable _roundAnswersData;
-        [SerializeField] private Timer.Timer _currentTimer;
-        [SerializeField] private StopButton.StopButton _stopButton;
+        [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
+        [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
 
         private void Start()
         {
-            _currentTimer.timedOut.AddListener(CaptureAndSaveDataEventHandler);
-            _stopButton.InterruptRound.AddListener(CaptureAndSaveDataEventHandler);
+            _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
+            _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
         }
 
         public void CaptureAndSaveDataEventHandler()

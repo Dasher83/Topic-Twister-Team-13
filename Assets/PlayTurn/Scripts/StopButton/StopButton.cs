@@ -1,15 +1,17 @@
+using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
+
 
 namespace TopicTwister.PlayTurn.StopButton
 {
     public class StopButton : MonoBehaviour
     {
-        public UnityEvent InterruptRound = new UnityEvent();
+        [SerializeField] private InterruptTurnEventScriptable _eventContainer;
+
         public void OnInterruptRound()
         {
-            InterruptRound.Invoke();
+            _eventContainer.InterruptTurn?.Invoke();
             transform.gameObject.GetComponent<Button>().enabled = false;
         }
     }
