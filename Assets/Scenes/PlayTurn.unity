@@ -388,6 +388,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 141717500}
     m_Modifications:
+    - target: {fileID: 933489458, guid: e013361183f7f034f81553646a267111, type: 3}
+      propertyPath: _loadSceneEventContainer
+      value: 
+      objectReference: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
     - target: {fileID: 486081346777814585, guid: e013361183f7f034f81553646a267111, type: 3}
       propertyPath: m_Name
       value: PlayTurnView

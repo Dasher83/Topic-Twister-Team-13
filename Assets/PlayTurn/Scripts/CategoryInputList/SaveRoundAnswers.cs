@@ -1,5 +1,6 @@
 using TMPro;
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
         [SerializeField] private RoundAnswersScriptable _roundAnswersData;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
+        [SerializeField] private LoadSceneEventScriptable _loadSceneEventContainer;
 
         private void Start()
         {
@@ -34,6 +36,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
             }
 
             _roundAnswersData.AddAnswers(roundAnswers);
+            _loadSceneEventContainer.LoadSceneWithDelay(Scenes.TurnResultScene, 1f);
         }
     }
 }
