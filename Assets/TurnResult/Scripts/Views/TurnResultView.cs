@@ -7,6 +7,7 @@ using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
 using TopicTwister.ResultRound.Shared.Interfaces;
 using TopicTwister.ResultRound.Shared.Structs;
+using TopicTwister.Shared.Constants;
 using UnityEngine.UI;
 
 
@@ -27,7 +28,10 @@ namespace TopicTwister.ResultRound.Views
 
         [SerializeField]
         private char _initialLetter; //TODO get initial letter from scene
-        
+
+        [SerializeField]
+        private LoadSceneEventScriptable _eventContainer;
+
         private List<RoundAnswer> _resultRoundViewList;
         private ResultRoundPresenter _resultRoundPresenter;
         private Sprite _answerResultImage;
@@ -79,6 +83,11 @@ namespace TopicTwister.ResultRound.Views
                 categoryResultList.transform.GetChild(i).Find("Answer")
                     .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].UserInput;
             }
+        }
+
+        public void FinishTurnReview()
+        {
+            _eventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.BeginRoundScene);
         }
     }
 }

@@ -595,22 +595,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5004715042030647563, guid: cee8750286aecfc4598327006bd48b14, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5004715042030647563, guid: cee8750286aecfc4598327006bd48b14, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5004715042030647563, guid: cee8750286aecfc4598327006bd48b14, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5004715042030647563, guid: cee8750286aecfc4598327006bd48b14, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6249298053639941142, guid: cee8750286aecfc4598327006bd48b14, type: 3}
       propertyPath: m_Name
       value: TurnResultView
