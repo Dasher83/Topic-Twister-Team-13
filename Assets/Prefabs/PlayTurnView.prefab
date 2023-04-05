@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 5245176507555839607}
   - component: {fileID: 2637597647208966369}
   - component: {fileID: 1900302825}
+  - component: {fileID: 5488925151586713503}
   m_Layer: 5
-  m_Name: PlayRoundView
+  m_Name: PlayTurnView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,6 +107,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &5488925151586713503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486081346777814585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3c482160533ed4ea78447094a138ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
+  _roundNumber: {fileID: 1919376079422969773}
+  _categoryListRoot: {fileID: 7582015830160536880}
+  _initialLetter: {fileID: 5488925153031352769}
 --- !u!1 &1919376079422969747
 GameObject:
   m_ObjectHideFlags: 0
@@ -6843,9 +6860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf1be03918cc24441b993a94392233b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InterruptRound:
-    m_PersistentCalls:
-      m_Calls: []
+  _eventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
 --- !u!1 &7582015829212432257
 GameObject:
   m_ObjectHideFlags: 0
@@ -7331,8 +7346,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9ba9dd675e6424293d3dcb5394e8b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTimer: {fileID: 21552979}
-  stopButton: {fileID: 5488925151586713500}
+  _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
+  _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
 --- !u!1 &7582015829549836437
 GameObject:
   m_ObjectHideFlags: 0
@@ -8839,10 +8854,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25612cb7139496448890e5df5a194781, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timedOut:
-    m_PersistentCalls:
-      m_Calls: []
-  stopButton: {fileID: 5488925151586713500}
+  _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
+  _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
 --- !u!1 &7582015830159841724
 GameObject:
   m_ObjectHideFlags: 0
@@ -9002,8 +9015,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roundAnswersData: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
-  _currentTimer: {fileID: 21552979}
-  _stopButton: {fileID: 5488925151586713500}
+  _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
+  _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
 --- !u!1 &7582015830209329018
 GameObject:
   m_ObjectHideFlags: 0

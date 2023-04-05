@@ -1,20 +1,23 @@
 using TMPro;
+using TopicTwister.PlayTurn.Shared.ScriptableObjects;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
 using UnityEngine;
 
-namespace TopicTwister.PlayRound.Scripts.CategoryInputList
+namespace TopicTwister.PlayTurn.CategoryInputList
 {
     public class SaveRoundAnswers : MonoBehaviour
     {
         [SerializeField] private RoundAnswersScriptable _roundAnswersData;
-        [SerializeField] private Timer.Timer _currentTimer;
-        [SerializeField] private StopButton.StopButton _stopButton;
+        [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
+        [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
+        [SerializeField] private LoadSceneEventScriptable _loadSceneEventContainer;
 
         private void Start()
         {
-            _currentTimer.timedOut.AddListener(CaptureAndSaveDataEventHandler);
-            _stopButton.InterruptRound.AddListener(CaptureAndSaveDataEventHandler);
+            _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
+            _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
         }
 
         public void CaptureAndSaveDataEventHandler()
@@ -33,6 +36,7 @@ namespace TopicTwister.PlayRound.Scripts.CategoryInputList
             }
 
             _roundAnswersData.AddAnswers(roundAnswers);
+            _loadSceneEventContainer.LoadSceneWithDelay(Scenes.TurnResultScene, 1f);
         }
     }
 }

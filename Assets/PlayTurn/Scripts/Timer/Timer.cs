@@ -1,23 +1,24 @@
 using TMPro;
+using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using UnityEngine;
-using UnityEngine.Events;
 
-namespace TopicTwister.PlayRound.Scripts.Timer
+
+namespace TopicTwister.PlayTurn.Timer
 {
     public class Timer : MonoBehaviour
     {
         private TextMeshProUGUI _timerText;
         private float _numericTime;
-        public UnityEvent timedOut = new UnityEvent();
         private bool _invokedTimedOut;
-        [SerializeField] private StopButton.StopButton stopButton;
+        [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
+        [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
 
         void Start()
         {
             _timerText = GetComponentInChildren<TextMeshProUGUI>();
             _numericTime = float.Parse(_timerText.text);
             _invokedTimedOut = false;
-            stopButton.InterruptRound.AddListener(InterruptRoundEventHandler);
+            _interruptTurnEventContainer.InterruptTurn += InterruptTurnEventHandler;
         }
 
         private float NumericTime
@@ -42,7 +43,7 @@ namespace TopicTwister.PlayRound.Scripts.Timer
             }
             else if (!_invokedTimedOut)
             {
-                timedOut.Invoke();
+                _timeOutEventContainer.TimeOut?.Invoke();
                 _invokedTimedOut = true;
             }
         }
@@ -52,7 +53,7 @@ namespace TopicTwister.PlayRound.Scripts.Timer
             NumericTime -= Time.deltaTime;
         }
         
-        private void InterruptRoundEventHandler()
+        private void InterruptTurnEventHandler()
         {
             NumericTime = 0;
             _invokedTimedOut = true;

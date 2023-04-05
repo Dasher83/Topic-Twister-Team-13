@@ -1,13 +1,15 @@
 ﻿using TMPro;
+using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using UnityEngine;
 
-namespace TopicTwister.PlayRound.Scripts.Keyboard
+
+namespace TopicTwister.PlayTurn.Keyboard
 {
     public class KeyboardController : MonoBehaviour
     {
         private TextMeshProUGUI _textField;
-        [SerializeField] private Timer.Timer currentTimer;
-        [SerializeField] private StopButton.StopButton stopButton;
+        [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
+        [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
 
         private string _currentInput;
 
@@ -25,13 +27,14 @@ namespace TopicTwister.PlayRound.Scripts.Keyboard
         {
             _currentInput = "";
             _blockKeyboard = false;
-            currentTimer.timedOut.AddListener(InputEndEventHandler);
-            stopButton.InterruptRound.AddListener(InputEndEventHandler);
+            _timeOutEventContainer.TimeOut += InputEndEventHandler;
+            _interruptTurnEventContainer.InterruptTurn += InputEndEventHandler;
         }
 
         public void AddLetter(string letter)
         {
             if (_blockKeyboard) return;
+            if (_textField == null) return;
             _currentInput += letter; 
             _textField.text = _currentInput;
         }
@@ -39,6 +42,7 @@ namespace TopicTwister.PlayRound.Scripts.Keyboard
         public void EreaseLetter()
         {
             if (_blockKeyboard) return;
+            if (_textField == null) return;
             _currentInput = _currentInput.Substring(0, _currentInput.Length - 1);
             _textField.text = _currentInput;
         }
@@ -46,6 +50,7 @@ namespace TopicTwister.PlayRound.Scripts.Keyboard
         public void AddSpace()
         {
             if (_blockKeyboard) return;
+            if (_textField == null) return;
             _currentInput += " ";
         }
 
