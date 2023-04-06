@@ -1,0 +1,9 @@
+{
+    "name": "TurnResultEditModeTests",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ]
+}
