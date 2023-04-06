@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using TopicTwister.ResultRound.Presenters;
+using TopicTwister.TurnResult.Presenters;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.Structs;
-using TopicTwister.ResultRound.Shared.Interfaces;
-using TopicTwister.ResultRound.Shared.Structs;
-using TopicTwister.Shared.Constants;
+using TopicTwister.TurnResult.Shared.Interfaces;
+using TopicTwister.TurnResult.Shared.Structs;
 using UnityEngine.UI;
 
 
-namespace TopicTwister.ResultRound.Views
+namespace TopicTwister.TurnResult.Views
 {
     public class TurnResultView : MonoBehaviour, IResultRoundView
     {

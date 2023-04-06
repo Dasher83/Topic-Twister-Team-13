@@ -4,8 +4,8 @@ using TopicTwister.TurnResult.Shared.Structs;
 
 namespace TopicTwister.TurnResult.Shared.Interfaces
 {
-    public interface IAnswersEvaluationService
+    public interface IEvaluateAnswersUseCase
     {
-        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate);
+        List<EvaluatedAnswerStruct> EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate);
     }
 }

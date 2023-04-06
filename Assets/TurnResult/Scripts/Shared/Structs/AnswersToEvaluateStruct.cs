@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TopicTwister.Shared.Structs;
 
 
-namespace TopicTwister.ResultRound.Shared.Structs
+namespace TopicTwister.TurnResult.Shared.Structs
 {
     public struct AnswersToEvaluateStruct
     {
