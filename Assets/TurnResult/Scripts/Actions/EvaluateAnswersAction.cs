@@ -12,10 +12,10 @@ namespace TopicTwister.TurnResult.Actions
     {
         private IResultRoundPresenter _resultRoundPresenter;
         private readonly IAnswersEvaluationService _answersEvaluationService;
-        private List<RoundAnswerDTO> _roundAnswers;
+        private List<TurnAnswerDTO> _roundAnswers;
         private char _initialLetter;
 
-        public List<RoundAnswerDTO> RoundAnswers
+        public List<TurnAnswerDTO> RoundAnswers
         {
             set => _roundAnswers = value;
         }

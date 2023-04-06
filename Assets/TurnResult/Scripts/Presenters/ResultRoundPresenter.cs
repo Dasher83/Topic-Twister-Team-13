@@ -41,7 +41,7 @@ namespace TopicTwister.TurnResult.Presenters
         
         public void EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            _evaluateAnswerAction.RoundAnswers = answerToEvaluate.roundAnswers;
+            _evaluateAnswerAction.RoundAnswers = answerToEvaluate.turnAnswers;
             _evaluateAnswerAction.InitialLetter = answerToEvaluate.initialLetter;
             _evaluateAnswerAction.Execute();
         }

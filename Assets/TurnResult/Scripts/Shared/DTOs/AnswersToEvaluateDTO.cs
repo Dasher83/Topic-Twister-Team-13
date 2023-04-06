@@ -7,12 +7,12 @@ namespace TopicTwister.TurnResult.Shared.DTOs
     public struct AnswersToEvaluateDTO
     {
         public readonly char initialLetter;
-        public readonly List<RoundAnswerDTO> roundAnswers;
+        public readonly List<TurnAnswerDTO> turnAnswers;
 
-        public AnswersToEvaluateDTO(char initialLetter, List<RoundAnswerDTO> roundAnswers)
+        public AnswersToEvaluateDTO(char initialLetter, List<TurnAnswerDTO> roundAnswers)
         {
             this.initialLetter = initialLetter;
-            this.roundAnswers = roundAnswers;
+            this.turnAnswers = roundAnswers;
         }
     }
 }

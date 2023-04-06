@@ -31,7 +31,7 @@ namespace TopicTwister.TurnResult.Views
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
         
-        private List<RoundAnswerDTO> _resultRoundViewList;
+        private List<TurnAnswerDTO> _resultRoundViewList;
         private ResultRoundPresenter _resultRoundPresenter;
         private Sprite _answerResultImage;
         private EvaluatedAnswerDTO _evaluatedAnswer;

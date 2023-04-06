@@ -16,16 +16,16 @@ namespace TopicTwister.TurnResult.Services
         {
             evaluatedAnswerStructs = new List<EvaluatedAnswerDTO>();
 
-            for (int i = 0; i < answerToEvaluate.roundAnswers.Count; i++)
+            for (int i = 0; i < answerToEvaluate.turnAnswers.Count; i++)
             {
                 isCorrect = Random.Range(0f, 1f) > 0.5f;
 
                 evaluatedAnswerStructs.Add(
                     new EvaluatedAnswerDTO(
-                        answerToEvaluate.roundAnswers[i].CategoryId,
-                        answerToEvaluate.roundAnswers[i].UserInput,
+                        answerToEvaluate.turnAnswers[i].CategoryId,
+                        answerToEvaluate.turnAnswers[i].UserInput,
                         isCorrect,
-                        order: answerToEvaluate.roundAnswers[i].Order));
+                        order: answerToEvaluate.turnAnswers[i].Order));
             }
 
             return evaluatedAnswerStructs.OrderBy(item => item.order).ToList();

@@ -4,13 +4,13 @@ using System;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public struct RoundAnswerDTO
+    public struct TurnAnswerDTO
     {
         [SerializeField] private string _categoryId;
         [SerializeField] private string _userInput;
         [SerializeField] private int _order;
 
-        public RoundAnswerDTO(string categoryId, string userInput, int order)
+        public TurnAnswerDTO(string categoryId, string userInput, int order)
         {
             _categoryId = categoryId;
             _userInput = userInput;
