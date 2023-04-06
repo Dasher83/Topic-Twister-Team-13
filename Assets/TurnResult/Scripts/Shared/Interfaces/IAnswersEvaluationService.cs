@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using TopicTwister.TurnResult.Shared.Structs;
+using TopicTwister.TurnResult.Shared.DTOs;
 
 
 namespace TopicTwister.TurnResult.Shared.Interfaces
 {
     public interface IAnswersEvaluationService
     {
-        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate);
+        public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate);
     }
 }

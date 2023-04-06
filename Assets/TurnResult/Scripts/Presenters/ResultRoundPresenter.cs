@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TopicTwister.TurnResult.Actions;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.Providers;
-using TopicTwister.TurnResult.Shared.Structs;
+using TopicTwister.TurnResult.Shared.DTOs;
 
 
 namespace TopicTwister.TurnResult.Presenters
@@ -11,9 +11,9 @@ namespace TopicTwister.TurnResult.Presenters
     {
         private readonly IResultRoundView _resultRoundView;
         private EvaluateAnswersAction _evaluateAnswerAction;
-        private List<EvaluatedAnswerStruct> _evaluatedAnswers;
+        private List<EvaluatedAnswerDTO> _evaluatedAnswers;
 
-        public List<EvaluatedAnswerStruct> EvaluatedAnswers {
+        public List<EvaluatedAnswerDTO> EvaluatedAnswers {
             set
             {
                 _evaluatedAnswers = value;
@@ -39,7 +39,7 @@ namespace TopicTwister.TurnResult.Presenters
             EvaluateAnswers(_resultRoundView.GetAnswersToEvaluate());
         }
         
-        public void EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate)
+        public void EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
             _evaluateAnswerAction.RoundAnswers = answerToEvaluate.roundAnswers;
             _evaluateAnswerAction.InitialLetter = answerToEvaluate.initialLetter;

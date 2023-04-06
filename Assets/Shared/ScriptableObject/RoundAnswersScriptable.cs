@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TopicTwister.Shared.Structs;
+using TopicTwister.Shared.DTOs;
 using UnityEngine;
 
 
@@ -8,11 +8,11 @@ namespace TopicTwister.Shared.ScriptableObjects
     [CreateAssetMenu(fileName = "RoundAnswersData", menuName = "ScriptableObjects/RoundAnswers")]
     public class RoundAnswersScriptable : ScriptableObject
     {
-        [SerializeField] private List<RoundAnswer> _roundAnswers = new List<RoundAnswer>();
+        [SerializeField] private List<RoundAnswerDTO> _roundAnswers = new List<RoundAnswerDTO>();
 
-        public void AddAnswers(RoundAnswer[] roundAnswers)
+        public void AddAnswers(RoundAnswerDTO[] roundAnswers)
         {
-            foreach (RoundAnswer roundAnswer in roundAnswers)
+            foreach (RoundAnswerDTO roundAnswer in roundAnswers)
             {
                 _roundAnswers.Add(roundAnswer);
             }
@@ -24,9 +24,9 @@ namespace TopicTwister.Shared.ScriptableObjects
         }
 
 
-        public List<RoundAnswer> GetRoundAnswers()
+        public List<RoundAnswerDTO> GetRoundAnswers()
         {
-            return new List<RoundAnswer>(_roundAnswers);
+            return new List<RoundAnswerDTO>(_roundAnswers);
         } 
     }
 }

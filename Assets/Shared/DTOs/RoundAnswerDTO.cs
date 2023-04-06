@@ -1,16 +1,16 @@
 using UnityEngine;
 using System;
 
-namespace TopicTwister.Shared.Structs
+namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public struct RoundAnswer
+    public struct RoundAnswerDTO
     {
         [SerializeField] private string _categoryId;
         [SerializeField] private string _userInput;
         [SerializeField] private int _order;
 
-        public RoundAnswer(string categoryId, string userInput, int order)
+        public RoundAnswerDTO(string categoryId, string userInput, int order)
         {
             _categoryId = categoryId;
             _userInput = userInput;

@@ -1,24 +1,24 @@
 using System.Collections.Generic;
-using TopicTwister.Shared.Structs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
-using TopicTwister.TurnResult.Shared.Structs;
+using TopicTwister.TurnResult.Shared.DTOs;
 
 
 namespace TopicTwister.TurnResult.UseCases
 {
     public class EvaluateAnswersUseCase : IEvaluateAnswersUseCase
     {
-        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate)
+        public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            List<EvaluatedAnswerStruct> result = new List<EvaluatedAnswerStruct>();
-            EvaluatedAnswerStruct evaluatedAnswer;
+            List<EvaluatedAnswerDTO> result = new List<EvaluatedAnswerDTO>();
+            EvaluatedAnswerDTO evaluatedAnswer;
             bool isCorrect;
 
-            foreach(RoundAnswer roundAnswer in answerToEvaluate.roundAnswers)
+            foreach(RoundAnswerDTO roundAnswer in answerToEvaluate.roundAnswers)
             {
                 isCorrect = !string.IsNullOrEmpty(roundAnswer.UserInput);
 
-                evaluatedAnswer = new EvaluatedAnswerStruct(
+                evaluatedAnswer = new EvaluatedAnswerDTO(
                     category: roundAnswer.CategoryId,
                     answer: roundAnswer.UserInput,
                     isCorrect: isCorrect,

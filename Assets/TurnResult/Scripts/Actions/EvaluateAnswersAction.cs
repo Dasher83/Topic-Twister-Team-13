@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using TopicTwister.TurnResult.Shared.Interfaces;
-using TopicTwister.TurnResult.Shared.Structs;
+using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
-using TopicTwister.Shared.Structs;
+using TopicTwister.Shared.DTOs;
 
 
 namespace TopicTwister.TurnResult.Actions
@@ -12,10 +12,10 @@ namespace TopicTwister.TurnResult.Actions
     {
         private IResultRoundPresenter _resultRoundPresenter;
         private readonly IAnswersEvaluationService _answersEvaluationService;
-        private List<RoundAnswer> _roundAnswers;
+        private List<RoundAnswerDTO> _roundAnswers;
         private char _initialLetter;
 
-        public List<RoundAnswer> RoundAnswers
+        public List<RoundAnswerDTO> RoundAnswers
         {
             set => _roundAnswers = value;
         }
@@ -40,7 +40,7 @@ namespace TopicTwister.TurnResult.Actions
             if (_roundAnswers == null || _roundAnswers.Count == 0) throw new ArgumentNullException();
             if (_resultRoundPresenter == null) throw new ArgumentNullException();
 
-            AnswersToEvaluateStruct answersEvaluationService = new AnswersToEvaluateStruct(_initialLetter, _roundAnswers);
+            AnswersToEvaluateDTO answersEvaluationService = new AnswersToEvaluateDTO(_initialLetter, _roundAnswers);
             
             _resultRoundPresenter.EvaluatedAnswers = _answersEvaluationService.EvaluateAnswers(answersEvaluationService);
         }

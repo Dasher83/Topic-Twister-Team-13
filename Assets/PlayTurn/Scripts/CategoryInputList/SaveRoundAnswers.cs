@@ -2,7 +2,7 @@ using TMPro;
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.ScriptableObjects;
-using TopicTwister.Shared.Structs;
+using TopicTwister.Shared.DTOs;
 using UnityEngine;
 
 namespace TopicTwister.PlayTurn.CategoryInputList
@@ -24,14 +24,14 @@ namespace TopicTwister.PlayTurn.CategoryInputList
         {
             _roundAnswersData.ClearAnswers();
 
-            RoundAnswer[] roundAnswers = new RoundAnswer[5];
+            RoundAnswerDTO[] roundAnswers = new RoundAnswerDTO[5];
             int index = 0;
 
             foreach (Transform childTransform in transform)
             {
                 string categoryId = childTransform.Find("Category").gameObject.GetComponent<TextMeshProUGUI>().text;
                 string userInput = childTransform.Find("UserInput").gameObject.GetComponent<TextMeshProUGUI>().text;
-                roundAnswers[index] = new RoundAnswer(categoryId, userInput, order: index);
+                roundAnswers[index] = new RoundAnswerDTO(categoryId, userInput, order: index);
                 index++;
             }
 
