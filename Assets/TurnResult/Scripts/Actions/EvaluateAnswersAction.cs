@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using TopicTwister.ResultRound.Shared.Interfaces;
-using TopicTwister.ResultRound.Shared.Structs;
+using TopicTwister.TurnResult.Shared.Interfaces;
+using TopicTwister.TurnResult.Shared.Structs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Structs;
 
 
-namespace TopicTwister.ResultRound.Actions
+namespace TopicTwister.TurnResult.Actions
 {
     public class EvaluateAnswersAction : IAction
     {

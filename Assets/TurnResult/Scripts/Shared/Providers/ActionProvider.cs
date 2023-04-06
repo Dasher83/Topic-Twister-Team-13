@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using TopicTwister.ResultRound.Actions;
+using TopicTwister.TurnResult.Actions;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.TurnResult.Services;
 
 
-namespace TopicTwister.ResultRound.Shared.Providers
+namespace TopicTwister.TurnResult.Shared.Providers
 {
     public class ActionProvider<T> where T : IAction
     {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using TopicTwister.ResultRound.Actions;
-using TopicTwister.ResultRound.Shared.Interfaces;
-using TopicTwister.ResultRound.Shared.Providers;
-using TopicTwister.ResultRound.Shared.Structs;
+using TopicTwister.TurnResult.Actions;
+using TopicTwister.TurnResult.Shared.Interfaces;
+using TopicTwister.TurnResult.Shared.Providers;
+using TopicTwister.TurnResult.Shared.Structs;
 
 
-namespace TopicTwister.ResultRound.Presenters
+namespace TopicTwister.TurnResult.Presenters
 {
     public class ResultRoundPresenter : IResultRoundPresenter
     {

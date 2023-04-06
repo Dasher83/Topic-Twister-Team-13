@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using TopicTwister.ResultRound.Shared.Structs;
+using TopicTwister.TurnResult.Shared.Structs;
 
 
-namespace TopicTwister.ResultRound.Shared.Interfaces
+namespace TopicTwister.TurnResult.Shared.Interfaces
 {
     public interface IResultRoundPresenter
     {
