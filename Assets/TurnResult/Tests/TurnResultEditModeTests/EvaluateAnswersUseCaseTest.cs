@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using TopicTwister.Shared.Structs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
-using TopicTwister.TurnResult.Shared.Structs;
+using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.TurnResult.UseCases;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -16,22 +16,22 @@ public class EvaluateAnswersUseCaseTest
     {
         IEvaluateAnswersUseCase useCase = new EvaluateAnswersUseCase();
         char initialLetter = 'A';
-        List<RoundAnswer> roundAnswers = new List<RoundAnswer>()
+        List<RoundAnswerDTO> roundAnswers = new List<RoundAnswerDTO>()
         {
-            new RoundAnswer("1", "", 0),
-            new RoundAnswer("2", "", 1),
-            new RoundAnswer("3", "", 2),
-            new RoundAnswer("4", "", 3),
-            new RoundAnswer("5", "", 4)
+            new RoundAnswerDTO("1", "", 0),
+            new RoundAnswerDTO("2", "", 1),
+            new RoundAnswerDTO("3", "", 2),
+            new RoundAnswerDTO("4", "", 3),
+            new RoundAnswerDTO("5", "", 4)
         };
-        AnswersToEvaluateStruct answersToEvaluateStruct = new AnswersToEvaluateStruct(initialLetter, roundAnswers);
+        AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, roundAnswers);
 
-        List<EvaluatedAnswerStruct> actualResult = useCase.EvaluateAnswers(answersToEvaluateStruct);
+        List<EvaluatedAnswerDTO> actualResult = useCase.EvaluateAnswers(answersToEvaluateStruct);
 
-        List<EvaluatedAnswerStruct> expectedResult = new List<EvaluatedAnswerStruct>();
-        foreach (RoundAnswer answer in roundAnswers)
+        List<EvaluatedAnswerDTO> expectedResult = new List<EvaluatedAnswerDTO>();
+        foreach (RoundAnswerDTO answer in roundAnswers)
         {
-            expectedResult.Add(new EvaluatedAnswerStruct(answer.CategoryId, answer.UserInput, isCorrect: false, order: answer.Order));
+            expectedResult.Add(new EvaluatedAnswerDTO(answer.CategoryId, answer.UserInput, isCorrect: false, order: answer.Order));
         }
 
         Assert.AreEqual(expectedResult, actualResult);

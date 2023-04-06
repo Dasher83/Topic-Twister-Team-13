@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TopicTwister.TurnResult.Shared.Interfaces;
-using TopicTwister.TurnResult.Shared.Structs;
+using TopicTwister.TurnResult.Shared.DTOs;
 using UnityEngine;
 
 
@@ -9,19 +9,19 @@ namespace TopicTwister.TurnResult.Services
 {
     public class AnswersEvaluationServiceFake : IAnswersEvaluationService
     {
-        private List<EvaluatedAnswerStruct> evaluatedAnswerStructs;
+        private List<EvaluatedAnswerDTO> evaluatedAnswerStructs;
         private bool isCorrect;
 
-        public List<EvaluatedAnswerStruct> EvaluateAnswers(AnswersToEvaluateStruct answerToEvaluate)
+        public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            evaluatedAnswerStructs = new List<EvaluatedAnswerStruct>();
+            evaluatedAnswerStructs = new List<EvaluatedAnswerDTO>();
 
             for (int i = 0; i < answerToEvaluate.roundAnswers.Count; i++)
             {
                 isCorrect = Random.Range(0f, 1f) > 0.5f;
 
                 evaluatedAnswerStructs.Add(
-                    new EvaluatedAnswerStruct(
+                    new EvaluatedAnswerDTO(
                         answerToEvaluate.roundAnswers[i].CategoryId,
                         answerToEvaluate.roundAnswers[i].UserInput,
                         isCorrect,

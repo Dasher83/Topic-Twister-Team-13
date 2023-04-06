@@ -4,9 +4,9 @@ using UnityEngine;
 using TMPro;
 using TopicTwister.TurnResult.Presenters;
 using TopicTwister.Shared.ScriptableObjects;
-using TopicTwister.Shared.Structs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
-using TopicTwister.TurnResult.Shared.Structs;
+using TopicTwister.TurnResult.Shared.DTOs;
 using UnityEngine.UI;
 
 
@@ -30,11 +30,11 @@ namespace TopicTwister.TurnResult.Views
 
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
-
-        private List<RoundAnswer> _resultRoundViewList;
+        
+        private List<RoundAnswerDTO> _resultRoundViewList;
         private ResultRoundPresenter _resultRoundPresenter;
         private Sprite _answerResultImage;
-        private EvaluatedAnswerStruct _evaluatedAnswer;
+        private EvaluatedAnswerDTO _evaluatedAnswer;
 
         void Start()
         {
@@ -43,7 +43,7 @@ namespace TopicTwister.TurnResult.Views
             OnLoad?.Invoke();
         }
 
-        public void EvaluateAnswers(List<EvaluatedAnswerStruct> evaluatedAnswers)
+        public void EvaluateAnswers(List<EvaluatedAnswerDTO> evaluatedAnswers)
         {
             for (int i = 0; i < categoryResultList.childCount; i++)
             {
@@ -66,9 +66,9 @@ namespace TopicTwister.TurnResult.Views
             }
         }
 
-        public AnswersToEvaluateStruct GetAnswersToEvaluate()
+        public AnswersToEvaluateDTO GetAnswersToEvaluate()
         {
-            return new AnswersToEvaluateStruct(_initialLetter, _resultRoundViewList);
+            return new AnswersToEvaluateDTO(_initialLetter, _resultRoundViewList);
         }
 
         public void LoadCategoryResultList()
