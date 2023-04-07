@@ -22,9 +22,9 @@ namespace TopicTwister.TurnResult.Repositories
         public bool Exists(string text, string categoryId, char initialLetter)
         {
             return _words.Any(
-                word => word.Text == text &&
+                word => word.Text.ToLower() == text.ToLower() &&
                 word.CategoryId == categoryId &&
-                word.Text[0] == initialLetter);
+                word.Text.ToLower()[0] == initialLetter.ToString().ToLower()[0]);
         }
     }
 }
