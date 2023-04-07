@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 
 namespace TopicTwister.TurnResult.Shared.DTOs
@@ -6,21 +7,18 @@ namespace TopicTwister.TurnResult.Shared.DTOs
     [Serializable]
     public class WordDTO
     {
-        private string _text;
-        private char _initialLetter;
-        private string _categoryId;
+        [SerializeField] private string _text;
+        [SerializeField] private string _categoryId;
 
         private WordDTO() { }
 
-        public WordDTO(string text, char initialLetter, string categoryId)
+        public WordDTO(string text, string categoryId)
         {
             _text = text;
-            _initialLetter = initialLetter;
             _categoryId = categoryId;
         }
 
         public string Text => _text;
-        public char InitialLetter => _initialLetter;
         public string CategoryId => _categoryId;
     }
 }

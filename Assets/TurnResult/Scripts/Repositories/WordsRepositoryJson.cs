@@ -21,11 +21,10 @@ namespace TopicTwister.TurnResult.Repositories
 
         public bool Exists(string text, string categoryId, char initialLetter)
         {
-            int a = 0;
             return _words.Any(
                 word => word.Text == text &&
                 word.CategoryId == categoryId &&
-                word.InitialLetter == initialLetter);
+                word.Text[0] == initialLetter);
         }
     }
 }
