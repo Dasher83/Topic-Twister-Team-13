@@ -18,7 +18,7 @@ namespace TopicTwister.NewRound.Shared.Providers
                 new GetRandomCategoriesAction(
                     categoriesService: new CategoriesService(
                         new GetNewRoundCategoriesUseCase(
-                            categoryRepository: new CategoryRepositoryJson())))
+                            categoryRepository: new CategoriesRepositoryJson())))
             },
             {
                 typeof(GetShuffledLetterAction),
