@@ -86,4 +86,50 @@ public class EvaluateAnswersUseCaseTest
         Assert.AreEqual(expectedResult, actualResult);
         #endregion
     }
+
+    [Test]
+    public void Test_evaluate_all_correct_answers()
+    {
+        #region -- Arrange --
+        string alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+        List<string> categoryIds = new List<string>()
+        {
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"
+        };
+
+        foreach (string categoryId in categoryIds)
+        {
+            foreach (char letter in alphabet)
+            {
+                List<TurnAnswerDTO> roundAnswers = new List<TurnAnswerDTO>()
+                {
+                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 0),
+                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 1),
+                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 2),
+                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 3),
+                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 4),
+                };
+                AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter: letter, roundAnswers);
+        #endregion
+
+                #region -- Act --
+                List<EvaluatedAnswerDTO> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+                #endregion
+
+                #region -- Assert --
+                List<EvaluatedAnswerDTO> expectedResult = new List<EvaluatedAnswerDTO>();
+                foreach (TurnAnswerDTO answer in roundAnswers)
+                {
+                    expectedResult.Add(new EvaluatedAnswerDTO(
+                        answer.CategoryId,
+                        answer.UserInput,
+                        isCorrect: true,
+                        order: answer.Order));
+                }
+
+                Assert.AreEqual(expectedResult, actualResult);
+                #endregion
+            }
+        }
+    }
 }
