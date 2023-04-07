@@ -8,21 +8,40 @@ namespace TopicTwister.TurnResult.UseCases
 {
     public class EvaluateAnswersUseCase : IEvaluateAnswersUseCase
     {
+        private IWordsRepository _wordRepository;
+
+        private EvaluateAnswersUseCase() { }
+
+        public EvaluateAnswersUseCase(IWordsRepository wordsRepository)
+        {
+            _wordRepository = wordsRepository;
+        }
+
         public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
             List<EvaluatedAnswerDTO> result = new List<EvaluatedAnswerDTO>();
             EvaluatedAnswerDTO evaluatedAnswer;
             bool isCorrect;
 
-            foreach(TurnAnswerDTO roundAnswer in answerToEvaluate.turnAnswers)
+            foreach(TurnAnswerDTO turnAnswer in answerToEvaluate.turnAnswers)
             {
-                isCorrect = !string.IsNullOrEmpty(roundAnswer.UserInput);
+                if (string.IsNullOrEmpty(turnAnswer.UserInput))
+                {
+                    isCorrect = false;
+                }
+                else
+                {
+                    isCorrect = _wordRepository.Exists(
+                        text: turnAnswer.UserInput,
+                        categoryId: turnAnswer.CategoryId,
+                        initialLetter: answerToEvaluate.initialLetter);
+                }
 
                 evaluatedAnswer = new EvaluatedAnswerDTO(
-                    category: roundAnswer.CategoryId,
-                    answer: roundAnswer.UserInput,
+                    category: turnAnswer.CategoryId,
+                    answer: turnAnswer.UserInput,
                     isCorrect: isCorrect,
-                    order: roundAnswer.Order);
+                    order: turnAnswer.Order);
 
                 result.Add(evaluatedAnswer);
             }
