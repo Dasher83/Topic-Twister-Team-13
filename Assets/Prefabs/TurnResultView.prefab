@@ -552,7 +552,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4125196281131127309}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8922730258286285478}
+        m_TargetAssemblyTypeName: TopicTwister.ResultRound.Views.TurnResultView,
+          TurnResult
+        m_MethodName: FinishTurnReview
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4125196281410915311
 GameObject:
   m_ObjectHideFlags: 0
@@ -1384,6 +1397,7 @@ MonoBehaviour:
   roundAnswer: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
   _answerImageResultReferences: {fileID: 11400000, guid: a81fb45d5eeb7cb449b8d084b8020325, type: 2}
   _initialLetter: 65
+  _eventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
 --- !u!1001 &1805822780515483204
 PrefabInstance:
   m_ObjectHideFlags: 0
