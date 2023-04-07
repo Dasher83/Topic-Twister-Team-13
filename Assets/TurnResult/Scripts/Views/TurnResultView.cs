@@ -8,6 +8,7 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
 using UnityEngine.UI;
+using TopicTwister.Shared.Constants;
 
 
 namespace TopicTwister.TurnResult.Views
