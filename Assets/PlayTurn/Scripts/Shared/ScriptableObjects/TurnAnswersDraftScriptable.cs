@@ -12,6 +12,8 @@ namespace TopicTwister.PlayTurn.Shared.ScriptableObjects
     {
         [SerializeField] private List<TurnAnswerDraftDTO> _turnAnswerDrafts;
 
+        public List<TurnAnswerDraftDTO> TurnAnswerDrafts => _turnAnswerDrafts.ToList();
+
         public Action<int> UserInputChanged;
 
         public void Initialize(TurnAnswerDraftDTO[] turnAnswerDrafts)

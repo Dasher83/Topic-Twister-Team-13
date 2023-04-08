@@ -8946,6 +8946,7 @@ GameObject:
   - component: {fileID: 7582015830160536880}
   - component: {fileID: 7582015830160536881}
   - component: {fileID: 933489458}
+  - component: {fileID: 3462493289271562761}
   m_Layer: 5
   m_Name: CategoryInputList
   m_TagString: Untagged
@@ -9021,6 +9022,19 @@ MonoBehaviour:
   _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
   _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
   _loadSceneEventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
+--- !u!114 &3462493289271562761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7582015830160536887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ecc93e9919de3c4a9281811b6b28a47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turnAnswerDraftData: {fileID: 11400000, guid: 80d196076f36ef34ca42c4a8ef00ed14, type: 2}
 --- !u!1 &7582015830209329018
 GameObject:
   m_ObjectHideFlags: 0
