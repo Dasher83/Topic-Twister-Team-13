@@ -47,7 +47,7 @@ namespace TopicTwister.TurnResult.Views
             _initialLetter = _newRoundData.InitialLetter;
             _initialLetterDisplay.text = _initialLetter.ToString();
             LoadCategoryResultList();
-            _turnResultPresenter = new TurnResultPresenter(resultRoundView: this);
+            _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
             OnLoad?.Invoke();
         }
 
@@ -81,7 +81,7 @@ namespace TopicTwister.TurnResult.Views
 
         public void LoadCategoryResultList()
         {
-            _turnResultViewList = _turnAnswer.GetRoundAnswers();
+            _turnResultViewList = _turnAnswer.GetTurnAnswers();
 
             for(int i = 0; i < _categoryResultList.childCount; i++)
             {

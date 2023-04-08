@@ -6837,9 +6837,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5488925151586713500}
-        m_TargetAssemblyTypeName: TopicTwister.PlayRound.Scripts.StopButton.StopButton,
-          PlayRound
-        m_MethodName: OnInterruptRound
+        m_TargetAssemblyTypeName: TopicTwister.PlayTurn.StopButton.StopButton, PlayTurn
+        m_MethodName: OnInterruptTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

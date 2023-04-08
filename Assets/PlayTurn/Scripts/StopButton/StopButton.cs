@@ -9,7 +9,7 @@ namespace TopicTwister.PlayTurn.StopButton
     {
         [SerializeField] private InterruptTurnEventScriptable _eventContainer;
 
-        public void OnInterruptRound()
+        public void OnInterruptTurn()
         {
             _eventContainer.InterruptTurn?.Invoke();
             transform.gameObject.GetComponent<Button>().enabled = false;

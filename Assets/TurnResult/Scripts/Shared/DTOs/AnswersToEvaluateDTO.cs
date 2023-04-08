@@ -9,10 +9,10 @@ namespace TopicTwister.TurnResult.Shared.DTOs
         public readonly char initialLetter;
         public readonly List<TurnAnswerDTO> turnAnswers;
 
-        public AnswersToEvaluateDTO(char initialLetter, List<TurnAnswerDTO> roundAnswers)
+        public AnswersToEvaluateDTO(char initialLetter, List<TurnAnswerDTO> turnAnswers)
         {
             this.initialLetter = initialLetter;
-            this.turnAnswers = roundAnswers;
+            this.turnAnswers = turnAnswers;
         }
     }
 }
