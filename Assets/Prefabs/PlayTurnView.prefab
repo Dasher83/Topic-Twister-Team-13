@@ -9014,9 +9014,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ab5354cc4e9a8408ac59aaa55bdc1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
   _roundAnswersData: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
   _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
   _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
+  _loadSceneEventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
 --- !u!1 &7582015830209329018
 GameObject:
   m_ObjectHideFlags: 0

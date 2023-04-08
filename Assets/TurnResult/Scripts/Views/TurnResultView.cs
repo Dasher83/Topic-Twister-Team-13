@@ -18,7 +18,10 @@ namespace TopicTwister.TurnResult.Views
         public event Action OnLoad;
 
         [SerializeField]
-        private Transform categoryResultList;
+        private Transform _categoryResultList;
+
+        [SerializeField]
+        private TextMeshProUGUI _initialLetterDisplay;
 
         [SerializeField]
         private RoundAnswersScriptable roundAnswer;
@@ -27,7 +30,9 @@ namespace TopicTwister.TurnResult.Views
         private AnswerImageResultScriptable _answerImageResultReferences;
 
         [SerializeField]
-        private char _initialLetter; //TODO get initial letter from scene
+        private NewRoundScriptable _newRoundData;
+
+        private char _initialLetter;
 
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
@@ -39,6 +44,8 @@ namespace TopicTwister.TurnResult.Views
 
         void Start()
         {
+            _initialLetter = _newRoundData.InitialLetter;
+            _initialLetterDisplay.text = _initialLetter.ToString();
             LoadCategoryResultList();
             _resultRoundPresenter = new ResultRoundPresenter(resultRoundView: this);
             OnLoad?.Invoke();
@@ -46,12 +53,12 @@ namespace TopicTwister.TurnResult.Views
 
         public void EvaluateAnswers(List<EvaluatedAnswerDTO> evaluatedAnswers)
         {
-            for (int i = 0; i < categoryResultList.childCount; i++)
+            for (int i = 0; i < _categoryResultList.childCount; i++)
             {
                 _evaluatedAnswer = evaluatedAnswers.Find(evaluatedAnswer => evaluatedAnswer.order == i);
 
-                if (categoryResultList.transform.GetChild(i).Find("Category")
-                    .gameObject.GetComponent<TextMeshProUGUI>().text == _evaluatedAnswer.category)
+                if (_categoryResultList.transform.GetChild(i).Find("Category")
+                    .gameObject.GetComponent<TextMeshProUGUI>().text == _evaluatedAnswer.category.Name)
                 {
                     if (_evaluatedAnswer.isCorrect)
                     {
@@ -61,7 +68,7 @@ namespace TopicTwister.TurnResult.Views
                     {
                         _answerResultImage = _answerImageResultReferences.incorrectAnswer;
                     }
-                    categoryResultList.transform.GetChild(i).Find("Result")
+                    _categoryResultList.transform.GetChild(i).Find("Result")
                         .gameObject.GetComponent<Image>().sprite = _answerResultImage;
                 }
             }
@@ -76,11 +83,11 @@ namespace TopicTwister.TurnResult.Views
         {
             _resultRoundViewList = roundAnswer.GetRoundAnswers();
 
-            for(int i = 0; i < categoryResultList.childCount; i++)
+            for(int i = 0; i < _categoryResultList.childCount; i++)
             {
-                categoryResultList.transform.GetChild(i).Find("Category")
-                    .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].CategoryId;
-                categoryResultList.transform.GetChild(i).Find("Answer")
+                _categoryResultList.transform.GetChild(i).Find("Category")
+                    .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].Category.Name;
+                _categoryResultList.transform.GetChild(i).Find("Answer")
                     .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].UserInput;
             }
         }

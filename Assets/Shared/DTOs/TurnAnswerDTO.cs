@@ -1,23 +1,24 @@
 using UnityEngine;
 using System;
 
+
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
     public struct TurnAnswerDTO
     {
-        [SerializeField] private string _categoryId;
+        [SerializeField] private CategoryDTO _category;
         [SerializeField] private string _userInput;
         [SerializeField] private int _order;
 
-        public TurnAnswerDTO(string categoryId, string userInput, int order)
+        public TurnAnswerDTO(CategoryDTO category, string userInput, int order)
         {
-            _categoryId = categoryId;
+            _category = category;
             _userInput = userInput;
             _order = order;
         }
 
-        public string CategoryId => _categoryId;
+        public CategoryDTO Category => _category;
         public string UserInput => _userInput;
         public int Order => _order;
     }
