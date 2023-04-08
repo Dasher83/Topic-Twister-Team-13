@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TopicTwister.PlayTurn.Shared.DTOs;
@@ -11,9 +12,23 @@ namespace TopicTwister.PlayTurn.Shared.ScriptableObjects
     {
         [SerializeField] private List<TurnAnswerDraftDTO> _turnAnswerDrafts;
 
+        public Action<int> UserInputChanged;
+
         public void Initialize(TurnAnswerDraftDTO[] turnAnswerDrafts)
         {
             _turnAnswerDrafts = turnAnswerDrafts.ToList();
+        }
+
+        public void AddUserInput(string userInput, int index)
+        {
+            _turnAnswerDrafts[index].UserInput += userInput;
+            UserInputChanged?.Invoke(index);
+        }
+
+        public void RemoveUserInput(int index)
+        {
+            _turnAnswerDrafts[index].UserInput = _turnAnswerDrafts[index].UserInput.Substring(
+                0, _turnAnswerDrafts[index].UserInput.Length - 1);
         }
     }
 }
