@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TopicTwister.TurnResult.Actions;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.TurnResult.Services;
+using TopicTwister.TurnResult.UseCases;
+using TopicTwister.TurnResult.Repositories;
 
 
 namespace TopicTwister.TurnResult.Shared.Providers
@@ -13,7 +15,10 @@ namespace TopicTwister.TurnResult.Shared.Providers
         {
             {
                 typeof(EvaluateAnswersAction),
-                new EvaluateAnswersAction(new AnswersEvaluationServiceFake())
+                new EvaluateAnswersAction(
+                    new AnswersEvaluationService(
+                        new EvaluateAnswersUseCase(
+                            new WordsRepositoryJson("WordsTest"))))
             }
         };
 
