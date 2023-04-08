@@ -9,6 +9,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
 {
     public class SaveRoundAnswers : MonoBehaviour
     {
+        [SerializeField] private NewRoundScriptable _newRoundData;
         [SerializeField] private RoundAnswersScriptable _roundAnswersData;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
@@ -29,9 +30,11 @@ namespace TopicTwister.PlayTurn.CategoryInputList
 
             foreach (Transform childTransform in transform)
             {
-                string categoryId = childTransform.Find("Category").gameObject.GetComponent<TextMeshProUGUI>().text;
-                string userInput = childTransform.Find("UserInput").gameObject.GetComponent<TextMeshProUGUI>().text;
-                turnAnswers[index] = new TurnAnswerDTO(categoryId, userInput, order: index);
+                string userInput = childTransform.Find("UserInput").gameObject.GetComponent<TextMeshProUGUI>().text.Trim();
+                turnAnswers[index] = new TurnAnswerDTO(
+                    category: _newRoundData.Categories[index],
+                    userInput: userInput,
+                    order: index);
                 index++;
             }
 

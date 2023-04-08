@@ -33,7 +33,7 @@ namespace TopicTwister.PlayTurn.Views
             for(int i = 0; i < _categoryListRoot.childCount; i++)
             {
                 child = _categoryListRoot.GetChild(i).Find("Category").gameObject;
-                child.GetComponent<TextMeshProUGUI>().text = _newRoundData.Categories[i];
+                child.GetComponent<TextMeshProUGUI>().text = _newRoundData.Categories[i].Name;
             }
         }
     }

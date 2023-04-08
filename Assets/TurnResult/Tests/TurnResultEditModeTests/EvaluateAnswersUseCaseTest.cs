@@ -26,11 +26,11 @@ public class EvaluateAnswersUseCaseTest
         char initialLetter = 'A';
         List<TurnAnswerDTO> roundAnswers = new List<TurnAnswerDTO>()
         {
-            new TurnAnswerDTO(categoryId: "1", userInput: "", order: 0),
-            new TurnAnswerDTO(categoryId: "2", userInput: "", order: 1),
-            new TurnAnswerDTO(categoryId: "3", userInput: "", order: 2),
-            new TurnAnswerDTO(categoryId: "4", userInput: "", order: 3),
-            new TurnAnswerDTO(categoryId: "5", userInput: "", order: 4),
+            new TurnAnswerDTO(category: new CategoryDTO("1", ""), userInput: "", order: 0),
+            new TurnAnswerDTO(category: new CategoryDTO("2", ""), userInput: "", order: 1),
+            new TurnAnswerDTO(category: new CategoryDTO("3", ""), userInput: "", order: 2),
+            new TurnAnswerDTO(category: new CategoryDTO("4", ""), userInput: "", order: 3),
+            new TurnAnswerDTO(category: new CategoryDTO("5", ""), userInput: "", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, roundAnswers);
         #endregion
@@ -44,7 +44,7 @@ public class EvaluateAnswersUseCaseTest
         foreach (TurnAnswerDTO answer in roundAnswers)
         {
             expectedResult.Add(new EvaluatedAnswerDTO(
-                answer.CategoryId,
+                answer.Category,
                 answer.UserInput,
                 isCorrect: false,
                 order: answer.Order));
@@ -61,11 +61,11 @@ public class EvaluateAnswersUseCaseTest
         char initialLetter = 'A';
         List<TurnAnswerDTO> roundAnswers = new List<TurnAnswerDTO>()
         {
-            new TurnAnswerDTO(categoryId: "1", userInput: "notTest", order: 0),
-            new TurnAnswerDTO(categoryId: "2", userInput: "notTest", order: 1),
-            new TurnAnswerDTO(categoryId: "3", userInput: "notTest", order: 2),
-            new TurnAnswerDTO(categoryId: "4", userInput: "notTest", order: 3),
-            new TurnAnswerDTO(categoryId: "5", userInput: "notTest", order: 4),
+            new TurnAnswerDTO(category: new CategoryDTO("1", ""), userInput: "notTest", order: 0),
+            new TurnAnswerDTO(category: new CategoryDTO("2", ""), userInput: "notTest", order: 1),
+            new TurnAnswerDTO(category: new CategoryDTO("3", ""), userInput: "notTest", order: 2),
+            new TurnAnswerDTO(category: new CategoryDTO("4", ""), userInput: "notTest", order: 3),
+            new TurnAnswerDTO(category: new CategoryDTO("5", ""), userInput: "notTest", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, roundAnswers);
         #endregion
@@ -79,7 +79,7 @@ public class EvaluateAnswersUseCaseTest
         foreach (TurnAnswerDTO answer in roundAnswers)
         {
             expectedResult.Add(new EvaluatedAnswerDTO(
-                answer.CategoryId,
+                answer.Category,
                 answer.UserInput,
                 isCorrect: false,
                 order: answer.Order));
@@ -105,11 +105,21 @@ public class EvaluateAnswersUseCaseTest
             {
                 List<TurnAnswerDTO> roundAnswers = new List<TurnAnswerDTO>()
                 {
-                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 0),
-                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 1),
-                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 2),
-                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 3),
-                    new TurnAnswerDTO(categoryId: categoryId, userInput: $"{letter} test", order: 4),
+                    new TurnAnswerDTO(
+                        category: new CategoryDTO(categoryId, ""),
+                        userInput: $"{letter} test", order: 0),
+                    new TurnAnswerDTO(
+                        category: new CategoryDTO(categoryId, ""),
+                        userInput: $"{letter} test", order: 1),
+                    new TurnAnswerDTO(
+                        category: new CategoryDTO(categoryId, ""),
+                        userInput: $"{letter} test", order: 2),
+                    new TurnAnswerDTO(
+                        category: new CategoryDTO(categoryId, ""),
+                        userInput: $"{letter} test", order: 3),
+                    new TurnAnswerDTO(
+                        category: new CategoryDTO(categoryId, ""),
+                        userInput: $"{letter} test", order: 4),
                 };
                 AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter: letter, roundAnswers);
         #endregion
@@ -123,7 +133,7 @@ public class EvaluateAnswersUseCaseTest
                 foreach (TurnAnswerDTO answer in roundAnswers)
                 {
                     expectedResult.Add(new EvaluatedAnswerDTO(
-                        answer.CategoryId,
+                        answer.Category,
                         answer.UserInput,
                         isCorrect: true,
                         order: answer.Order));
@@ -151,11 +161,21 @@ public class EvaluateAnswersUseCaseTest
         {
             List<TurnAnswerDTO> roundAnswers = new List<TurnAnswerDTO>()
             {
-                new TurnAnswerDTO(categoryId: randomCategoryIds[0], userInput: $"{letter} test", order: 0),
-                new TurnAnswerDTO(categoryId: randomCategoryIds[1], userInput: "", order: 1),
-                new TurnAnswerDTO(categoryId: randomCategoryIds[2], userInput: "notTest", order: 2),
-                new TurnAnswerDTO(categoryId: randomCategoryIds[3], userInput: "", order: 3),
-                new TurnAnswerDTO(categoryId: randomCategoryIds[4], userInput: $"{letter} test", order: 4),
+                new TurnAnswerDTO(
+                    category: new CategoryDTO(randomCategoryIds[0], ""),
+                    userInput: $"{letter} test", order: 0),
+                new TurnAnswerDTO(
+                    category: new CategoryDTO(randomCategoryIds[1], ""),
+                    userInput: "", order: 1),
+                new TurnAnswerDTO(
+                    category: new CategoryDTO(randomCategoryIds[2], ""),
+                    userInput: "notTest", order: 2),
+                new TurnAnswerDTO(
+                    category: new CategoryDTO(randomCategoryIds[3], ""),
+                    userInput: "", order: 3),
+                new TurnAnswerDTO(
+                    category: new CategoryDTO(randomCategoryIds[4], ""),
+                    userInput: $"{letter} test", order: 4),
             };
             AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter: letter, roundAnswers);
             #endregion
@@ -168,27 +188,27 @@ public class EvaluateAnswersUseCaseTest
             List<EvaluatedAnswerDTO> expectedResult = new List<EvaluatedAnswerDTO>()
             {
                 new EvaluatedAnswerDTO(
-                    category: roundAnswers[0].CategoryId,
+                    category: roundAnswers[0].Category,
                     answer: roundAnswers[0].UserInput,
                     isCorrect: true,
                     order: roundAnswers[0].Order),
                 new EvaluatedAnswerDTO(
-                    category: roundAnswers[1].CategoryId,
+                    category: roundAnswers[1].Category,
                     answer: roundAnswers[1].UserInput,
                     isCorrect: false,
                     order: roundAnswers[1].Order),
                 new EvaluatedAnswerDTO(
-                    category: roundAnswers[2].CategoryId,
+                    category: roundAnswers[2].Category,
                     answer: roundAnswers[2].UserInput,
                     isCorrect: false,
                     order: roundAnswers[2].Order),
                 new EvaluatedAnswerDTO(
-                    category: roundAnswers[3].CategoryId,
+                    category: roundAnswers[3].Category,
                     answer: roundAnswers[3].UserInput,
                     isCorrect: false,
                     order: roundAnswers[3].Order),
                 new EvaluatedAnswerDTO(
-                    category: roundAnswers[4].CategoryId,
+                    category: roundAnswers[4].Category,
                     answer: roundAnswers[4].UserInput,
                     isCorrect: true,
                     order: roundAnswers[4].Order)

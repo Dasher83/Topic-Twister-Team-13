@@ -33,12 +33,12 @@ namespace TopicTwister.TurnResult.UseCases
                 {
                     isCorrect = _wordRepository.Exists(
                         text: turnAnswer.UserInput,
-                        categoryId: turnAnswer.CategoryId,
+                        categoryId: turnAnswer.Category.Id,
                         initialLetter: answerToEvaluate.initialLetter);
                 }
 
                 evaluatedAnswer = new EvaluatedAnswerDTO(
-                    category: turnAnswer.CategoryId,
+                    category: turnAnswer.Category,
                     answer: turnAnswer.UserInput,
                     isCorrect: isCorrect,
                     order: turnAnswer.Order);

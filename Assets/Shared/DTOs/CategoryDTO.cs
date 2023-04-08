@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace TopicTwister.NewRound.Shared.DTOs
+namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
     public class CategoryDTO
@@ -22,15 +22,6 @@ namespace TopicTwister.NewRound.Shared.DTOs
         {
             _id = id;
             _name = name;
-        }
-
-        public override bool Equals(object obj)
-        {
-            CategoryDTO other = obj as CategoryDTO;
-
-            if(this._id != other._id) return false;
-            if(this._name != other._name) return false;
-            return true;
         }
     }
 }

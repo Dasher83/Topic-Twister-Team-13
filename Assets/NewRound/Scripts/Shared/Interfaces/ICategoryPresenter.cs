@@ -1,4 +1,4 @@
-using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
 

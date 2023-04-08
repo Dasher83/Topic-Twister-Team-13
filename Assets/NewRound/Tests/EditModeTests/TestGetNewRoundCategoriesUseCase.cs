@@ -1,5 +1,5 @@
 using TopicTwister.NewRound.Repositories;
-using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.NewRound.Shared;
