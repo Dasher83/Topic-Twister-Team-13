@@ -10,7 +10,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
     public class SaveRoundAnswers : MonoBehaviour
     {
         [SerializeField] private NewRoundScriptable _newRoundData;
-        [SerializeField] private RoundAnswersScriptable _roundAnswersData;
+        [SerializeField] private TurnAnswersScriptable _turnAnswersData;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
         [SerializeField] private LoadSceneEventScriptable _loadSceneEventContainer;
@@ -23,7 +23,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
 
         public void CaptureAndSaveDataEventHandler()
         {
-            _roundAnswersData.ClearAnswers();
+            _turnAnswersData.ClearAnswers();
 
             TurnAnswerDTO[] turnAnswers = new TurnAnswerDTO[5];
             int index = 0;
@@ -38,7 +38,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
                 index++;
             }
 
-            _roundAnswersData.AddAnswers(turnAnswers);
+            _turnAnswersData.AddAnswers(turnAnswers);
             _loadSceneEventContainer.LoadSceneWithDelay(Scenes.TurnResultScene, 1f);
         }
     }

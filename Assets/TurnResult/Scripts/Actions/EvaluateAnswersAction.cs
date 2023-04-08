@@ -10,7 +10,7 @@ namespace TopicTwister.TurnResult.Actions
 {
     public class EvaluateAnswersAction : IAction
     {
-        private IResultRoundPresenter _resultRoundPresenter;
+        private ITurnResultPresenter _resultRoundPresenter;
         private readonly IAnswersEvaluationService _answersEvaluationService;
         private List<TurnAnswerDTO> _roundAnswers;
         private char _initialLetter;
@@ -25,7 +25,7 @@ namespace TopicTwister.TurnResult.Actions
             set => _initialLetter = value;
         }
 
-        public IResultRoundPresenter ResultRoundPresenter
+        public ITurnResultPresenter ResultRoundPresenter
         {
             set => _resultRoundPresenter = value;
         }

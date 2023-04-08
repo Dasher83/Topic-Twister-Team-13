@@ -7,9 +7,9 @@ using TopicTwister.TurnResult.Shared.DTOs;
 
 namespace TopicTwister.TurnResult.Presenters
 {
-    public class ResultRoundPresenter : IResultRoundPresenter
+    public class TurnResultPresenter : ITurnResultPresenter
     {
-        private readonly IResultRoundView _resultRoundView;
+        private readonly ITurnResultView _turnResultView;
         private EvaluateAnswersAction _evaluateAnswerAction;
         private List<EvaluatedAnswerDTO> _evaluatedAnswers;
 
@@ -17,26 +17,26 @@ namespace TopicTwister.TurnResult.Presenters
             set
             {
                 _evaluatedAnswers = value;
-                _resultRoundView.EvaluateAnswers(_evaluatedAnswers);
+                _turnResultView.EvaluateAnswers(_evaluatedAnswers);
             }
         }
 
-        public ResultRoundPresenter(IResultRoundView resultRoundView)
+        public TurnResultPresenter(ITurnResultView resultRoundView)
         {
-            _resultRoundView = resultRoundView;
-            _resultRoundView.OnLoad += OnLoadHandler;
+            _turnResultView = resultRoundView;
+            _turnResultView.OnLoad += OnLoadHandler;
             _evaluateAnswerAction = new ActionProvider<EvaluateAnswersAction>().Provide();
             _evaluateAnswerAction.ResultRoundPresenter = this;
         }
 
-        ~ResultRoundPresenter()
+        ~TurnResultPresenter()
         {
-            this._resultRoundView.OnLoad -= OnLoadHandler;
+            this._turnResultView.OnLoad -= OnLoadHandler;
         }
 
         private void OnLoadHandler()
         {
-            EvaluateAnswers(_resultRoundView.GetAnswersToEvaluate());
+            EvaluateAnswers(_turnResultView.GetAnswersToEvaluate());
         }
         
         public void EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
