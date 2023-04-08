@@ -7348,6 +7348,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
   _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
+  _turnAnswersDraftData: {fileID: 11400000, guid: 80d196076f36ef34ca42c4a8ef00ed14, type: 2}
+  _userInputPressedEventContainer: {fileID: 11400000, guid: 4fec4d142c422d543862c5153eac6c42, type: 2}
 --- !u!1 &7582015829549836437
 GameObject:
   m_ObjectHideFlags: 0
@@ -9728,6 +9730,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _eventContainer
+      value: 
+      objectReference: {fileID: 11400000, guid: 4fec4d142c422d543862c5153eac6c42, type: 2}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
       propertyPath: _keyboardController
       value: 
       objectReference: {fileID: 7582015829761001622}
@@ -9833,6 +9839,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _eventContainer
+      value: 
+      objectReference: {fileID: 11400000, guid: 4fec4d142c422d543862c5153eac6c42, type: 2}
     - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
       propertyPath: _keyboardController
       value: 
@@ -9940,6 +9950,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _eventContainer
+      value: 
+      objectReference: {fileID: 11400000, guid: 4fec4d142c422d543862c5153eac6c42, type: 2}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
       propertyPath: _keyboardController
       value: 
       objectReference: {fileID: 7582015829761001622}
@@ -10046,6 +10060,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _eventContainer
+      value: 
+      objectReference: {fileID: 11400000, guid: 4fec4d142c422d543862c5153eac6c42, type: 2}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
       propertyPath: _keyboardController
       value: 
       objectReference: {fileID: 7582015829761001622}
@@ -10151,6 +10169,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
+      propertyPath: _eventContainer
+      value: 
+      objectReference: {fileID: 11400000, guid: 4fec4d142c422d543862c5153eac6c42, type: 2}
     - target: {fileID: 7174010714716504386, guid: 27a1e034e7b6810458cd9f8e5380f08f, type: 3}
       propertyPath: _keyboardController
       value: 

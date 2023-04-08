@@ -7,51 +7,45 @@ namespace TopicTwister.PlayTurn.Keyboard
 {
     public class KeyboardController : MonoBehaviour
     {
-        private TextMeshProUGUI _textField;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
+        [SerializeField] private TurnAnswersDraftScriptable _turnAnswersDraftData;
+        [SerializeField] private UserInputPressedEventScriptable _userInputPressedEventContainer;
 
-        private string _currentInput;
+        private int _currentIndex;
 
         private bool _blockKeyboard;
 
-        public TextMeshProUGUI TextField {
-            set
-            {
-                _textField = value;
-                _currentInput = _textField.text;
-            }
+        private void CurrentIndex(int index)
+        {
+            _currentIndex = index;
         }
 
         public void Start()
         {
-            _currentInput = "";
+            _currentIndex = 0;
             _blockKeyboard = false;
             _timeOutEventContainer.TimeOut += InputEndEventHandler;
             _interruptTurnEventContainer.InterruptTurn += InputEndEventHandler;
+            _userInputPressedEventContainer.OnInputPressed += CurrentIndex;
         }
 
         public void AddLetter(string letter)
         {
             if (_blockKeyboard) return;
-            if (_textField == null) return;
-            _currentInput += letter; 
-            _textField.text = _currentInput;
+            _turnAnswersDraftData.AddUserInput(userInput: letter, index: _currentIndex);
         }
 
         public void EreaseLetter()
         {
             if (_blockKeyboard) return;
-            if (_textField == null) return;
-            _currentInput = _currentInput.Substring(0, _currentInput.Length - 1);
-            _textField.text = _currentInput;
+            _turnAnswersDraftData.RemoveUserInput(_currentIndex);
         }
 
         public void AddSpace()
         {
             if (_blockKeyboard) return;
-            if (_textField == null) return;
-            _currentInput += " ";
+            _turnAnswersDraftData.AddUserInput(userInput: " ", index: _currentIndex);
         }
 
         private void InputEndEventHandler()
