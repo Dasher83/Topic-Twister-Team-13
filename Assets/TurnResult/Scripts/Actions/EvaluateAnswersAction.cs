@@ -10,14 +10,14 @@ namespace TopicTwister.TurnResult.Actions
 {
     public class EvaluateAnswersAction : IAction
     {
-        private ITurnResultPresenter _resultRoundPresenter;
+        private ITurnResultPresenter _turnResultPresenter;
         private readonly IAnswersEvaluationService _answersEvaluationService;
-        private List<TurnAnswerDTO> _roundAnswers;
+        private List<TurnAnswerDTO> _turnAnswers;
         private char _initialLetter;
 
-        public List<TurnAnswerDTO> RoundAnswers
+        public List<TurnAnswerDTO> TurnAnswers
         {
-            set => _roundAnswers = value;
+            set => _turnAnswers = value;
         }
 
         public char InitialLetter
@@ -25,9 +25,9 @@ namespace TopicTwister.TurnResult.Actions
             set => _initialLetter = value;
         }
 
-        public ITurnResultPresenter ResultRoundPresenter
+        public ITurnResultPresenter TurnResultPresenter
         {
-            set => _resultRoundPresenter = value;
+            set => _turnResultPresenter = value;
         }
 
         public EvaluateAnswersAction(IAnswersEvaluationService answersEvaluationService)
@@ -37,12 +37,14 @@ namespace TopicTwister.TurnResult.Actions
         
         public void Execute()
         {
-            if (_roundAnswers == null || _roundAnswers.Count == 0) throw new ArgumentNullException();
-            if (_resultRoundPresenter == null) throw new ArgumentNullException();
+            if (_turnAnswers == null || _turnAnswers.Count == 0) throw new ArgumentNullException();
+            if (_turnResultPresenter == null) throw new ArgumentNullException();
 
-            AnswersToEvaluateDTO answersEvaluationService = new AnswersToEvaluateDTO(_initialLetter, _roundAnswers);
-            
-            _resultRoundPresenter.EvaluatedAnswers = _answersEvaluationService.EvaluateAnswers(answersEvaluationService);
+            AnswersToEvaluateDTO answersEvaluationService = new AnswersToEvaluateDTO(
+                _initialLetter, _turnAnswers);
+
+            _turnResultPresenter.EvaluatedAnswers = _answersEvaluationService.EvaluateAnswers(
+                answersEvaluationService);
         }
     }
 }

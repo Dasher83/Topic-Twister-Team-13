@@ -5,9 +5,10 @@ using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.DTOs;
 using UnityEngine;
 
+
 namespace TopicTwister.PlayTurn.CategoryInputList
 {
-    public class SaveRoundAnswers : MonoBehaviour
+    public class SaveTurnAnswers : MonoBehaviour
     {
         [SerializeField] private NewRoundScriptable _newRoundData;
         [SerializeField] private TurnAnswersScriptable _turnAnswersData;

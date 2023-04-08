@@ -21,12 +21,12 @@ namespace TopicTwister.TurnResult.Presenters
             }
         }
 
-        public TurnResultPresenter(ITurnResultView resultRoundView)
+        public TurnResultPresenter(ITurnResultView turnResultView)
         {
-            _turnResultView = resultRoundView;
+            _turnResultView = turnResultView;
             _turnResultView.OnLoad += OnLoadHandler;
             _evaluateAnswerAction = new ActionProvider<EvaluateAnswersAction>().Provide();
-            _evaluateAnswerAction.ResultRoundPresenter = this;
+            _evaluateAnswerAction.TurnResultPresenter = this;
         }
 
         ~TurnResultPresenter()
@@ -41,7 +41,7 @@ namespace TopicTwister.TurnResult.Presenters
         
         public void EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            _evaluateAnswerAction.RoundAnswers = answerToEvaluate.turnAnswers;
+            _evaluateAnswerAction.TurnAnswers = answerToEvaluate.turnAnswers;
             _evaluateAnswerAction.InitialLetter = answerToEvaluate.initialLetter;
             _evaluateAnswerAction.Execute();
         }
