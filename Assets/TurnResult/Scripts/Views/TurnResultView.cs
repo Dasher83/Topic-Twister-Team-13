@@ -13,7 +13,7 @@ using TopicTwister.Shared.Constants;
 
 namespace TopicTwister.TurnResult.Views
 {
-    public class TurnResultView : MonoBehaviour, IResultRoundView
+    public class TurnResultView : MonoBehaviour, ITurnResultView
     {
         public event Action OnLoad;
 
@@ -24,7 +24,7 @@ namespace TopicTwister.TurnResult.Views
         private TextMeshProUGUI _initialLetterDisplay;
 
         [SerializeField]
-        private RoundAnswersScriptable roundAnswer;
+        private TurnAnswersScriptable _turnAnswer;
 
         [SerializeField]
         private AnswerImageResultScriptable _answerImageResultReferences;
@@ -37,8 +37,8 @@ namespace TopicTwister.TurnResult.Views
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
         
-        private List<TurnAnswerDTO> _resultRoundViewList;
-        private ResultRoundPresenter _resultRoundPresenter;
+        private List<TurnAnswerDTO> _turnResultViewList;
+        private TurnResultPresenter _turnResultPresenter;
         private Sprite _answerResultImage;
         private EvaluatedAnswerDTO _evaluatedAnswer;
 
@@ -47,7 +47,7 @@ namespace TopicTwister.TurnResult.Views
             _initialLetter = _newRoundData.InitialLetter;
             _initialLetterDisplay.text = _initialLetter.ToString();
             LoadCategoryResultList();
-            _resultRoundPresenter = new ResultRoundPresenter(resultRoundView: this);
+            _turnResultPresenter = new TurnResultPresenter(resultRoundView: this);
             OnLoad?.Invoke();
         }
 
@@ -76,19 +76,19 @@ namespace TopicTwister.TurnResult.Views
 
         public AnswersToEvaluateDTO GetAnswersToEvaluate()
         {
-            return new AnswersToEvaluateDTO(_initialLetter, _resultRoundViewList);
+            return new AnswersToEvaluateDTO(_initialLetter, _turnResultViewList);
         }
 
         public void LoadCategoryResultList()
         {
-            _resultRoundViewList = roundAnswer.GetRoundAnswers();
+            _turnResultViewList = _turnAnswer.GetRoundAnswers();
 
             for(int i = 0; i < _categoryResultList.childCount; i++)
             {
                 _categoryResultList.transform.GetChild(i).Find("Category")
-                    .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].Category.Name;
+                    .gameObject.GetComponent<TextMeshProUGUI>().text = _turnResultViewList[i].Category.Name;
                 _categoryResultList.transform.GetChild(i).Find("Answer")
-                    .gameObject.GetComponent<TextMeshProUGUI>().text = _resultRoundViewList[i].UserInput;
+                    .gameObject.GetComponent<TextMeshProUGUI>().text = _turnResultViewList[i].UserInput;
             }
         }
 

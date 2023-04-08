@@ -5,7 +5,7 @@ using TopicTwister.TurnResult.Shared.DTOs;
 
 namespace TopicTwister.TurnResult.Shared.Interfaces
 {
-    public interface IResultRoundView
+    public interface ITurnResultView
     {
         event Action OnLoad;
         public void EvaluateAnswers(List<EvaluatedAnswerDTO> evaluatedAnswers);

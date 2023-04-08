@@ -1395,7 +1395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _categoryResultList: {fileID: 4125196279930572575}
   _initialLetterDisplay: {fileID: 4125196281515457760}
-  roundAnswer: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
+  _turnAnswer: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
   _answerImageResultReferences: {fileID: 11400000, guid: a81fb45d5eeb7cb449b8d084b8020325, type: 2}
   _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
   _eventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}

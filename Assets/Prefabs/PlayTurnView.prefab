@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
+  _turnAnswersDraftData: {fileID: 11400000, guid: 80d196076f36ef34ca42c4a8ef00ed14, type: 2}
   _roundNumber: {fileID: 1919376079422969773}
   _categoryListRoot: {fileID: 7582015830160536880}
   _initialLetter: {fileID: 5488925153031352769}
@@ -9015,7 +9016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
-  _roundAnswersData: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
+  _turnAnswersData: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
   _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
   _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
   _loadSceneEventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}

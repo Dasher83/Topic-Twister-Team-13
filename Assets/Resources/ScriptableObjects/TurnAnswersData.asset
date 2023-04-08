@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6716bad4e119a1549ba351fcdb7bd5a1, type: 3}
-  m_Name: RoundAnswersData
+  m_Name: TurnAnswersData
   m_EditorClassIdentifier: 
   _roundAnswers:
   - _categoryId: Categoria 1

@@ -5,11 +5,13 @@ using System;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public struct TurnAnswerDTO
+    public class TurnAnswerDTO
     {
         [SerializeField] private CategoryDTO _category;
         [SerializeField] private string _userInput;
         [SerializeField] private int _order;
+
+        private TurnAnswerDTO() { }
 
         public TurnAnswerDTO(CategoryDTO category, string userInput, int order)
         {
