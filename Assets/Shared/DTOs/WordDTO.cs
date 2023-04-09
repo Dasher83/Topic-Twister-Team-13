@@ -1,9 +1,8 @@
 using System;
-using TopicTwister.Shared.DTOs;
 using UnityEngine;
 
 
-namespace TopicTwister.TurnResult.Shared.DTOs
+namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
     public class WordDTO

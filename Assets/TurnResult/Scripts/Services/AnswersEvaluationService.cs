@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
 

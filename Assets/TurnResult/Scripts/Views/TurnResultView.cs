@@ -9,6 +9,7 @@ using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
 using UnityEngine.UI;
 using TopicTwister.Shared.Constants;
+using TopicTwister.Shared.ScriptableObjects.FakeMatch;
 
 
 namespace TopicTwister.TurnResult.Views
@@ -36,7 +37,10 @@ namespace TopicTwister.TurnResult.Views
 
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
-        
+
+        [SerializeField]
+        private FakeMatchScriptable _fakeMatchData;
+
         private List<TurnAnswerDTO> _turnResultViewList;
         private TurnResultPresenter _turnResultPresenter;
         private Sprite _answerResultImage;
@@ -55,12 +59,12 @@ namespace TopicTwister.TurnResult.Views
         {
             for (int i = 0; i < _categoryResultList.childCount; i++)
             {
-                _evaluatedAnswer = evaluatedAnswers.Find(evaluatedAnswer => evaluatedAnswer.order == i);
+                _evaluatedAnswer = evaluatedAnswers.Find(evaluatedAnswer => evaluatedAnswer.Order == i);
 
                 if (_categoryResultList.transform.GetChild(i).Find("Category")
-                    .gameObject.GetComponent<TextMeshProUGUI>().text == _evaluatedAnswer.category.Name)
+                    .gameObject.GetComponent<TextMeshProUGUI>().text == _evaluatedAnswer.Category.Name)
                 {
-                    if (_evaluatedAnswer.isCorrect)
+                    if (_evaluatedAnswer.IsCorrect)
                     {
                         _answerResultImage = _answerImageResultReferences.correctAnswer;
                     }
@@ -72,6 +76,10 @@ namespace TopicTwister.TurnResult.Views
                         .gameObject.GetComponent<Image>().sprite = _answerResultImage;
                 }
             }
+            _fakeMatchData.AddRound(
+                userAnswers: evaluatedAnswers,
+                roundNumber: _newRoundData.RoundNumber,
+                initialLetter: _newRoundData.InitialLetter.ToString());
         }
 
         public AnswersToEvaluateDTO GetAnswersToEvaluate()
