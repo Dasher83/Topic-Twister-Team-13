@@ -14,6 +14,8 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
         private FakeRound[] _rounds = new FakeRound[3];
         private BotTurnAnswersGenerator _botTurnAnswerGenerator;
 
+        public List<FakeRound> Rounds => _rounds.ToList();
+
         public void AddRound(List<EvaluatedAnswerDTO> userAnswers, int roundNumber, string initialLetter)
         {
             _botTurnAnswerGenerator = new BotTurnAnswersGenerator(
@@ -25,7 +27,7 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
         }
 
         [Serializable]
-        private class FakeRound
+        public class FakeRound
         {
             [SerializeField] private List<EvaluatedAnswerDTO> _userAnswers;
             [SerializeField] private List<EvaluatedAnswerDTO> _botAnswers;
