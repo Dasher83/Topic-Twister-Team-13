@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 470946906836731382}
   - component: {fileID: 8161698480743574256}
   m_Layer: 5
-  m_Name: ResultRoundView 1
+  m_Name: ResultRoundView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,7 +121,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fakeMatchData: {fileID: 11400000, guid: 8090573c1f2c9634caef05091a6b6ec0, type: 2}
   _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
+  _answerImageResultReferences: {fileID: 11400000, guid: a81fb45d5eeb7cb449b8d084b8020325, type: 2}
   _cateoryResultList: {fileID: 8048381748721852719}
+  _header: {fileID: 8048381748144389257}
 --- !u!1 &1439583390528542520
 GameObject:
   m_ObjectHideFlags: 0

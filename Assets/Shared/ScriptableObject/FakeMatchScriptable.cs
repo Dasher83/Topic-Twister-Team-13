@@ -70,7 +70,7 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
                     {
                         botAnswer = new EvaluatedAnswerDTO(
                             category: evaluatedAnswer.Category,
-                            answer: $"{_initialLetter} test",
+                            answer: $"{_initialLetter} test".ToUpper(),
                             isCorrect: true,
                             order: evaluatedAnswer.Order);
                     }
@@ -78,7 +78,7 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
                     {
                         botAnswer = new EvaluatedAnswerDTO(
                             category: evaluatedAnswer.Category,
-                            answer: $"No se",
+                            answer: $"No se".ToUpper(),
                             isCorrect: false,
                             order: evaluatedAnswer.Order);
                     }
