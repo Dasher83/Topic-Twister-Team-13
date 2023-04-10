@@ -12,4 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7efb88bbff173af4a848321edb50b1ee, type: 3}
   m_Name: TurnAnswersDraftData
   m_EditorClassIdentifier: 
-  _turnAnswerDrafts: []
+  _turnAnswerDrafts:
+  - _category:
+      _id: 13
+      _name: Emociones
+    _userInput: J TEST
+    _order: 0
+  - _category:
+      _id: 11
+      _name: Superpoderes
+    _userInput: 
+    _order: 1
+  - _category:
+      _id: 2
+      _name: Animales
+    _userInput: 
+    _order: 2
+  - _category:
+      _id: 3
+      _name: "Pa\xEDses"
+    _userInput: 
+    _order: 3
+  - _category:
+      _id: 7
+      _name: Monedas
+    _userInput: ' '
+    _order: 4
