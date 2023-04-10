@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Home.unity
+    guid: db7a0066d1a450a409aa26383d1827d1
+  - enabled: 1
     path: Assets/Scenes/BeginRoundScene.unity
     guid: 3fc8acdd13e6c734bafef6554d6fdbcd
   - enabled: 1
@@ -17,9 +20,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RoundResults.unity
     guid: fba4e973a67716248972cebc57e2a173
-  - enabled: 1
-    path: Assets/Scenes/Home.unity
-    guid: db7a0066d1a450a409aa26383d1827d1
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: d0fcf601b952d3e4bba356189b4810b3, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: f3acf7696176c844db1cec37220450fc, type: 2}

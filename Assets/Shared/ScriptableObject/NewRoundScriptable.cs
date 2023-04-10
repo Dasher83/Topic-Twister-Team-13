@@ -24,10 +24,14 @@ namespace TopicTwister.Shared.ScriptableObjects
 
         public int RoundNumber => _roundNumber;
 
-        public void Initialize(char initialLetter, int roundNumber)
+        public void Initialize()
+        {
+            _roundNumber = 1;
+        }
+
+        public void Initialize(char initialLetter)
         {
             _initialLetter = initialLetter;
-            _roundNumber = roundNumber;
             _eventContainer.RoundEnded += GoToNextRound;
         }
 
