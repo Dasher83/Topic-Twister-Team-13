@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.Serializers;
 using UnityEngine;
+using TopicTwister.Shared.DTOs;
 
 
 namespace TopicTwister.TurnResult.Repositories

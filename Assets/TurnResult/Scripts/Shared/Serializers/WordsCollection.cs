@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TopicTwister.TurnResult.Shared.DTOs;
+using TopicTwister.Shared.DTOs;
 using UnityEngine;
 
 

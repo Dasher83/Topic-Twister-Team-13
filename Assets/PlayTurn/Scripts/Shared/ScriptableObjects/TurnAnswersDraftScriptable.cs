@@ -29,8 +29,10 @@ namespace TopicTwister.PlayTurn.Shared.ScriptableObjects
 
         public void RemoveUserInput(int index)
         {
+            if (string.IsNullOrEmpty(_turnAnswerDrafts[index].UserInput)) return;
             _turnAnswerDrafts[index].UserInput = _turnAnswerDrafts[index].UserInput.Substring(
                 0, _turnAnswerDrafts[index].UserInput.Length - 1);
+            UserInputChanged?.Invoke(index);
         }
     }
 }

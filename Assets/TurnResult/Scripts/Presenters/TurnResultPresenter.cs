@@ -3,6 +3,7 @@ using TopicTwister.TurnResult.Actions;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.Providers;
 using TopicTwister.TurnResult.Shared.DTOs;
+using TopicTwister.Shared.DTOs;
 
 
 namespace TopicTwister.TurnResult.Presenters

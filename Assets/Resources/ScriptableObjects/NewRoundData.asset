@@ -12,6 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a9d941f11af2ce4c866affa49e6e7e5, type: 3}
   m_Name: NewRoundData
   m_EditorClassIdentifier: 
-  _categories: []
-  _initialLetter: 0
-  _roundNumber: 0
+  _categories:
+  - _id: 10
+    _name: Profesiones
+  - _id: 9
+    _name: Bandas musicales
+  - _id: 12
+    _name: Lenguajes
+  - _id: 8
+    _name: Objetos
+  - _id: 6
+    _name: Frutas
+  _initialLetter: 89
+  _roundNumber: 1
+  _eventContainer: {fileID: 11400000, guid: 0ffc80a63ccad0d4d82ffa9d2faef6a4, type: 2}

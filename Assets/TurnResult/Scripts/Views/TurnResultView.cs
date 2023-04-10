@@ -9,6 +9,7 @@ using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
 using UnityEngine.UI;
 using TopicTwister.Shared.Constants;
+using TopicTwister.Shared.ScriptableObjects.FakeMatch;
 
 
 namespace TopicTwister.TurnResult.Views
@@ -21,7 +22,7 @@ namespace TopicTwister.TurnResult.Views
         private Transform _categoryResultList;
 
         [SerializeField]
-        private TextMeshProUGUI _initialLetterDisplay;
+        private Transform _header;
 
         [SerializeField]
         private TurnAnswersScriptable _turnAnswer;
@@ -32,11 +33,12 @@ namespace TopicTwister.TurnResult.Views
         [SerializeField]
         private NewRoundScriptable _newRoundData;
 
-        private char _initialLetter;
-
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
-        
+
+        [SerializeField]
+        private FakeMatchScriptable _fakeMatchData;
+
         private List<TurnAnswerDTO> _turnResultViewList;
         private TurnResultPresenter _turnResultPresenter;
         private Sprite _answerResultImage;
@@ -44,8 +46,8 @@ namespace TopicTwister.TurnResult.Views
 
         void Start()
         {
-            _initialLetter = _newRoundData.InitialLetter;
-            _initialLetterDisplay.text = _initialLetter.ToString();
+            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>().text = _newRoundData.InitialLetter.ToString();
+            _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>().text = $"Ronda {_newRoundData.RoundNumber}";
             LoadCategoryResultList();
             _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
             OnLoad?.Invoke();
@@ -55,12 +57,12 @@ namespace TopicTwister.TurnResult.Views
         {
             for (int i = 0; i < _categoryResultList.childCount; i++)
             {
-                _evaluatedAnswer = evaluatedAnswers.Find(evaluatedAnswer => evaluatedAnswer.order == i);
+                _evaluatedAnswer = evaluatedAnswers.Find(evaluatedAnswer => evaluatedAnswer.Order == i);
 
                 if (_categoryResultList.transform.GetChild(i).Find("Category")
-                    .gameObject.GetComponent<TextMeshProUGUI>().text == _evaluatedAnswer.category.Name)
+                    .gameObject.GetComponent<TextMeshProUGUI>().text == _evaluatedAnswer.Category.Name)
                 {
-                    if (_evaluatedAnswer.isCorrect)
+                    if (_evaluatedAnswer.IsCorrect)
                     {
                         _answerResultImage = _answerImageResultReferences.correctAnswer;
                     }
@@ -72,11 +74,15 @@ namespace TopicTwister.TurnResult.Views
                         .gameObject.GetComponent<Image>().sprite = _answerResultImage;
                 }
             }
+            _fakeMatchData.AddRound(
+                userAnswers: evaluatedAnswers,
+                roundNumber: _newRoundData.RoundNumber,
+                initialLetter: _newRoundData.InitialLetter.ToString());
         }
 
         public AnswersToEvaluateDTO GetAnswersToEvaluate()
         {
-            return new AnswersToEvaluateDTO(_initialLetter, _turnResultViewList);
+            return new AnswersToEvaluateDTO(_newRoundData.InitialLetter, _turnResultViewList);
         }
 
         public void LoadCategoryResultList()
@@ -94,7 +100,7 @@ namespace TopicTwister.TurnResult.Views
 
         public void FinishTurnReview()
         {
-            _eventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.BeginRoundScene);
+            _eventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.RoundResults);
         }
     }
 }
