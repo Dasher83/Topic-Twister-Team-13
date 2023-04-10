@@ -27,12 +27,12 @@ namespace TopicTwister.Shared.ScriptableObjects
         public void Initialize()
         {
             _roundNumber = 1;
+            _eventContainer.RoundEnded += GoToNextRound;
         }
 
         public void Initialize(char initialLetter)
         {
             _initialLetter = initialLetter;
-            _eventContainer.RoundEnded += GoToNextRound;
         }
 
         public void Initialize(CategoryDTO[] categories)

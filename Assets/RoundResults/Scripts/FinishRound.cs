@@ -3,6 +3,7 @@ using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class FinishRound : MonoBehaviour
 {
     [SerializeField]
@@ -24,11 +25,12 @@ public class FinishRound : MonoBehaviour
         if(_newRoundData.RoundNumber < 3)
         {
             _roundEndedEventContainer.RoundEnded?.Invoke();
-            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.BeginRoundScene); 
+            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.BeginRoundScene);
         }
         else
         {
             _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.Home);
         }
+        GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
     }
 }
