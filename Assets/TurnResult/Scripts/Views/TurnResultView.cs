@@ -22,7 +22,7 @@ namespace TopicTwister.TurnResult.Views
         private Transform _categoryResultList;
 
         [SerializeField]
-        private TextMeshProUGUI _initialLetterDisplay;
+        private Transform _header;
 
         [SerializeField]
         private TurnAnswersScriptable _turnAnswer;
@@ -32,8 +32,6 @@ namespace TopicTwister.TurnResult.Views
 
         [SerializeField]
         private NewRoundScriptable _newRoundData;
-
-        private char _initialLetter;
 
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
@@ -48,8 +46,8 @@ namespace TopicTwister.TurnResult.Views
 
         void Start()
         {
-            _initialLetter = _newRoundData.InitialLetter;
-            _initialLetterDisplay.text = _initialLetter.ToString();
+            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>().text = _newRoundData.InitialLetter.ToString();
+            _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>().text = $"Ronda {_newRoundData.RoundNumber}";
             LoadCategoryResultList();
             _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
             OnLoad?.Invoke();
@@ -84,7 +82,7 @@ namespace TopicTwister.TurnResult.Views
 
         public AnswersToEvaluateDTO GetAnswersToEvaluate()
         {
-            return new AnswersToEvaluateDTO(_initialLetter, _turnResultViewList);
+            return new AnswersToEvaluateDTO(_newRoundData.InitialLetter, _turnResultViewList);
         }
 
         public void LoadCategoryResultList()
