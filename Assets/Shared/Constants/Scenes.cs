@@ -6,5 +6,6 @@ namespace TopicTwister.Shared.Constants
         public const string TurnResultScene = "TurnResultScene";
         public const string BeginRoundScene = "BeginRoundScene";
         public const string RoundResults = "RoundResults"; 
+        public const string Home = "Home";
     }
 }

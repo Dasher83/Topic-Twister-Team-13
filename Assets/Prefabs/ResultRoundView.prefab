@@ -5371,8 +5371,9 @@ GameObject:
   - component: {fileID: 8048381747808615484}
   - component: {fileID: 8048381747808615485}
   - component: {fileID: 8048381747808615486}
+  - component: {fileID: 7959509094870805682}
   m_Layer: 5
-  m_Name: End
+  m_Name: EndButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5481,6 +5482,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7959509094870805682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048381747808615480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f421b3390830aee46921e9df4407152f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _roundEndedEventContainer: {fileID: 11400000, guid: 0ffc80a63ccad0d4d82ffa9d2faef6a4, type: 2}
+  _loadSceneEventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
+  _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
 --- !u!1 &8048381748144389258
 GameObject:
   m_ObjectHideFlags: 0

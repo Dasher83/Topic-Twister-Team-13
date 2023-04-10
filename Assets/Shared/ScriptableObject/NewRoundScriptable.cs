@@ -15,6 +15,8 @@ namespace TopicTwister.Shared.ScriptableObjects
         private char _initialLetter;
         [SerializeField]
         private int _roundNumber;
+        [SerializeField]
+        private RoundEndedEventScriptable _eventContainer;
 
         public List<CategoryDTO> Categories => _categories.ToList();
 
@@ -26,12 +28,18 @@ namespace TopicTwister.Shared.ScriptableObjects
         {
             _initialLetter = initialLetter;
             _roundNumber = roundNumber;
+            _eventContainer.RoundEnded += GoToNextRound;
         }
 
         public void Initialize(CategoryDTO[] categories)
         {
             _categories = new List<CategoryDTO>();
             _categories = categories.ToList();
+        }
+
+        private void GoToNextRound()
+        {
+            _roundNumber++;
         }
     }
 }
