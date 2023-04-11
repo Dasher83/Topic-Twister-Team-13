@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8572333483237363533}
   - component: {fileID: 8572333483237363532}
   - component: {fileID: 8572333483237363531}
+  - component: {fileID: 8652372551208900201}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -122,6 +123,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8652372551208900201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8572333483237363529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61fdc1789236b474e8c25b343465ff41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loadSceneEventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
 --- !u!1 &8572333483336313811
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +586,7 @@ GameObject:
   - component: {fileID: 8572333483708158559}
   - component: {fileID: 8572333483708158545}
   - component: {fileID: 8572333483708158544}
+  - component: {fileID: 8572333483754006155}
   m_Layer: 5
   m_Name: MatchResultView
   m_TagString: Untagged
@@ -640,6 +655,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8572333483754006155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8572333483708158558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57327d2552b8cd44cbaeeeac32ab5b7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _matchData: {fileID: 11400000, guid: 8090573c1f2c9634caef05091a6b6ec0, type: 2}
+  _matchImageReferences: {fileID: 11400000, guid: a96480bb53d2d7045829c0747462bc6b, type: 2}
+  _header: {fileID: 8572333484848872774}
+  _resultMatchImage: {fileID: 8572333483445897381}
 --- !u!1 &8572333483744673826
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,7 +890,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player One
+  m_text: 'User
 
 '
   m_isRightToLeft: 0
@@ -1322,7 +1353,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player Two
+  m_text: 'Bot
 
 '
   m_isRightToLeft: 0

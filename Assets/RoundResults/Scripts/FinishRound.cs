@@ -29,7 +29,7 @@ public class FinishRound : MonoBehaviour
         }
         else
         {
-            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.Home);
+            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.MatchResult);
         }
         GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
     }
