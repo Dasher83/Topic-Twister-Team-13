@@ -13,17 +13,41 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
         [SerializeField]
         private FakeRound[] _rounds = new FakeRound[3];
         private BotTurnAnswersGenerator _botTurnAnswerGenerator;
+        private int _userPoints;
+        private int _botPoints;
 
         public List<FakeRound> Rounds => _rounds.ToList();
+        public int UserPoints => _userPoints;
+        public int BotPoints => _botPoints;
 
         public void AddRound(List<EvaluatedAnswerDTO> userAnswers, int roundNumber, string initialLetter)
         {
             _botTurnAnswerGenerator = new BotTurnAnswersGenerator(
                 userAnswers: userAnswers,
                 initialLetter: initialLetter);
+
+            List<EvaluatedAnswerDTO> botAnswers = _botTurnAnswerGenerator.GenerateAnswers();
+
             _rounds[roundNumber - 1] = new FakeRound(
                 userAnswers: userAnswers,
-                botAnswers: _botTurnAnswerGenerator.GenerateAnswers());
+                botAnswers: botAnswers);
+
+            int _userTurnCorrectAnswers = userAnswers.Count(answer => answer.IsCorrect);
+            int _botTurnCorrectAnswers = botAnswers.Count(answer => answer.IsCorrect);
+
+            if (_userTurnCorrectAnswers > _botTurnCorrectAnswers)
+            {
+                _userPoints++;
+            }
+            else if (_botTurnCorrectAnswers > _userTurnCorrectAnswers)
+            {
+                _botPoints++;
+            }
+            else
+            {
+                _userPoints++;
+                _botPoints++;
+            }
         }
 
         [Serializable]
