@@ -11,7 +11,7 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
     public class FakeMatchScriptable : ScriptableObject
     {
         [SerializeField]
-        private FakeRound[] _rounds = new FakeRound[3];
+        private List<FakeRound> _rounds = new List<FakeRound>();
         private BotTurnAnswersGenerator _botTurnAnswerGenerator;
         private int _userPoints;
         private int _botPoints;
@@ -28,9 +28,9 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
 
             List<EvaluatedAnswerDTO> botAnswers = _botTurnAnswerGenerator.GenerateAnswers();
 
-            _rounds[roundNumber - 1] = new FakeRound(
+            _rounds.Add(new FakeRound(
                 userAnswers: userAnswers,
-                botAnswers: botAnswers);
+                botAnswers: botAnswers));
 
             int _userTurnCorrectAnswers = userAnswers.Count(answer => answer.IsCorrect);
             int _botTurnCorrectAnswers = botAnswers.Count(answer => answer.IsCorrect);
