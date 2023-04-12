@@ -24,6 +24,7 @@ public class FinishRound : MonoBehaviour
     {
         if(_newRoundData.RoundNumber < 3)
         {
+            Debug.Log("Aumenté la ronda");
             _roundEndedEventContainer.RoundEnded?.Invoke();
             _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.BeginRoundScene);
         }
