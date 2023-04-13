@@ -20,6 +20,13 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
         public int UserPoints => _userPoints;
         public int BotPoints => _botPoints;
 
+        public void Initialize()
+        {
+            _rounds = new List<FakeRound>();
+            _userPoints = 0;
+            _botPoints = 0;
+        }
+
         public void AddRound(List<EvaluatedAnswerDTO> userAnswers, int roundNumber, string initialLetter)
         {
             _botTurnAnswerGenerator = new BotTurnAnswersGenerator(

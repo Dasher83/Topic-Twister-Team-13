@@ -445,22 +445,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1419531115}
     m_Modifications:
-    - target: {fileID: 2336205458114748609, guid: 09627abbf0e0e8e47a4f9639f9997514, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2336205458114748609, guid: 09627abbf0e0e8e47a4f9639f9997514, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2336205458114748609, guid: 09627abbf0e0e8e47a4f9639f9997514, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2336205458114748609, guid: 09627abbf0e0e8e47a4f9639f9997514, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2336205460159787738, guid: 09627abbf0e0e8e47a4f9639f9997514, type: 3}
       propertyPath: m_Name
       value: HomeViewMinimalist
