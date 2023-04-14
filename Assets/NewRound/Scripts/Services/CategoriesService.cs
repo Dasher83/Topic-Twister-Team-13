@@ -2,7 +2,6 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
 
 
-
 namespace TopicTwister.NewRound.Services
 {
     public class CategoriesService : ICategoriesService

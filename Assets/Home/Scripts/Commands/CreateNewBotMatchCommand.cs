@@ -1,5 +1,7 @@
 ﻿using System;
 using TopicTwister.Home.Scripts.Shared.Interfaces;
+using TopicTwister.Home.Shared.Interfaces;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
 
@@ -9,16 +11,18 @@ namespace TopicTwister.Home.Scripts.Commands
     {
         private INewBotMatchPresenter _presenter;
 
+        private ICreateBotMatchService _service;
+
         public INewBotMatchPresenter Presenter { set => _presenter = value; }
 
-        public CreateNewBotMatchCommand()
+        public CreateNewBotMatchCommand(ICreateBotMatchService service)
         {
-            //
+            _service = service;
         }
 
         public void Execute()
         {
-            throw new NotImplementedException();
+            MatchDTO match = _service.Create();
         }
     }
 }
