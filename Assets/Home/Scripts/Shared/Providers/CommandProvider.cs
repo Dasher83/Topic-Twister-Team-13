@@ -10,7 +10,7 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
     {
         private readonly Dictionary<Type, object> _commands = new()
         {
-            { typeof(CreateNewMatchCommand), new CreateNewMatchCommand() }
+            { typeof(CreateNewBotMatchCommand), new CreateNewBotMatchCommand() }
         };
 
         public T Provide()
