@@ -23,5 +23,20 @@ namespace TopicTwister.Shared.DTOs
             _id = id;
             _name = name;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            CategoryDTO other = (CategoryDTO)obj;
+            return this._id == other._id &&
+                this._name == other._name;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_id, _name);
+        }
     }
 }
