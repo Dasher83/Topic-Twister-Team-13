@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TopicTwister.Home.Scripts.Commands;
 using TopicTwister.Home.Services;
+using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.Interfaces;
 
 
@@ -11,10 +12,11 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
     {
         private readonly Dictionary<Type, object> _commands = new()
         {
-            { 
+            {
                 typeof(CreateNewBotMatchCommand),
                     new CreateNewBotMatchCommand(
-                        new CreateBotMatchService()) 
+                        new CreateBotMatchService(
+                            new CreateBotMatchUseCase()))
             }
         };
 

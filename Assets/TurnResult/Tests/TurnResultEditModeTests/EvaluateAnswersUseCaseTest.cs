@@ -5,7 +5,6 @@ using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.TurnResult.UseCases;
 using TopicTwister.TurnResult.Repositories;
-using System.Collections;
 using System.Linq;
 using System;
 
