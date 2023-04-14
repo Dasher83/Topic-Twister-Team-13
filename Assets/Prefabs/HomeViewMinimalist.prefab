@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 2336205458114748612}
   - component: {fileID: 2336205458114748611}
   - component: {fileID: 2336205458114748610}
-  - component: {fileID: 2336205458157130706}
+  - component: {fileID: 8858991521240137077}
   m_Layer: 5
   m_Name: PlayWithBotButton
   m_TagString: Untagged
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2336205458157130706
+--- !u!114 &8858991521240137077
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2336205458114748608}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60d8ce7d4a6f25045a142162785f49cc, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b2bd43ba5d4b644dafbab04cc924c05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _eventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
