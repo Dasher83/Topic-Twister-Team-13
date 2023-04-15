@@ -42,7 +42,7 @@ namespace TopicTwister.Shared.Repositories
 
         public List<MatchDTO> GetAll()
         {
-            string data = Resources.Load<TextAsset>(_matchesResourceName).text;
+            string data = Resources.Load<TextAsset>($"JSON/{_matchesResourceName}").text;
             _matches = JsonUtility.FromJson<MatchesCollection>(data).Matches;
             return _matches.ToList();
         }

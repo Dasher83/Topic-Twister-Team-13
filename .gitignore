@@ -82,5 +82,5 @@ Assets/TextMesh Pro/
 Assets/TextMesh Pro.meta
 
 # Testing jsons
-/[Aa]ssets/[Rr]esources/*.json
-/[Aa]ssets/[Rr]esources/*.json.meta
+/[Aa]ssets/[Rr]esources/JSON/*.json
+/[Aa]ssets/[Rr]esources/JSON/*.json.meta
