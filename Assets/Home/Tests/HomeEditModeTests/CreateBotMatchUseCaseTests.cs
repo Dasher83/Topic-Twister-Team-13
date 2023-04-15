@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using TopicTwister.Home.Shared.Interfaces;
+using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Repositories;
@@ -30,6 +31,10 @@ public class CreateBotMatchUseCaseTests
         #region -- Assert --
         MatchDTO expectedResult = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
         Assert.AreEqual(expectedResult, actualResult);
+        #endregion
+
+        #region -- CleanUp --
+        new MatchesDeleteJson().Delete(id: actualResult.Id);
         #endregion
     }
 }
