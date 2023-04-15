@@ -12,6 +12,21 @@ namespace TopicTwister.Shared.Serialization
     {
         [SerializeField] private MatchDTO[] _matches;
 
-        public List<MatchDTO> Matches => _matches.ToList();
+        public MatchesCollection(MatchDTO[] matches)
+        {
+            _matches = matches;
+        }
+
+        public List<MatchDTO> Matches
+        {
+            get
+            {
+                if( _matches == null )
+                {
+                    return new List<MatchDTO>();
+                }
+                return _matches.ToList();
+            }
+        }
     }
 }

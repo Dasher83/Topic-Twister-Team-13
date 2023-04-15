@@ -1,13 +1,15 @@
 ﻿using System;
+using UnityEngine;
 
 
 namespace TopicTwister.Shared.DTOs
 {
+    [Serializable]
     public class MatchDTO
     {
-        private int _id;
-        private DateTime _startDateTime;
-        private DateTime? _endDateTime;
+        [SerializeField] private int _id;
+        [SerializeField] private DateTime _startDateTime;
+        [SerializeField] private DateTime? _endDateTime;
 
         public int Id => _id;
         public DateTime StartDate => _startDateTime;

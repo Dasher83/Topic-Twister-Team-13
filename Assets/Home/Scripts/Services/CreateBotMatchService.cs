@@ -7,6 +7,7 @@ namespace TopicTwister.Home.Services
     public class CreateBotMatchService : ICreateBotMatchService
     {
         private ICreateBotMatchUseCase _useCase;
+        private const int UserTestId = 1;
 
         public CreateBotMatchService(ICreateBotMatchUseCase useCase)
         {
@@ -15,7 +16,7 @@ namespace TopicTwister.Home.Services
 
         public MatchDTO Create()
         {
-            throw new System.NotImplementedException();
+            return _useCase.Create(userId: UserTestId);
         }
     }
 }

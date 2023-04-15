@@ -80,3 +80,7 @@ crashlytics-build.properties
 DebugExports/
 Assets/TextMesh Pro/
 Assets/TextMesh Pro.meta
+
+# Testing jsons
+/[Aa]ssets/[Rr]esources/*.json
+/[Aa]ssets/[Rr]esources/*.json.meta
