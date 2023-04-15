@@ -4,6 +4,7 @@ using TopicTwister.Home.Scripts.Commands;
 using TopicTwister.Home.Services;
 using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Repositories;
 
 
 namespace TopicTwister.Home.Scripts.Shared.Providers
@@ -16,7 +17,8 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
                 typeof(CreateNewBotMatchCommand),
                     new CreateNewBotMatchCommand(
                         new CreateBotMatchService(
-                            new CreateBotMatchUseCase()))
+                            new CreateBotMatchUseCase(
+                                new MatchesRepositoryJson())))
             }
         };
 
