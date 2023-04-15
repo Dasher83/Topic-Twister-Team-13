@@ -15,7 +15,7 @@ public class EvaluateAnswersUseCaseTest
     [SetUp]
     public void SetUp()
     {
-        _useCase = new EvaluateAnswersUseCase(new WordsRepositoryJson(wordsResourceName: "WordsTest"));
+        _useCase = new EvaluateAnswersUseCase(new WordsRepositoryJson(wordsResourceName: "JSON/TestData/WordsTest"));
     }
 
     [Test]

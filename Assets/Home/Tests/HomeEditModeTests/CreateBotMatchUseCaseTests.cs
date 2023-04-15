@@ -13,7 +13,7 @@ public class CreateBotMatchUseCaseTests
     [SetUp]
     public void Setup()
     {
-        _useCase = new CreateBotMatchUseCase(new MatchesRepositoryJson(matchesResourceName: "MatchesTest"));
+        _useCase = new CreateBotMatchUseCase(new MatchesRepositoryJson(matchesResourceName: "/Test/MatchesTest"));
     }
 
     [Test]

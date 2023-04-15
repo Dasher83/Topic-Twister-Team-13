@@ -22,7 +22,7 @@ namespace TopicTwister.Shared.Repositories
         public MatchesRepositoryJson(string matchesResourceName)
         {
             _matchesResourceName = matchesResourceName;
-            _path = $"{Application.dataPath}/Resources/{_matchesResourceName}.json";
+            _path = $"{Application.dataPath}/Resources/JSON/{_matchesResourceName}.json";
             _matches = GetAll();
             _idGenerator = new MatchesIdGenerator(matchesRepository: this);
         }
