@@ -10,7 +10,7 @@ namespace TopicTwister.NewRound.Repositories
 {
     public class CategoriesRepositoryJson : ICategoryRepository
     {
-        private const string CategoryResourceName = "Category";
+        private const string CategoryResourceName = "JSON/Category";
 
         private readonly List<CategoryDTO> _categories;
 
