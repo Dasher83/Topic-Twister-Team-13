@@ -1,5 +1,6 @@
-using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.NewRound.Shared.Interfaces;
+using TopicTwister.Shared.Interfaces;
 
 
 namespace TopicTwister.NewRound.UseCases

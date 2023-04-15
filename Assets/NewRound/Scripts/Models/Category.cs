@@ -1,6 +1,7 @@
 using System;
-using TopicTwister.NewRound.Shared.DTOs;
+using TopicTwister.Shared.DTOs;
 using UnityEngine;
+
 
 [Serializable]
 public class Category
