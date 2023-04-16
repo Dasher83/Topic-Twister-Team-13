@@ -46,7 +46,7 @@ namespace TopicTwister.Shared.Repositories
         public List<MatchDTO> GetAll()
         {
             string resourceName = $"JSON/{_matchesResourceName}";
-            string data = Resources.Load<TextAsset>(resourceName).text;
+            string data = File.ReadAllText(_path);
             _matches = JsonUtility.FromJson<MatchesCollection>(data).Matches;
             return _matches.ToList();
         }
