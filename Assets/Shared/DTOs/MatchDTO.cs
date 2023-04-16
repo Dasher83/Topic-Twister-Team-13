@@ -8,18 +8,19 @@ namespace TopicTwister.Shared.DTOs
     public class MatchDTO
     {
         [SerializeField] private int _id;
-        [SerializeField] private DateTime _startDateTime;
-        [SerializeField] private DateTime? _endDateTime;
+        [SerializeField] private string _startDateTime;
+        [SerializeField] private string _endDateTime;
 
         public int Id => _id;
-        public DateTime StartDate => _startDateTime;
-        public DateTime? EndDate => _endDateTime;
+
+        public DateTime StartDateTime => DateTime.Parse(_startDateTime);
+        public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
 
         public MatchDTO(int id, DateTime startDateTime, DateTime? endDateTime = null)
         {
             _id = id;
-            _startDateTime = startDateTime;
-            _endDateTime = endDateTime;
+            _startDateTime = startDateTime.ToString("s"); //ISO 8601
+            _endDateTime = endDateTime == null ? null : ((DateTime)endDateTime).ToString("s");
         }
 
         public override bool Equals(object obj)
@@ -29,14 +30,14 @@ namespace TopicTwister.Shared.DTOs
 
             MatchDTO other = (MatchDTO)obj;
 
-            if (other._endDateTime == null && this._endDateTime != null) return false;
-            if (other._endDateTime != null && this._endDateTime == null) return false;
+            if (string.IsNullOrEmpty(other._endDateTime) && !string.IsNullOrEmpty(this._endDateTime)) return false;
+            if (!string.IsNullOrEmpty(other._endDateTime) && string.IsNullOrEmpty(this._endDateTime)) return false;
 
-            TimeSpan startDifference = other._startDateTime - this._startDateTime;
+            TimeSpan startDifference = other.StartDateTime - this.StartDateTime;
 
             return this._id == other._id &&
                 startDifference.TotalSeconds < 1 &&
-                (this._endDateTime == null || ((DateTime)other._endDateTime - (DateTime)this._endDateTime).TotalSeconds < 1);
+                (this._endDateTime == null || ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1);
         }
 
         public override int GetHashCode()
