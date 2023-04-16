@@ -1,7 +1,7 @@
-﻿namespace TopicTwister.Shared.Interfaces
+namespace TopicTwister.Shared.Interfaces
 {
     public interface ISerializer<T>
     {
-        T Serialize(string data);
+        string Serialize(T objectToSerialize);
     }
 }

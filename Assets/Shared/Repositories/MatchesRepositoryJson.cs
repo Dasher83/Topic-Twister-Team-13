@@ -5,6 +5,7 @@ using System.Linq;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Repositories.IdGenerators;
+using TopicTwister.Shared.Serialization.Deserializers;
 using TopicTwister.Shared.Serialization.Serializers;
 using TopicTwister.Shared.Serialization.Shared;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace TopicTwister.Shared.Repositories
             matchesToWriteCache = _matches.ToList();
             matchesToWriteCache.Add(match);
             MatchesCollection collection = new MatchesCollection(matchesToWriteCache.ToArray());
-            string data = JsonUtility.ToJson(collection);
+            string data = new MatchesCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
             MatchDTO newMatch = Get(match.Id);
             return newMatch;
@@ -47,7 +48,7 @@ namespace TopicTwister.Shared.Repositories
         public List<MatchDTO> GetAll()
         {
             string data = File.ReadAllText(_path);
-            _matches = new MatchesCollectionSerializer().Serialize(data).Matches;
+            _matches = new MatchesCollectionDeserializer().Deserialize(data).Matches;
             return _matches.ToList();
         }
 

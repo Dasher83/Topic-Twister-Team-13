@@ -7,12 +7,12 @@ namespace TopicTwister.Shared.Serialization.Serializers
 {
     public class MatchesCollectionSerializer : ISerializer<MatchesCollection>
     {
-        private MatchesCollection _serializedObject;
+        private string _data;
 
-        public MatchesCollection Serialize(string data)
+        public string Serialize(MatchesCollection objectToSerialize)
         {
-            _serializedObject = JsonUtility.FromJson<MatchesCollection>(data);
-            return _serializedObject;
+            _data = JsonUtility.ToJson(objectToSerialize);
+            return _data;
         }
     }
 }
