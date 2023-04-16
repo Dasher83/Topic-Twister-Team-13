@@ -5,6 +5,7 @@ using System.Linq;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Repositories.IdGenerators;
+using TopicTwister.Shared.Serialization.Serializers;
 using TopicTwister.Shared.Serialization.Shared;
 using UnityEngine;
 
@@ -45,9 +46,8 @@ namespace TopicTwister.Shared.Repositories
 
         public List<MatchDTO> GetAll()
         {
-            string resourceName = $"JSON/{_matchesResourceName}";
             string data = File.ReadAllText(_path);
-            _matches = JsonUtility.FromJson<MatchesCollection>(data).Matches;
+            _matches = new MatchesCollectionSerializer().Serialize(data).Matches;
             return _matches.ToList();
         }
 
