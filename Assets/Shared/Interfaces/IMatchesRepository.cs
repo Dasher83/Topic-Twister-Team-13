@@ -8,5 +8,6 @@ namespace TopicTwister.Shared.Interfaces
     {
         MatchDTO Create(int userOneId, int userTwoId);
         List<MatchDTO> GetAll();
+        MatchDTO Get(int id);
     }
 }

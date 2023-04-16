@@ -15,6 +15,7 @@ public class CreateBotMatchUseCaseTests
     public void Setup()
     {
         _useCase = new CreateBotMatchUseCase(new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"));
+        //TODO: recordar inyectar repositorio de UserMatches
     }
 
     [TearDown]
@@ -37,6 +38,7 @@ public class CreateBotMatchUseCaseTests
         #region -- Assert --
         MatchDTO expectedResult = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
         Assert.AreEqual(expectedResult, actualResult);
+        //TODO: utilizar el repositorio de UserMatches para comprobar la existencia de los 2 UserMatches correspondientes
         #endregion
     }
 }

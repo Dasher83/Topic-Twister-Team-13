@@ -15,27 +15,24 @@ namespace TopicTwister.Shared.Repositories
 {
     public class MatchesRepositoryJson : IMatchesRepository
     {
-        private string _matchesResourceName;
         private string _path;
-
         private List<MatchDTO> _matches;
         List<MatchDTO> matchesToWriteCache;
         private IUniqueIdGenerator _idGenerator;
 
         public MatchesRepositoryJson(string matchesResourceName)
         {
-            _matchesResourceName = matchesResourceName;
-            _path = $"{Application.dataPath}/Resources/JSON/{_matchesResourceName}.json";
+            _path = $"{Application.dataPath}/Resources/JSON/{matchesResourceName}.json";
             _matches = GetAll();
             _idGenerator = new MatchesIdGenerator(matchesRepository: this);
         }
 
         public MatchDTO Create(int userOneId, int userTwoId)
         {
+            _matches = GetAll();
             MatchDTO match = new MatchDTO(
                 id: _idGenerator.GetNextId(),
                 startDateTime: DateTime.UtcNow);
-            _matches = GetAll();
             matchesToWriteCache = _matches.ToList();
             matchesToWriteCache.Add(match);
             MatchesCollection collection = new MatchesCollection(matchesToWriteCache.ToArray());
