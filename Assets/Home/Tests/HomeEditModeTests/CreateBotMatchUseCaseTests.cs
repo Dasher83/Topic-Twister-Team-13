@@ -17,6 +17,12 @@ public class CreateBotMatchUseCaseTests
         _useCase = new CreateBotMatchUseCase(new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"));
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        new MatchesDeleteJson().Delete();
+    }
+
     [Test]
     public void Test_happy_path()
     {
@@ -31,10 +37,6 @@ public class CreateBotMatchUseCaseTests
         #region -- Assert --
         MatchDTO expectedResult = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
         Assert.AreEqual(expectedResult, actualResult);
-        #endregion
-
-        #region -- CleanUp --
-        new MatchesDeleteJson().Delete(id: actualResult.Id);
         #endregion
     }
 }

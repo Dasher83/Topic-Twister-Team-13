@@ -17,6 +17,16 @@ namespace TopicTwister.Home.Tests.Utils
             _path = $"{Application.dataPath}/Resources/JSON/TestData/MatchesTest.json";
         }
 
+        public void Delete()
+        {
+            string originalData = Resources.Load<TextAsset>($"JSON/TestData/MatchesTest").text;
+            List<MatchDTO> matches = JsonUtility.FromJson<MatchesCollection>(originalData).Matches;
+            matches.Clear();
+            MatchesCollection collection = new MatchesCollection(matches.ToArray());
+            string newData = JsonUtility.ToJson(collection);
+            File.WriteAllText(this._path, newData);
+        }
+
         public void Delete(int id)
         {
             string originalData = Resources.Load<TextAsset>($"JSON/TestData/MatchesTest").text;

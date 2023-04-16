@@ -17,6 +17,7 @@ namespace TopicTwister.Shared.Repositories
         private string _path;
 
         private List<MatchDTO> _matches;
+        List<MatchDTO> matchesToWriteCache;
         private IUniqueIdGenerator _idGenerator;
 
         public MatchesRepositoryJson(string matchesResourceName)
@@ -33,18 +34,28 @@ namespace TopicTwister.Shared.Repositories
                 id: _idGenerator.GetNextId(),
                 startDateTime: DateTime.UtcNow);
             _matches = GetAll();
-            _matches.Add(match);
-            MatchesCollection collection = new MatchesCollection(_matches.ToArray());
+            matchesToWriteCache = _matches.ToList();
+            matchesToWriteCache.Add(match);
+            MatchesCollection collection = new MatchesCollection(matchesToWriteCache.ToArray());
             string data = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, data);
-            return match;
+            MatchDTO newMatch = Get(match.Id);
+            return newMatch;
         }
 
         public List<MatchDTO> GetAll()
         {
-            string data = Resources.Load<TextAsset>($"JSON/{_matchesResourceName}").text;
+            string resourceName = $"JSON/{_matchesResourceName}";
+            string data = Resources.Load<TextAsset>(resourceName).text;
             _matches = JsonUtility.FromJson<MatchesCollection>(data).Matches;
             return _matches.ToList();
+        }
+
+        public MatchDTO Get(int id)
+        {
+            _matches = GetAll();
+            MatchDTO matchObtained = _matches.SingleOrDefault(match => match.Id == id);
+            return matchObtained;
         }
     }
 }
