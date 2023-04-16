@@ -5,7 +5,7 @@ using TopicTwister.Shared.DTOs;
 using UnityEngine;
 
 
-namespace TopicTwister.Shared.Serialization
+namespace TopicTwister.Shared.Serialization.Shared
 {
     [Serializable]
     public class MatchesCollection

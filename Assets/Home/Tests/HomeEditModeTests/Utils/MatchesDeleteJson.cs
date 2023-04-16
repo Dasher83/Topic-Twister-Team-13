@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TopicTwister.Shared.DTOs;
-using TopicTwister.Shared.Serialization;
+using TopicTwister.Shared.Serialization.Shared;
 using UnityEngine;
 
 
