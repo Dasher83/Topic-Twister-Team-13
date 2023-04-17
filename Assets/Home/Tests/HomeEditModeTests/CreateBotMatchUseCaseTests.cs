@@ -4,41 +4,56 @@ using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Repositories;
 
 
 public class CreateBotMatchUseCaseTests
 {
     private ICreateBotMatchUseCase _useCase;
+    private IUserMatchesRepository _userMatchesRepository;
 
     [SetUp]
     public void Setup()
     {
-        _useCase = new CreateBotMatchUseCase(new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"));
-        //TODO: recordar inyectar repositorio de UserMatches
+        _userMatchesRepository = new UserMatchesRepositoryJson(userMatchesResourceName: "TestData/UserMatchesTest");
+        _useCase = new CreateBotMatchUseCase(
+            new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"),
+            _userMatchesRepository);
     }
 
     [TearDown]
     public void TearDown()
     {
         new MatchesDeleteJson().Delete();
+        new UserMatchesDeleteJson().Delete();
     }
 
     [Test]
     public void Test_happy_path()
     {
         #region -- Arrange --
-        int idUser = 1;
+        int userId = 1;
+        int botId = 2;
         #endregion
 
         #region -- Act --
-        MatchDTO actualResult = _useCase.Create(idUser);
+        MatchDTO actualResult = _useCase.Create(userId);
         #endregion
 
         #region -- Assert --
-        MatchDTO expectedResult = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
-        Assert.AreEqual(expectedResult, actualResult);
-        //TODO: utilizar el repositorio de UserMatches para comprobar la existencia de los 2 UserMatches correspondientes
+        MatchDTO expectedMatch = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
+        Assert.AreEqual(expectedMatch, actualResult);
+
+        UserMatchDTO expectedUserMatch = new UserMatchDTO(
+            score: 0, isWinner: false, hasInitiative: true, userId: userId, matchId: expectedMatch.Id);
+        UserMatchDTO actualUserMatch = _userMatchesRepository.Get(userId: userId, matchId: expectedMatch.Id);
+        Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
+
+        expectedUserMatch = new UserMatchDTO(
+            score: 0, isWinner: false, hasInitiative: false, userId: botId, matchId: expectedMatch.Id);
+        actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id);
+        Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         #endregion
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Serialization.Deserializers;
+using TopicTwister.Shared.Serialization.Serializers;
+using TopicTwister.Shared.Serialization.Shared;
 using UnityEngine;
 
 
@@ -13,27 +15,35 @@ namespace TopicTwister.Shared.Repositories
     {
         private string _path;
         private List<UserMatchDTO> _userMatches;
-        List<UserMatchDTO> matchesToWriteCache; //TODO : cambiar nombre
+        private List<UserMatchDTO> _userMatchesToWriteCache;
 
-        public UserMatchesRepositoryJson(string matchesResourceName)
+        public UserMatchesRepositoryJson(string userMatchesResourceName)
         {
-            _path = $"{Application.dataPath}/Resources/JSON/{matchesResourceName}.json";
+            _path = $"{Application.dataPath}/Resources/JSON/{userMatchesResourceName}.json";
             _userMatches = GetAll();
         }
 
-        public UserMatchDTO Create(int userId, int matchId)
+        public UserMatchDTO Create(int userId, int matchId, bool hasInitiative)
         {
             _userMatches = GetAll();
             UserMatchDTO userMatch = new UserMatchDTO(
-                score: 0, isWinner: false, hasInitiative: true,
+                score: 0, isWinner: false, hasInitiative: hasInitiative,
                 userId: userId, matchId: matchId);
-            //TODO: Continuar aca mirando como referencia el repositorio de matches 
-            return userMatch; //Esto es de borrador, no deberia devolverse esta variable, deberia devolverse una nueva variable traida de la bbdd
+            _userMatchesToWriteCache = _userMatches.ToList();
+            _userMatchesToWriteCache.Add(userMatch);
+            UserMatchesCollection collection = new UserMatchesCollection(_userMatchesToWriteCache.ToArray());
+            string data = new UserMatchesCollectionSerializer().Serialize(collection);
+            File.WriteAllText(this._path, data);
+            UserMatchDTO newUserMatch = Get(userId, matchId);
+            return newUserMatch;
         }
 
         public UserMatchDTO Get(int userId, int matchId)
         {
-            throw new System.NotImplementedException();
+            _userMatches = GetAll();
+            UserMatchDTO userMatchObtained = _userMatches.SingleOrDefault(
+                userMatch => userMatch.UserId == userId && userMatch.MatchId == matchId);
+            return userMatchObtained;
         }
 
         public List<UserMatchDTO> GetAll()

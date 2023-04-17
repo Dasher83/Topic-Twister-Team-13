@@ -18,7 +18,8 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
                     new CreateNewBotMatchCommand(
                         new CreateBotMatchService(
                             new CreateBotMatchUseCase(
-                                new MatchesRepositoryJson(matchesResourceName: "Matches"))))
+                                new MatchesRepositoryJson(matchesResourceName: "Matches"),
+                                new UserMatchesRepositoryJson(userMatchesResourceName: "UserMatches"))))
             }
         };
 
