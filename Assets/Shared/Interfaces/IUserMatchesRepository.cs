@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TopicTwister.Shared.Models;
 using TopicTwister.Shared.DTOs;
 
 
@@ -8,6 +9,6 @@ namespace TopicTwister.Shared.Interfaces
     {
         UserMatchDTO Create(int userId, int matchId, bool hasInitiative);
         UserMatchDTO Get(int userId, int matchId);
-        List<UserMatchDTO> GetAll();
+        List<UserMatch> GetAll();
     }
 }

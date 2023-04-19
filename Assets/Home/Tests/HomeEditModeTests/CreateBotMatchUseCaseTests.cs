@@ -16,7 +16,10 @@ public class CreateBotMatchUseCaseTests
     [SetUp]
     public void Setup()
     {
-        _userMatchesRepository = new UserMatchesRepositoryJson(userMatchesResourceName: "TestData/UserMatchesTest");
+        _userMatchesRepository = new UserMatchesRepositoryJson(
+            userMatchesResourceName: "TestData/UserMatchesTest",
+            matchesRepository: new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest")
+            );
         _useCase = new CreateBotMatchUseCase(
             new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"),
             _userMatchesRepository);

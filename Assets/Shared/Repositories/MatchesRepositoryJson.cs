@@ -18,7 +18,7 @@ namespace TopicTwister.Shared.Repositories
     {
         private string _path;
         private List<MatchDTO> _matchesReadCache;
-        List<MatchDTO> matchesWriteCache;
+        private List<MatchDTO> matchesWriteCache;
         private IUniqueIdGenerator _idGenerator;
         private MatchMapper _mapper;
 

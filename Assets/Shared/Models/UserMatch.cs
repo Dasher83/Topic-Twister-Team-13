@@ -1,37 +1,29 @@
 ﻿using System;
-using UnityEngine;
 
 
-namespace TopicTwister.Shared.DTOs
+namespace TopicTwister.Shared.Models
 {
-    [Serializable]
-    public class UserMatchDTO
+    public class UserMatch
     {
-        [SerializeField]
         private int _score;
-        [SerializeField]
         private bool _isWinner;
-        [SerializeField]
         private bool _hasInitiative;
-
-        [SerializeField]
         private int _userId;
-        [SerializeField]
-        private int _matchId;
+        private Match _match;
 
         public int Score => _score;
         public bool IsWinner => _isWinner;
         public bool HasInitiative => _hasInitiative;
         public int UserId => _userId;
-        public int MatchId => _matchId;
+        public Match Match => _match;
 
-        public UserMatchDTO(int score, bool isWinner, bool hasInitiative, int userId, int matchId)
+        public UserMatch(int score, bool isWinner, bool hasInitiative, int userId, Match match)
         {
             _score = score;
             _isWinner = isWinner;
             _hasInitiative = hasInitiative;
             _userId = userId;
-            _matchId = matchId;
+            _match = match;
         }
 
         public override bool Equals(object obj)
@@ -39,10 +31,10 @@ namespace TopicTwister.Shared.DTOs
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            UserMatchDTO other = (UserMatchDTO)obj;
+            UserMatch other = (UserMatch)obj;
 
             return _userId == other._userId &&
-                _matchId == other._matchId &&
+                _match == other._match &&
                 _score == other._score &&
                 _isWinner == other._isWinner &&
                 _hasInitiative == other._hasInitiative;
@@ -50,7 +42,7 @@ namespace TopicTwister.Shared.DTOs
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_userId, _matchId, _score, _isWinner, _hasInitiative);
+            return HashCode.Combine(_userId, _match, _score, _isWinner, _hasInitiative);
         }
     }
 }
