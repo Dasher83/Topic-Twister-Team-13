@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Models;
 
 
 namespace TopicTwister.Shared.Repositories.IdGenerators
@@ -11,7 +11,7 @@ namespace TopicTwister.Shared.Repositories.IdGenerators
     {
         private int _currentId;
         private IMatchesRepository _matchesRepository;
-        private List<MatchDTO> _matches;
+        private List<Match> _matches;
 
         public MatchesIdGenerator(IMatchesRepository matchesRepository)
         {

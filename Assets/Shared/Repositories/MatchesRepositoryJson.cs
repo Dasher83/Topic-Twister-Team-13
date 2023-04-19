@@ -25,14 +25,14 @@ namespace TopicTwister.Shared.Repositories
         public MatchesRepositoryJson(string matchesResourceName)
         {
             _path = $"{Application.dataPath}/Resources/JSON/{matchesResourceName}.json";
-            _matchesReadCache = GetAll();
-            _idGenerator = new MatchesIdGenerator(matchesRepository: this);
             _mapper = new MatchMapper();
+            _matchesReadCache = _mapper.ToDTOs(GetAll());
+            _idGenerator = new MatchesIdGenerator(matchesRepository: this);
         }
 
         public Match Persist(Match match)
         {
-            _matchesReadCache = GetAll();
+            _matchesReadCache = _mapper.ToDTOs(GetAll());
             matchesWriteCache = _matchesReadCache.ToList();
             MatchDTO matchDto = _mapper.ToDTO(match);
 
@@ -47,16 +47,17 @@ namespace TopicTwister.Shared.Repositories
             return Get(matchDto.Id); // TODO atrapar excepciones de negocio personalizadas y relanzar desconocidas
         }
 
-        public List<MatchDTO> GetAll()
+        public List<Match> GetAll()
         {
             string data = File.ReadAllText(_path);
             _matchesReadCache = new MatchesCollectionDeserializer().Deserialize(data).Matches;
-            return _matchesReadCache.ToList();
+            List<Match> matches = _mapper.FromDTOs(_matchesReadCache.ToList());
+            return matches;
         }
 
         public Match Get(int id)
         {
-            _matchesReadCache = GetAll();
+            _matchesReadCache = _mapper.ToDTOs(GetAll());
             MatchDTO matchDTO = _matchesReadCache.SingleOrDefault(match => match.Id == id);
             Match match = _mapper.FromDTO(matchDTO);
             return match;
