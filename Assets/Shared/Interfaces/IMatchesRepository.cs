@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.Models;
 
 
 namespace TopicTwister.Shared.Interfaces
 {
     public interface IMatchesRepository
     {
-        MatchDTO Create(int userOneId, int userTwoId);
+        Match Persist(Match match);
         List<MatchDTO> GetAll();
-        MatchDTO Get(int id);
+        Match Get(int id);
     }
 }
