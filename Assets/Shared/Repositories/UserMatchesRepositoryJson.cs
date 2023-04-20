@@ -4,6 +4,7 @@ using System.Linq;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Repositories.Exceptions;
 using TopicTwister.Shared.Serialization.Deserializers;
 using TopicTwister.Shared.Serialization.Serializers;
 using TopicTwister.Shared.Serialization.Shared;
@@ -38,7 +39,15 @@ namespace TopicTwister.Shared.Repositories
             UserMatchesCollection collection = new UserMatchesCollection(_userMatchesWriteCache.ToArray());
             string data = new UserMatchesCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
-            UserMatch newUserMatch = Get(userId: userMatch.UserId, matchId: userMatch.Match.Id);
+            UserMatch newUserMatch;
+            try
+            {
+                newUserMatch = Get(userId: userMatch.UserId, matchId: userMatch.Match.Id);
+            }
+            catch (UserMatchNotFoundByRepositoryException)
+            {
+                throw new UserMatchNotPersistedByRepositoryException();
+            }
             return newUserMatch;
         }
 
@@ -47,6 +56,10 @@ namespace TopicTwister.Shared.Repositories
             _userMatchesReadCache = _mapper.ToDTOs(GetAll());
             UserMatchDTO userMatchObtained = _userMatchesReadCache.SingleOrDefault(
                 userMatch => userMatch.UserId == userId && userMatch.MatchId == matchId);
+            if (userMatchObtained == null)
+            {
+                throw new UserMatchNotFoundByRepositoryException(message: $"userId '{userId}' matchId '{matchId}'");
+            }
             UserMatch userMatch = _mapper.FromDTO(userMatchObtained);
             return userMatch;
         }

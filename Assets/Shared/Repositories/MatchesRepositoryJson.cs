@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TopicTwister.Shared.Repositories.Exceptions;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
-using TopicTwister.Shared.Repositories.Exceptions;
 using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.Serialization.Deserializers;
 using TopicTwister.Shared.Serialization.Serializers;
@@ -45,7 +45,14 @@ namespace TopicTwister.Shared.Repositories
             MatchesCollection collection = new MatchesCollection(matchesWriteCache.ToArray());
             string data = new MatchesCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
-            return Get(matchDto.Id); // TODO atrapar excepciones de negocio personalizadas y relanzar desconocidas
+            try
+            {
+                return Get(matchDto.Id);
+            }
+            catch (MatchNotFoundByRespositoryException)
+            {
+                throw new MatchNotPersistedByRepositoryException();
+            }
         }
 
         public List<Match> GetAll()
@@ -60,6 +67,10 @@ namespace TopicTwister.Shared.Repositories
         {
             _matchesReadCache = _mapper.ToDTOs(GetAll());
             MatchDTO matchDTO = _matchesReadCache.SingleOrDefault(match => match.Id == id);
+            if(matchDTO == null)
+            {
+                throw new MatchNotFoundByRespositoryException();
+            }
             Match match = _mapper.FromDTO(matchDTO);
             return match;
         }

@@ -39,7 +39,14 @@ namespace TopicTwister.Home.UseCases
             }
 
             Match match = new Match();
-            match = _matchesRepository.Persist(match);
+            try
+            {
+                match = _matchesRepository.Persist(match);
+            }
+            catch (MatchNotPersistedByRepositoryException ex)
+            {
+                throw new MatchNotCreatedInUseCaseException(inner: ex);
+            }
 
             UserMatch userMatch = new UserMatch(
                 score: 0,
@@ -48,7 +55,15 @@ namespace TopicTwister.Home.UseCases
                 userId: userId,
                 match: match);
 
-            _userMatchesRepository.Persist(userMatch);
+            try
+            {
+                _userMatchesRepository.Persist(userMatch);
+            }
+            catch(UserMatchNotPersistedByRepositoryException ex)
+            {
+                //TODO : borrar match 
+                throw new MatchNotCreatedInUseCaseException(inner: ex);
+            }
 
             userMatch = new UserMatch(
                 score: 0,
@@ -57,7 +72,15 @@ namespace TopicTwister.Home.UseCases
                 userId: BotId,
                 match: match);
 
-            _userMatchesRepository.Persist(userMatch);
+            try
+            {
+                _userMatchesRepository.Persist(userMatch);
+            }
+            catch (UserMatchNotPersistedByRepositoryException ex)
+            {
+                //TODO : borrar match 
+                throw new MatchNotCreatedInUseCaseException(inner: ex);
+            }
 
             return _mapper.ToDTO(match);
         }
