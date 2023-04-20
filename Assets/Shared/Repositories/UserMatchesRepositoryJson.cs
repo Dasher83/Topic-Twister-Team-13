@@ -29,18 +29,16 @@ namespace TopicTwister.Shared.Repositories
             _userMatchesReadCache = _mapper.ToDTOs(GetAll());
         }
 
-        public UserMatchDTO Create(int userId, int matchId, bool hasInitiative)
+        public UserMatch Persist(UserMatch userMatch)
         {
             _userMatchesReadCache = _mapper.ToDTOs(GetAll());
-            UserMatchDTO userMatch = new UserMatchDTO(
-                score: 0, isWinner: false, hasInitiative: hasInitiative,
-                userId: userId, matchId: matchId);
             _userMatchesWriteCache = _userMatchesReadCache.ToList();
-            _userMatchesWriteCache.Add(userMatch);
+            UserMatchDTO userMatchDTO = _mapper.ToDTO(userMatch);
+            _userMatchesWriteCache.Add(userMatchDTO);
             UserMatchesCollection collection = new UserMatchesCollection(_userMatchesWriteCache.ToArray());
             string data = new UserMatchesCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
-            UserMatchDTO newUserMatch = _mapper.ToDTO(Get(userId, matchId));
+            UserMatch newUserMatch = Get(userId: userMatch.UserId, matchId: userMatch.Match.Id);
             return newUserMatch;
         }
 

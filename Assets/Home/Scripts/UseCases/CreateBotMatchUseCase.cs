@@ -25,8 +25,25 @@ namespace TopicTwister.Home.UseCases
         {
             Match match = new Match();
             match = _matchesRepository.Persist(match);
-            _userMatchesRepository.Create(userId: userId, matchId: match.Id, hasInitiative: true);
-            _userMatchesRepository.Create(userId: BotId, matchId: match.Id, hasInitiative: false);
+
+            UserMatch userMatch = new UserMatch(
+                score: 0,
+                isWinner: false,
+                hasInitiative: true,
+                userId: userId,
+                match: match);
+
+            _userMatchesRepository.Persist(userMatch);
+
+            userMatch = new UserMatch(
+                score: 0,
+                isWinner: false,
+                hasInitiative: false,
+                userId: BotId,
+                match: match);
+
+            _userMatchesRepository.Persist(userMatch);
+
             return _mapper.ToDTO(match);
         }
     }
