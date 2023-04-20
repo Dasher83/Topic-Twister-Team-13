@@ -3,6 +3,7 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Repositories.Exceptions;
 
 
 namespace TopicTwister.Home.UseCases
@@ -11,18 +12,32 @@ namespace TopicTwister.Home.UseCases
     {
         private IMatchesRepository _matchesRepository;
         private IUserMatchesRepository _userMatchesRepository;
+        private IUserRepository _userRepository;
         private const int BotId = 2;
         private MatchMapper _mapper;
 
-        public CreateBotMatchUseCase(IMatchesRepository matchesRepository, IUserMatchesRepository userMatchesRepository)
+        public CreateBotMatchUseCase(
+            IMatchesRepository matchesRepository,
+            IUserMatchesRepository userMatchesRepository,
+            IUserRepository userRespository)
         {
             _matchesRepository = matchesRepository;
             _userMatchesRepository = userMatchesRepository;
+            _userRepository = userRespository;
             _mapper = new MatchMapper();
         }
 
         public MatchDTO Create(int userId)
         {
+            try
+            {
+                _userRepository.Get(userId);
+            }
+            catch (UserNotFoundByRepositoryException)
+            {
+                throw new UserNotFoundInUseCaseException(message: $"userId: {userId}");
+            }
+
             Match match = new Match();
             match = _matchesRepository.Persist(match);
 

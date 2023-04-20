@@ -5,6 +5,7 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Repositories.Exceptions;
 using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.Serialization.Deserializers;
 using TopicTwister.Shared.Serialization.Serializers;

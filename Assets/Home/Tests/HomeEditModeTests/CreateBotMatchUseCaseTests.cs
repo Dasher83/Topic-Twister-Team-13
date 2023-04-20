@@ -25,7 +25,8 @@ public class CreateBotMatchUseCaseTests
             );
         _useCase = new CreateBotMatchUseCase(
             new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"),
-            _userMatchesRepository);
+            _userMatchesRepository,
+            userRespository: new UserRepositoryInMemory());
         _mapper = new MatchMapper();
     }
 
@@ -37,7 +38,7 @@ public class CreateBotMatchUseCaseTests
     }
 
     [Test]
-    public void Test_happy_path()
+    public void Test_ok_creation_and_persistance_of_match_and_usermatches()
     {
         #region -- Arrange --
         int userId = 1;
