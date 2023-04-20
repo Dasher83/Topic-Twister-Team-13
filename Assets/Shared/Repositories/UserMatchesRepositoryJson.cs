@@ -40,16 +40,17 @@ namespace TopicTwister.Shared.Repositories
             UserMatchesCollection collection = new UserMatchesCollection(_userMatchesWriteCache.ToArray());
             string data = new UserMatchesCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
-            UserMatchDTO newUserMatch = Get(userId, matchId);
+            UserMatchDTO newUserMatch = _mapper.ToDTO(Get(userId, matchId));
             return newUserMatch;
         }
 
-        public UserMatchDTO Get(int userId, int matchId)
+        public UserMatch Get(int userId, int matchId)
         {
             _userMatchesReadCache = _mapper.ToDTOs(GetAll());
             UserMatchDTO userMatchObtained = _userMatchesReadCache.SingleOrDefault(
                 userMatch => userMatch.UserId == userId && userMatch.MatchId == matchId);
-            return userMatchObtained;
+            UserMatch userMatch = _mapper.FromDTO(userMatchObtained);
+            return userMatch;
         }
 
         public List<UserMatch> GetAll()

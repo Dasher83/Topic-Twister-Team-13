@@ -42,7 +42,7 @@ namespace TopicTwister.Shared.Models
 
             return this._id == other._id &&
                 startDifference.TotalSeconds < 1 &&
-                (this._endDateTime == null || ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1);
+                (string.IsNullOrEmpty(this._endDateTime) || ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1);
         }
 
         public override int GetHashCode()

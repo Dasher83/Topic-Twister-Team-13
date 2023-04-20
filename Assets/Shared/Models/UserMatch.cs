@@ -34,7 +34,7 @@ namespace TopicTwister.Shared.Models
             UserMatch other = (UserMatch)obj;
 
             return _userId == other._userId &&
-                _match == other._match &&
+                _match.Equals(other._match) &&
                 _score == other._score &&
                 _isWinner == other._isWinner &&
                 _hasInitiative == other._hasInitiative;

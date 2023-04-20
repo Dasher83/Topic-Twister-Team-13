@@ -5,6 +5,8 @@ using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
+using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 
 
@@ -12,6 +14,7 @@ public class CreateBotMatchUseCaseTests
 {
     private ICreateBotMatchUseCase _useCase;
     private IUserMatchesRepository _userMatchesRepository;
+    private MatchMapper _mapper;
 
     [SetUp]
     public void Setup()
@@ -23,6 +26,7 @@ public class CreateBotMatchUseCaseTests
         _useCase = new CreateBotMatchUseCase(
             new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"),
             _userMatchesRepository);
+        _mapper = new MatchMapper();
     }
 
     [TearDown]
@@ -48,13 +52,13 @@ public class CreateBotMatchUseCaseTests
         MatchDTO expectedMatch = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
         Assert.AreEqual(expectedMatch, actualResult);
 
-        UserMatchDTO expectedUserMatch = new UserMatchDTO(
-            score: 0, isWinner: false, hasInitiative: true, userId: userId, matchId: expectedMatch.Id);
-        UserMatchDTO actualUserMatch = _userMatchesRepository.Get(userId: userId, matchId: expectedMatch.Id);
+        UserMatch expectedUserMatch = new UserMatch(
+            score: 0, isWinner: false, hasInitiative: true, userId: userId, match: _mapper.FromDTO(expectedMatch));
+        UserMatch actualUserMatch = _userMatchesRepository.Get(userId: userId, matchId: expectedMatch.Id);
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
 
-        expectedUserMatch = new UserMatchDTO(
-            score: 0, isWinner: false, hasInitiative: false, userId: botId, matchId: expectedMatch.Id);
+        expectedUserMatch = new UserMatch(
+            score: 0, isWinner: false, hasInitiative: false, userId: botId, match: _mapper.FromDTO(expectedMatch));
         actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id);
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         #endregion
