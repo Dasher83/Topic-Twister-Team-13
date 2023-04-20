@@ -9,5 +9,6 @@ namespace TopicTwister.Shared.Interfaces
         Match Persist(Match match);
         List<Match> GetAll();
         Match Get(int id);
+        void Delete(int id);
     }
 }

@@ -19,7 +19,7 @@ namespace TopicTwister.Shared.Repositories
     {
         private string _path;
         private List<MatchDTO> _matchesReadCache;
-        private List<MatchDTO> matchesWriteCache;
+        private List<MatchDTO> _matchesWriteCache;
         private IUniqueIdGenerator _idGenerator;
         private MatchMapper _mapper;
 
@@ -34,15 +34,15 @@ namespace TopicTwister.Shared.Repositories
         public Match Persist(Match match)
         {
             _matchesReadCache = _mapper.ToDTOs(GetAll());
-            matchesWriteCache = _matchesReadCache.ToList();
+            _matchesWriteCache = _matchesReadCache.ToList();
             MatchDTO matchDto = _mapper.ToDTO(match);
 
             matchDto = new MatchDTO(id: _idGenerator.GetNextId(),
                 startDateTime: matchDto.StartDateTime,
                 endDateTime: matchDto.EndDateTime);
 
-            matchesWriteCache.Add(matchDto);
-            MatchesCollection collection = new MatchesCollection(matchesWriteCache.ToArray());
+            _matchesWriteCache.Add(matchDto);
+            MatchesCollection collection = new MatchesCollection(_matchesWriteCache.ToArray());
             string data = new MatchesCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
             try
@@ -73,6 +73,16 @@ namespace TopicTwister.Shared.Repositories
             }
             Match match = _mapper.FromDTO(matchDTO);
             return match;
+        }
+
+        public void Delete(int id)
+        {
+            MatchDTO matchToDelete = _mapper.ToDTO(Get(id));
+            _matchesWriteCache = _matchesReadCache.ToList();
+            _matchesWriteCache.Remove(matchToDelete);
+            MatchesCollection collection = new MatchesCollection(_matchesWriteCache.ToArray());
+            string newData = JsonUtility.ToJson(collection);
+            File.WriteAllText(this._path, newData);
         }
     }
 }

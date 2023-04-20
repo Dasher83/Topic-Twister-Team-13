@@ -61,7 +61,7 @@ namespace TopicTwister.Home.UseCases
             }
             catch(UserMatchNotPersistedByRepositoryException ex)
             {
-                //TODO : borrar match 
+                _matchesRepository.Delete(match.Id);
                 throw new MatchNotCreatedInUseCaseException(inner: ex);
             }
 
@@ -78,7 +78,7 @@ namespace TopicTwister.Home.UseCases
             }
             catch (UserMatchNotPersistedByRepositoryException ex)
             {
-                //TODO : borrar match 
+                _matchesRepository.Delete(match.Id);
                 throw new MatchNotCreatedInUseCaseException(inner: ex);
             }
 
