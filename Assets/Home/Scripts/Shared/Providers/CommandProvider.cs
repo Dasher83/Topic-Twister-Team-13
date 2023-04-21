@@ -4,6 +4,7 @@ using TopicTwister.Home.Scripts.Commands;
 using TopicTwister.Home.Services;
 using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Repositories;
 
 
@@ -23,7 +24,8 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
                                 new UserMatchesRepositoryJson(
                                     userMatchesResourceName: "UserMatches",
                                     matchesRepository: new MatchesRepositoryJson(matchesResourceName: "Matches")),
-                                new UserRepositoryInMemory())))
+                                new UserRepositoryInMemory(),
+                                new MatchDtoMapper())))
             }
         };
 

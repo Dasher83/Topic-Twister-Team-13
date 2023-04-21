@@ -21,7 +21,7 @@ namespace TopicTwister.Shared.Repositories
         private List<MatchDaoJson> _matchesReadCache;
         private List<MatchDaoJson> _matchesWriteCache;
         private IUniqueIdGenerator _idGenerator;
-        private IMatchDaoMapper _mapper;
+        private IdaoMapper<Match, MatchDaoJson> _mapper;
 
         public MatchesRepositoryJson(string matchesResourceName)
         {

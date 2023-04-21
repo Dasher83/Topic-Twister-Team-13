@@ -7,7 +7,7 @@ using TopicTwister.Shared.Models;
 
 namespace TopicTwister.Shared.Mappers
 {
-    public class MatchDaoJsonMapper : IMatchDaoMapper
+    public class MatchDaoJsonMapper : IdaoMapper<Match, MatchDaoJson>
     {
         public Match FromDAO(MatchDaoJson matchDAO)
         {

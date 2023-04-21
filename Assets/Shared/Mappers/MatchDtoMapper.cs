@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 
 
 namespace TopicTwister.Shared.Mappers
 {
-    public class MatchDtoMapper
+    public class MatchDtoMapper: IdtoMapper<Match, MatchDTO>
     {
         public MatchDTO ToDTO(Match match)
         {

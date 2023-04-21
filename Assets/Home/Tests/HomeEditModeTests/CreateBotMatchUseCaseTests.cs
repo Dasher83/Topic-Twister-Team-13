@@ -14,7 +14,7 @@ public class CreateBotMatchUseCaseTests
 {
     private ICreateBotMatchUseCase _useCase;
     private IUserMatchesRepository _userMatchesRepository;
-    private MatchDtoMapper _mapper;
+    private IdtoMapper<Match, MatchDTO> _mapper;
 
     [SetUp]
     public void Setup()
@@ -23,11 +23,12 @@ public class CreateBotMatchUseCaseTests
             userMatchesResourceName: "TestData/UserMatchesTest",
             matchesRepository: new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest")
             );
+        _mapper = new MatchDtoMapper();
         _useCase = new CreateBotMatchUseCase(
             new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"),
             _userMatchesRepository,
-            userRespository: new UserRepositoryInMemory());
-        _mapper = new MatchDtoMapper();
+            userRespository: new UserRepositoryInMemory(),
+            mapper: _mapper);
     }
 
     [TearDown]

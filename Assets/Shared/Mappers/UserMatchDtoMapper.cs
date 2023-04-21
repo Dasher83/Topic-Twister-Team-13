@@ -7,7 +7,7 @@ using TopicTwister.Shared.Models;
 
 namespace TopicTwister.Shared.Mappers
 {
-    public class UserMatchDtoMapper
+    public class UserMatchDtoMapper: IdtoMapper<UserMatch, UserMatchDTO>
     {
         private IMatchesRepository _matchesRepository;
 

@@ -19,7 +19,7 @@ namespace TopicTwister.Shared.Repositories
         private string _path;
         private List<UserMatchDaoJson> _userMatchesWriteCache;
         private List<UserMatchDaoJson> _userMatchesReadCache;
-        private IUserMatchDaoMapper _mapper;
+        private IdaoMapper<UserMatch, UserMatchDaoJson> _mapper;
         private IMatchesRepository _matchRepository;
 
         public UserMatchesRepositoryJson(string userMatchesResourceName, IMatchesRepository matchesRepository)
