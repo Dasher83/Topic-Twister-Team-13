@@ -8,7 +8,7 @@ using TopicTwister.Shared.Repositories.Exceptions;
 using TopicTwister.Shared.Serialization.Deserializers;
 using TopicTwister.Shared.Serialization.Serializers;
 using TopicTwister.Shared.Serialization.Shared;
-using TopicTwister.SharedMappers;
+using TopicTwister.Shared.Mappers;
 using UnityEngine;
 
 
@@ -19,13 +19,13 @@ namespace TopicTwister.Shared.Repositories
         private string _path;
         private List<UserMatchDTO> _userMatchesWriteCache;
         private List<UserMatchDTO> _userMatchesReadCache;
-        private UserMatchMapper _mapper;
+        private UserMatchDtoMapper _mapper;
         private IMatchesRepository _matchRepository;
 
         public UserMatchesRepositoryJson(string userMatchesResourceName, IMatchesRepository matchesRepository)
         {
             _matchRepository = matchesRepository;
-            _mapper = new UserMatchMapper(matchesRepository: _matchRepository);
+            _mapper = new UserMatchDtoMapper(matchesRepository: _matchRepository);
             _path = $"{Application.dataPath}/Resources/JSON/{userMatchesResourceName}.json";
             _userMatchesReadCache = _mapper.ToDTOs(GetAll());
         }

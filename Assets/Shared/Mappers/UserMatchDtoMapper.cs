@@ -5,13 +5,13 @@ using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 
 
-namespace TopicTwister.SharedMappers
+namespace TopicTwister.Shared.Mappers
 {
-    public class UserMatchMapper
+    public class UserMatchDtoMapper
     {
         private IMatchesRepository _matchesRepository;
 
-        public UserMatchMapper(IMatchesRepository matchesRepository)
+        public UserMatchDtoMapper(IMatchesRepository matchesRepository)
         {
             _matchesRepository = matchesRepository;
         }

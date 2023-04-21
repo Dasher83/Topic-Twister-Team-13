@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace TopicTwister.Shared.Serialization.Serializers
 {
-    public class MatchesCollectionSerializer : ISerializer<MatchesCollection>
+    public class MatchesDaoCollectionSerializer : ISerializer<MatchesDaoCollection>
     {
         private string _data;
 
-        public string Serialize(MatchesCollection objectToSerialize)
+        public string Serialize(MatchesDaoCollection objectToSerialize)
         {
             _data = JsonUtility.ToJson(objectToSerialize);
             return _data;

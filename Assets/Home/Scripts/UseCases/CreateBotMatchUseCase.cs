@@ -14,7 +14,7 @@ namespace TopicTwister.Home.UseCases
         private IUserMatchesRepository _userMatchesRepository;
         private IUserRepository _userRepository;
         private const int BotId = 2;
-        private MatchMapper _mapper;
+        private MatchDtoMapper _mapper;
 
         public CreateBotMatchUseCase(
             IMatchesRepository matchesRepository,
@@ -24,7 +24,7 @@ namespace TopicTwister.Home.UseCases
             _matchesRepository = matchesRepository;
             _userMatchesRepository = userMatchesRepository;
             _userRepository = userRespository;
-            _mapper = new MatchMapper();
+            _mapper = new MatchDtoMapper();
         }
 
         public MatchDTO Create(int userId)

@@ -6,7 +6,7 @@ using TopicTwister.Shared.Models;
 
 namespace TopicTwister.Shared.Mappers
 {
-    public class MatchMapper
+    public class MatchDtoMapper
     {
         public MatchDTO ToDTO(Match match)
         {
