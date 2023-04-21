@@ -1,3 +1,4 @@
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using TopicTwister.Home.Shared.Interfaces;
@@ -64,5 +65,25 @@ public class CreateBotMatchUseCaseTests
         actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id);
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         #endregion
+
+        //Create:
+        var calculator = Substitute.For<ICalculator>();
+
+        //Set a return value:
+        calculator.Add(1, 2).Returns(3);
+        Assert.AreEqual(3, calculator.Add(1, 2));
+
+        //Check received calls:
+        calculator.Received().Add(1, Arg.Any<int>());
+        calculator.DidNotReceive().Add(2, 2);
+
+        //Raise events
+        calculator.PoweringUp += Raise.Event();
+    }
+
+    public interface ICalculator
+    {
+        int Add(int a, int b);
+        event EventHandler PoweringUp;
     }
 }
