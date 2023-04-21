@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Serialization.Shared;
 using UnityEngine;
 
@@ -20,20 +20,20 @@ namespace TopicTwister.Home.Tests.Utils
         public void Delete()
         {
             string originalData = Resources.Load<TextAsset>($"JSON/TestData/UserMatchesTest").text;
-            List<UserMatchDTO> userMatches = JsonUtility.FromJson<UserMatchesCollection>(originalData).UserMatches;
+            List<UserMatchDaoJson> userMatches = JsonUtility.FromJson<UserMatchDaosCollection>(originalData).UserMatches;
             userMatches.Clear();
-            UserMatchesCollection collection = new UserMatchesCollection(userMatches.ToArray());
+            UserMatchDaosCollection collection = new UserMatchDaosCollection(userMatches.ToArray());
             string newData = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, newData);
         }
 
         public void Delete(int userId, int matchId)
         {string originalData = Resources.Load<TextAsset>($"JSON/TestData/UserMatchesTest").text;
-            List<UserMatchDTO> userMatches = JsonUtility.FromJson<UserMatchesCollection>(originalData).UserMatches;
-            UserMatchDTO userMatchToDelete = userMatches.SingleOrDefault(
+            List<UserMatchDaoJson> userMatches = JsonUtility.FromJson<UserMatchDaosCollection>(originalData).UserMatches;
+            UserMatchDaoJson userMatchToDelete = userMatches.SingleOrDefault(
                 userMatch => userMatch.UserId == userId && userMatch.MatchId == matchId);
             userMatches.Remove(userMatchToDelete);
-            UserMatchesCollection collection = new UserMatchesCollection(userMatches.ToArray());
+            UserMatchDaosCollection collection = new UserMatchDaosCollection(userMatches.ToArray());
             string newData = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, newData);
         }

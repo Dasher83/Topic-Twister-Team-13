@@ -5,7 +5,7 @@ using TopicTwister.Shared.Models;
 
 namespace TopicTwister.Shared.Interfaces
 {
-    public interface IMatchDAOMapper
+    public interface IMatchDaoMapper
     {
         public MatchDaoJson ToDAO(Match match);
 

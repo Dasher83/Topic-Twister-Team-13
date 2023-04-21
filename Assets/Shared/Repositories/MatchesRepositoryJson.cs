@@ -21,7 +21,7 @@ namespace TopicTwister.Shared.Repositories
         private List<MatchDaoJson> _matchesReadCache;
         private List<MatchDaoJson> _matchesWriteCache;
         private IUniqueIdGenerator _idGenerator;
-        private IMatchDAOMapper _mapper;
+        private IMatchDaoMapper _mapper;
 
         public MatchesRepositoryJson(string matchesResourceName)
         {
@@ -42,8 +42,8 @@ namespace TopicTwister.Shared.Repositories
                 endDateTime: matchDAO.EndDateTime);
 
             _matchesWriteCache.Add(matchDAO);
-            MatchesDaoCollection collection = new MatchesDaoCollection(_matchesWriteCache.ToArray());
-            string data = new MatchesDaoCollectionSerializer().Serialize(collection);
+            MatchDaosCollection collection = new MatchDaosCollection(_matchesWriteCache.ToArray());
+            string data = new MatchDaosCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
             try
             {
@@ -58,7 +58,7 @@ namespace TopicTwister.Shared.Repositories
         public List<Match> GetAll()
         {
             string data = File.ReadAllText(_path);
-            _matchesReadCache = new MatchesDaoCollectionDeserializer().Deserialize(data).Matches;
+            _matchesReadCache = new MatchDaosCollectionDeserializer().Deserialize(data).Matches;
             List<Match> matches = _mapper.FromDAOs(_matchesReadCache.ToList());
             return matches;
         }
@@ -80,7 +80,7 @@ namespace TopicTwister.Shared.Repositories
             MatchDaoJson matchToDelete = _mapper.ToDAO(Get(id));
             _matchesWriteCache = _matchesReadCache.ToList();
             _matchesWriteCache.Remove(matchToDelete);
-            MatchesDaoCollection collection = new MatchesDaoCollection(_matchesWriteCache.ToArray());
+            MatchDaosCollection collection = new MatchDaosCollection(_matchesWriteCache.ToArray());
             string newData = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, newData);
         }

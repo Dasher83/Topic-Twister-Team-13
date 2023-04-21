@@ -20,9 +20,9 @@ namespace TopicTwister.Home.Tests.Utils
         public void Delete()
         {
             string originalData = Resources.Load<TextAsset>($"JSON/TestData/MatchesTest").text;
-            List<MatchDaoJson> matches = JsonUtility.FromJson<MatchesDaoCollection>(originalData).Matches;
+            List<MatchDaoJson> matches = JsonUtility.FromJson<MatchDaosCollection>(originalData).Matches;
             matches.Clear();
-            MatchesDaoCollection collection = new MatchesDaoCollection(matches.ToArray());
+            MatchDaosCollection collection = new MatchDaosCollection(matches.ToArray());
             string newData = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, newData);
         }
@@ -30,10 +30,10 @@ namespace TopicTwister.Home.Tests.Utils
         public void Delete(int id)
         {
             string originalData = Resources.Load<TextAsset>($"JSON/TestData/MatchesTest").text;
-            List<MatchDaoJson> matches = JsonUtility.FromJson<MatchesDaoCollection>(originalData).Matches;
+            List<MatchDaoJson> matches = JsonUtility.FromJson<MatchDaosCollection>(originalData).Matches;
             MatchDaoJson matchToDelete = matches.SingleOrDefault(match => match.Id == id);
             matches.Remove(matchToDelete);
-            MatchesDaoCollection collection = new MatchesDaoCollection(matches.ToArray());
+            MatchDaosCollection collection = new MatchDaosCollection(matches.ToArray());
             string newData = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, newData);
         }

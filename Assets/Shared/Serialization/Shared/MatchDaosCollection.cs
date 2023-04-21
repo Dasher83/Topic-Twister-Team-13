@@ -8,11 +8,11 @@ using UnityEngine;
 namespace TopicTwister.Shared.Serialization.Shared
 {
     [Serializable]
-    public class MatchesDaoCollection
+    public class MatchDaosCollection
     {
         [SerializeField] private MatchDaoJson[] _matches;
 
-        public MatchesDaoCollection(MatchDaoJson[] matches)
+        public MatchDaosCollection(MatchDaoJson[] matches)
         {
             _matches = matches;
         }

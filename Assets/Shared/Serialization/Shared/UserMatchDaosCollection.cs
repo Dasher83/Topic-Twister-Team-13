@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.DAOs;
 using UnityEngine;
 
 
 namespace TopicTwister.Shared.Serialization.Shared
 {
     [Serializable]
-    public class UserMatchesCollection
+    public class UserMatchDaosCollection
     {
-        [SerializeField] private UserMatchDTO[] _userMatches;
+        [SerializeField] private UserMatchDaoJson[] _userMatches;
 
-        public UserMatchesCollection(UserMatchDTO[] userMatches)
+        public UserMatchDaosCollection(UserMatchDaoJson[] userMatches)
         {
             _userMatches = userMatches;
         }
 
-        public List<UserMatchDTO> UserMatches
+        public List<UserMatchDaoJson> UserMatches
         {
             get
             {
                 if (_userMatches == null)
                 {
-                    return new List<UserMatchDTO>();
+                    return new List<UserMatchDaoJson>();
                 }
                 return _userMatches.ToList();
             }
