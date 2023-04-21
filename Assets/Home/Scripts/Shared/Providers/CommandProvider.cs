@@ -20,10 +20,10 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
                         new CreateBotMatchService(
                             new CreateBotMatchUseCase(
                                 new MatchesRepositoryJson(
-                                    matchesResourceName: "Matches"),
+                                    matchesResourceName: "DevelopmentData/Matches"),
                                 new UserMatchesRepositoryJson(
-                                    userMatchesResourceName: "UserMatches",
-                                    matchesRepository: new MatchesRepositoryJson(matchesResourceName: "Matches")),
+                                    userMatchesResourceName: "DevelopmentData/UserMatches",
+                                    matchesRepository: new MatchesRepositoryJson(matchesResourceName: "DevelopmentData/Matches")),
                                 new UserRepositoryInMemory(),
                                 new MatchDtoMapper())))
             }

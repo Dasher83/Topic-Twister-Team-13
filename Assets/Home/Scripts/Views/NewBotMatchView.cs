@@ -1,6 +1,7 @@
 using System;
 using TopicTwister.Home.Presenters;
 using TopicTwister.Home.Scripts.Shared.Interfaces;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.ScriptableObjects.FakeMatch;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace TopicTwister.Home.Views
         public event Action StartMatchVersusBot;
 
         [SerializeField]
-        private LoadSceneEventScriptable _eventContainer;
+        private LoadSceneEventScriptable _loadSceneEventContainer;
 
         [SerializeField]
         private NewRoundScriptable _newRoundData;
@@ -35,6 +36,7 @@ namespace TopicTwister.Home.Views
             _fakeMatchScriptable.Initialize();
             _newRoundData.Initialize();
             StartMatchVersusBot?.Invoke();
+            _loadSceneEventContainer.LoadSceneWithoutDelay(Scenes.BeginRoundScene);
         }
     }
 }
