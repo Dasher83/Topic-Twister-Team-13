@@ -1,7 +1,6 @@
 using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
-using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories.Exceptions;
 

@@ -89,7 +89,7 @@ public class CreateBotMatchUseCaseTests
     {
         #region -- Arrange --
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Persist(Arg.Any<Match>()).Returns(x => { throw new MatchNotPersistedByRepositoryException();});
+        _matchesRepository.Persist(Arg.Any<Match>()).Returns(args => { throw new MatchNotPersistedByRepositoryException();});
 
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _userRepository = Substitute.For<IUserRepository>();
@@ -106,4 +106,40 @@ public class CreateBotMatchUseCaseTests
         Assert.Throws<MatchNotCreatedInUseCaseException>(() => _useCase.Create(0));
         #endregion
     }
+
+    [Test]
+    public void Test_fail_due_to_userMatch_not_persisted()
+    {
+        #region -- Arrange --
+        _matchesRepository = Substitute.For<IMatchesRepository>();
+        _matchesRepository.Persist(Arg.Any<Match>()).Returns(args =>  new Match(id: 1,startDateTime: DateTime.UtcNow,endDateTime: null ));
+
+        _userRepository = Substitute.For<IUserRepository>();
+        _userRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>  
+            {
+                int userId = (int)args[0];
+                return new User(userId);
+            });
+
+
+        _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+        _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
+        _userMatchesRepository.Persist(Arg.Any<UserMatch>()).Returns(args => { throw new UserMatchNotPersistedByRepositoryException(); });
+
+        _useCase = new CreateBotMatchUseCase(
+            matchesRepository: _matchesRepository,
+            userMatchesRepository: _userMatchesRepository,
+            userRespository: _userRepository,
+            mapper: _mapper);
+
+
+        #endregion
+
+        #region -- Act & Assert--
+        Assert.Throws<MatchNotCreatedInUseCaseException>(() => _useCase.Create(0));
+        #endregion
+    }
+
+    //UserNotFoundByRepositoryException
 }
