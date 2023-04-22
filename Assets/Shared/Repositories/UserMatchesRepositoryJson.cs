@@ -22,10 +22,10 @@ namespace TopicTwister.Shared.Repositories
         private IdaoMapper<UserMatch, UserMatchDaoJson> _mapper;
         private IMatchesRepository _matchRepository;
 
-        public UserMatchesRepositoryJson(string userMatchesResourceName, IMatchesRepository matchesRepository)
+        public UserMatchesRepositoryJson(string userMatchesResourceName, IMatchesRepository matchesRepository, IUserRepository userRepository)
         {
             _matchRepository = matchesRepository;
-            _mapper = new UserMatchJsonDaoMapper(matchesRepository: _matchRepository);
+            _mapper = new UserMatchJsonDaoMapper(matchesRepository: _matchRepository,userRepository: userRepository);
             _path = $"{Application.dataPath}/Resources/JSON/{userMatchesResourceName}.json";
             _userMatchesReadCache = _mapper.ToDAOs(GetAll());
         }
@@ -42,7 +42,7 @@ namespace TopicTwister.Shared.Repositories
             UserMatch newUserMatch;
             try
             {
-                newUserMatch = Get(userId: userMatch.UserId, matchId: userMatch.Match.Id);
+                newUserMatch = Get(userId: userMatch.User.Id, matchId: userMatch.Match.Id);
             }
             catch (UserMatchNotFoundByRepositoryException)
             {

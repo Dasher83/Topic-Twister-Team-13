@@ -10,19 +10,21 @@ namespace TopicTwister.Shared.Mappers
     public class UserMatchDtoMapper: IdtoMapper<UserMatch, UserMatchDTO>
     {
         private IMatchesRepository _matchesRepository;
+        private IUserRepository _userRepository;
 
-        public UserMatchDtoMapper(IMatchesRepository matchesRepository)
+        public UserMatchDtoMapper(IMatchesRepository matchesRepository, IUserRepository userRepository)
         {
             _matchesRepository = matchesRepository;
+            _userRepository = userRepository;
         }
 
-        public UserMatchDTO ToDTO(UserMatch userMatch)
+        public UserMatchDTO ToDTO(UserMatch userMatch )
         {
             return new UserMatchDTO(
                 score: userMatch.Score,
                 isWinner: userMatch.IsWinner,
                 hasInitiative: userMatch.HasInitiative,
-                userId: userMatch.UserId,
+                userId: userMatch.User.Id,
                 matchId: userMatch.Match.Id
                 );
         }
@@ -33,7 +35,7 @@ namespace TopicTwister.Shared.Mappers
                 score: userMatchDTO.Score,
                 isWinner: userMatchDTO.IsWinner,
                 hasInitiative: userMatchDTO.HasInitiative,
-                userId: userMatchDTO.UserId,
+                user: _userRepository.Get(userMatchDTO.UserId),
                 match: _matchesRepository.Get(id: userMatchDTO.MatchId)
                 );
         }

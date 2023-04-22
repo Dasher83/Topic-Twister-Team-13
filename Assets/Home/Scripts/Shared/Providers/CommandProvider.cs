@@ -23,7 +23,8 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
                                     matchesResourceName: "DevelopmentData/Matches"),
                                 new UserMatchesRepositoryJson(
                                     userMatchesResourceName: "DevelopmentData/UserMatches",
-                                    matchesRepository: new MatchesRepositoryJson(matchesResourceName: "DevelopmentData/Matches")),
+                                    matchesRepository: new MatchesRepositoryJson(matchesResourceName: "DevelopmentData/Matches"),
+                                    userRepository: new UserRepositoryInMemory()),
                                 new UserRepositoryInMemory(),
                                 new MatchDtoMapper())))
             }

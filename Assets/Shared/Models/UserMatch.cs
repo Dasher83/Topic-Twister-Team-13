@@ -8,21 +8,21 @@ namespace TopicTwister.Shared.Models
         private int _score;
         private bool _isWinner;
         private bool _hasInitiative;
-        private int _userId;
+        private User _user;
         private Match _match;
 
         public int Score => _score;
         public bool IsWinner => _isWinner;
         public bool HasInitiative => _hasInitiative;
-        public int UserId => _userId;
+        public User User => _user;
         public Match Match => _match;
 
-        public UserMatch(int score, bool isWinner, bool hasInitiative, int userId, Match match)
+        public UserMatch(int score, bool isWinner, bool hasInitiative, User user, Match match)
         {
             _score = score;
             _isWinner = isWinner;
             _hasInitiative = hasInitiative;
-            _userId = userId;
+            _user = user;
             _match = match;
         }
 
@@ -33,7 +33,7 @@ namespace TopicTwister.Shared.Models
 
             UserMatch other = (UserMatch)obj;
 
-            return _userId == other._userId &&
+            return _user.Equals(other._user) &&
                 _match.Equals(other._match) &&
                 _score == other._score &&
                 _isWinner == other._isWinner &&
@@ -42,7 +42,7 @@ namespace TopicTwister.Shared.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_userId, _match, _score, _isWinner, _hasInitiative);
+            return HashCode.Combine(_user, _match, _score, _isWinner, _hasInitiative);
         }
     }
 }

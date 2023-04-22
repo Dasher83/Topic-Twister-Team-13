@@ -29,9 +29,10 @@ namespace TopicTwister.Home.UseCases
 
         public MatchDTO Create(int userId)
         {
+            User user;
             try
             {
-                _userRepository.Get(userId);
+               user = _userRepository.Get(userId);
             }
             catch (UserNotFoundByRepositoryException)
             {
@@ -52,7 +53,7 @@ namespace TopicTwister.Home.UseCases
                 score: 0,
                 isWinner: false,
                 hasInitiative: true,
-                userId: userId,
+                user: user,
                 match: match);
 
             try
@@ -69,7 +70,7 @@ namespace TopicTwister.Home.UseCases
                 score: 0,
                 isWinner: false,
                 hasInitiative: false,
-                userId: BotId,
+                user: _userRepository.Get(BotId),
                 match: match);
 
             try

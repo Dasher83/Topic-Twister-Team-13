@@ -82,7 +82,7 @@ public class CreateBotMatchUseCaseTests
                     score: userMatch.Score,
                     isWinner: userMatch.IsWinner,
                     hasInitiative: userMatch.HasInitiative,
-                    userId: userMatch.UserId,
+                    user: new User(userMatch.User.Id),
                     match: userMatch.Match);
             });
         _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
@@ -95,7 +95,7 @@ public class CreateBotMatchUseCaseTests
                     score: 0,
                     isWinner: false,
                     hasInitiative: userId == testUserId,
-                    userId: userId,
+                    user: new User(userId),
                     match: new Match(
                         id: matchId,
                         startDateTime: DateTime.UtcNow,
@@ -118,12 +118,12 @@ public class CreateBotMatchUseCaseTests
         Assert.AreEqual(expectedMatch, actualResult);
 
         UserMatch expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: true, userId: testUserId, match: _mapper.FromDTO(expectedMatch));
+            score: 0, isWinner: false, hasInitiative: true, user: _userRepository.Get(testUserId), match: _mapper.FromDTO(expectedMatch));
         UserMatch actualUserMatch = _userMatchesRepository.Get(userId: testUserId, matchId: expectedMatch.Id);
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
 
         expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: false, userId: botId, match: _mapper.FromDTO(expectedMatch));
+            score: 0, isWinner: false, hasInitiative: false, user: _userRepository.Get(botId), match: _mapper.FromDTO(expectedMatch));
         actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id);
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         #endregion
