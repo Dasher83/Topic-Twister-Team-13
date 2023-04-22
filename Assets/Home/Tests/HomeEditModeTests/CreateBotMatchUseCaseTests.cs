@@ -16,20 +16,24 @@ public class CreateBotMatchUseCaseTests
     private ICreateBotMatchUseCase _useCase;
     private IUserMatchesRepository _userMatchesRepository;
     private IdtoMapper<Match, MatchDTO> _mapper;
+    private IMatchesRepository _matchesRepository;
 
     [SetUp]
     public void Setup()
     {
+        _mapper = new MatchDtoMapper();
+        _matchesRepository = Substitute.For<IMatchesRepository>();
+
         _userMatchesRepository = new UserMatchesRepositoryJson(
             userMatchesResourceName: "TestData/UserMatchesTest",
             matchesRepository: new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest")
             );
-        _mapper = new MatchDtoMapper();
         _useCase = new CreateBotMatchUseCase(
             new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"),
             _userMatchesRepository,
             userRespository: new UserRepositoryInMemory(),
             mapper: _mapper);
+        _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
     }
 
     [TearDown]
@@ -54,6 +58,11 @@ public class CreateBotMatchUseCaseTests
         #region -- Assert --
         MatchDTO expectedMatch = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
         Assert.AreEqual(expectedMatch, actualResult);
+
+        _mapper.FromDTO(expectedMatch).Returns(
+            new Match(id: expectedMatch.Id,
+            startDateTime: expectedMatch.StartDateTime,
+            endDateTime: expectedMatch.EndDateTime));
 
         UserMatch expectedUserMatch = new UserMatch(
             score: 0, isWinner: false, hasInitiative: true, userId: userId, match: _mapper.FromDTO(expectedMatch));
