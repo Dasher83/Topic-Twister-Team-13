@@ -8,7 +8,7 @@ using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
-
+using TopicTwister.Shared.Repositories.Exceptions;
 
 public class CreateBotMatchUseCaseTests
 {
@@ -63,6 +63,18 @@ public class CreateBotMatchUseCaseTests
             score: 0, isWinner: false, hasInitiative: false, userId: botId, match: _mapper.FromDTO(expectedMatch));
         actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id);
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
+        #endregion
+    }
+
+    [Test]
+    public void Test_fail_due_to_unknown_user()
+    {
+        #region -- Arrange --
+        int userId = -1;
+        #endregion
+
+        #region -- Act & Assert--
+        Assert.Throws<UserNotFoundInUseCaseException>(() => _useCase.Create(userId));
         #endregion
     }
 }
