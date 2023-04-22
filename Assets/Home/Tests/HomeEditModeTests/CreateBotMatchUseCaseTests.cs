@@ -1,3 +1,4 @@
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using TopicTwister.Home.Shared.Interfaces;
@@ -10,24 +11,29 @@ using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.Exceptions;
 
+
 public class CreateBotMatchUseCaseTests
 {
     private ICreateBotMatchUseCase _useCase;
     private IUserMatchesRepository _userMatchesRepository;
     private IdtoMapper<Match, MatchDTO> _mapper;
+    private IMatchesRepository _matchesRepository;
+    private IUserRepository _userRepository;
 
     [SetUp]
     public void Setup()
     {
+        _userRepository = new UserRepositoryInMemory();
+        _matchesRepository = new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest");
         _userMatchesRepository = new UserMatchesRepositoryJson(
             userMatchesResourceName: "TestData/UserMatchesTest",
-            matchesRepository: new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest")
+            matchesRepository: _matchesRepository
             );
         _mapper = new MatchDtoMapper();
         _useCase = new CreateBotMatchUseCase(
-            new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest"),
-            _userMatchesRepository,
-            userRespository: new UserRepositoryInMemory(),
+            matchesRepository: _matchesRepository,
+            userMatchesRepository: _userMatchesRepository,
+            userRespository: _userRepository,
             mapper: _mapper);
     }
 
@@ -75,6 +81,29 @@ public class CreateBotMatchUseCaseTests
 
         #region -- Act & Assert--
         Assert.Throws<UserNotFoundInUseCaseException>(() => _useCase.Create(userId));
+        #endregion
+    }
+
+    [Test]
+    public void Test_fail_due_to_match_not_persisted()
+    {
+        #region -- Arrange --
+        _matchesRepository = Substitute.For<IMatchesRepository>();
+        _matchesRepository.Persist(Arg.Any<Match>()).Returns(x => { throw new MatchNotPersistedByRepositoryException();});
+
+        _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
+        _userRepository = Substitute.For<IUserRepository>();
+        _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+
+        _useCase = new CreateBotMatchUseCase(
+            matchesRepository: _matchesRepository,
+            userMatchesRepository: _userMatchesRepository,
+            userRespository: _userRepository,
+            mapper: _mapper);
+        #endregion
+
+        #region -- Act & Assert--
+        Assert.Throws<MatchNotCreatedInUseCaseException>(() => _useCase.Create(0));
         #endregion
     }
 }
