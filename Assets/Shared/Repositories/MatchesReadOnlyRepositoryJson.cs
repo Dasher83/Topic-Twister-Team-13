@@ -36,7 +36,7 @@ namespace TopicTwister.Shared.Repositories
         public Match Get(int id)
         {
             _matchesReadCache = _mapper.ToDAOs(GetAll());
-            MatchDaoJson matchDAO = _matchesReadCache.SingleOrDefault(match => match.Id == id);
+            MatchDaoJson matchDAO = _matchesReadCache.SingleOrDefault(match => match.Id == id && match.Id >= 0);
             if(matchDAO == null)
             {
                 throw new MatchNotFoundByRespositoryException();

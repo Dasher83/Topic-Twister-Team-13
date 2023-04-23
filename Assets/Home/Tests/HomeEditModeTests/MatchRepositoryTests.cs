@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
-
+using TopicTwister.Shared.Repositories.Exceptions;
 
 public class MatchRepositoryTests
 {
@@ -19,30 +20,70 @@ public class MatchRepositoryTests
     }
 
     [Test]
-    public void Test_ok_persist_match()
+    public void Test_ok_all_operations()
     {
-        #region -- Arrange --
+        int index = 0;
+        int[] ids = new int[2] { 3, 8 };
         idGenerator = Substitute.For<IUniqueIdGenerator>();
         idGenerator.GetNextId().Returns(
             (args) =>
             {
-                return 3;
+                int result = ids[index];
+                index++;
+                return result;
             });
 
         _matchesRepository = new MatchesRepositoryJson(
             matchesResourceName: "TestData/MatchesTest",
             idGenerator: idGenerator);
 
-        Match match = new Match();
-        #endregion
+        List<Match> matches = new List<Match>() { new Match(), new Match()};
 
-        #region -- Act --
-        Match actualResult = _matchesRepository.Persist(match);
-        #endregion
+        for(int i = 0; i < matches.Count; i++)
+        {
+            matches[i] = _matchesRepository.Persist(matches[i]);
+            Match expectedMatch = new Match(id: ids[i], startDateTime: DateTime.UtcNow, endDateTime: null);
+            Assert.AreEqual(expected: expectedMatch, actual: matches[i]);
+        }
 
-        #region -- Assert --
-        Match expectedMatch = new Match(id: 3, startDateTime: DateTime.UtcNow, endDateTime: null);
-        Assert.AreEqual(expectedMatch, actualResult);
-        #endregion
+        for (int i = 0; i < ids.Length; i++)
+        {
+            Match actualMatch = _matchesRepository.Get(ids[i]);
+            Match expectedMatch = matches[i];
+            Assert.AreEqual(expected: expectedMatch, actual: actualMatch);
+        }
+
+        List<Match> expectedMatches = _matchesRepository.GetAll();
+        Assert.AreEqual(expected: expectedMatches, actual: matches);
+
+        for(int i = 0; i < ids.Length; i++)
+        {
+            try
+            {
+                _matchesRepository.Delete(ids[i]);
+                Assert.Throws<MatchNotFoundByRespositoryException>(() => _matchesRepository.Get(id: ids[i]));
+            }
+            catch (MatchNotFoundByRespositoryException) { }
+        }
+
+        idGenerator = Substitute.For<IUniqueIdGenerator>();
+        idGenerator.GetNextId().Returns(
+            (args) =>
+            {
+                return -1;
+            });
+        _matchesRepository = new MatchesRepositoryJson(
+            matchesResourceName: "TestData/MatchesTest",
+            idGenerator: idGenerator);
+
+        try
+        {
+            Assert.Throws<MatchNotPersistedByRepositoryException>(
+            () =>
+            {
+                _matchesRepository.Persist(match: new Match(id: -1, startDateTime: DateTime.UtcNow, endDateTime: null));
+            });
+        }
+        catch (MatchNotPersistedByRepositoryException) { }
     }
 }
