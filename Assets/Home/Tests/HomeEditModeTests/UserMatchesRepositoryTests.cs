@@ -35,6 +35,7 @@ public class UserMatchesRepositoryTests
     public void TearDown()
     {
         new UserMatchesDeleteJson().Delete();
+        new MatchesDeleteJson().Delete();
     }
 
     [Test]
@@ -44,14 +45,32 @@ public class UserMatchesRepositoryTests
         match = _matchRepository.Persist(match);
 
         List<UserMatch> userMatches = new List<UserMatch>() {
-            new UserMatch(score:1,isWinner: true,hasInitiative: true,user: new User(1),match: match),
-            new UserMatch(score:2,isWinner:false,hasInitiative:false,user: new User(2),match: match)
+            new UserMatch(
+                score:1,
+                isWinner: true,
+                hasInitiative: true,
+                user: new User(1),
+                match: match),
+
+            new UserMatch(
+                score:2,
+                isWinner:false,
+                hasInitiative:false,
+                user: new User(2),
+                match: match)
         };
 
         for (int i = 0; i < userMatches.Count; i++)
         {
             userMatches[i] = _userMatchesRepository.Persist(userMatches[i]);
-            UserMatch expectedUserMatch = new UserMatch(score: 1, isWinner: true, hasInitiative: true, user: new User(1), match: match);
+
+            UserMatch expectedUserMatch = new UserMatch(
+                score: userMatches[i].Score,
+                isWinner: userMatches[i].IsWinner,
+                hasInitiative: userMatches[i].HasInitiative,
+                user: userMatches[i].User,
+                match: userMatches[i].Match);
+
             Assert.AreEqual(expected: expectedUserMatch, actual: userMatches[i]);
         }
 
