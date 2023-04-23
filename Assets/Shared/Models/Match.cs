@@ -40,9 +40,15 @@ namespace TopicTwister.Shared.Models
 
             TimeSpan startDifference = other.StartDateTime - this.StartDateTime;
 
-            return this._id == other._id &&
-                startDifference.TotalSeconds < 1 &&
-                (string.IsNullOrEmpty(this._endDateTime) || ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1);
+            bool areIdsEquals = this._id == other._id;
+            bool isStarDifferenceCloseEnough = startDifference.TotalSeconds < 1;
+            bool isEndDateTimeCloseEnough = string.IsNullOrEmpty(this._endDateTime);
+            if (!isEndDateTimeCloseEnough)
+            {
+                isEndDateTimeCloseEnough = ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1;
+            }
+
+            return areIdsEquals && isStarDifferenceCloseEnough && isEndDateTimeCloseEnough;
         }
 
         public override int GetHashCode()

@@ -20,12 +20,11 @@ namespace TopicTwister.Shared.Repositories
         private List<UserMatchDaoJson> _userMatchesWriteCache;
         private List<UserMatchDaoJson> _userMatchesReadCache;
         private IdaoMapper<UserMatch, UserMatchDaoJson> _mapper;
-        private IMatchesRepository _matchRepository;
+        
 
         public UserMatchesRepositoryJson(string userMatchesResourceName, IMatchesRepository matchesRepository, IUserRepository userRepository)
         {
-            _matchRepository = matchesRepository;
-            _mapper = new UserMatchJsonDaoMapper(matchesRepository: _matchRepository,userRepository: userRepository);
+            _mapper = new UserMatchJsonDaoMapper(matchesRepository: matchesRepository, userRepository: userRepository);
             _path = $"{Application.dataPath}/Resources/JSON/{userMatchesResourceName}.json";
             _userMatchesReadCache = _mapper.ToDAOs(GetAll());
         }
