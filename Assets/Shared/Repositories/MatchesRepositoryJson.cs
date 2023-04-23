@@ -5,8 +5,6 @@ using TopicTwister.Shared.Repositories.Exceptions;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
-using TopicTwister.Shared.Repositories.IdGenerators;
-using TopicTwister.Shared.Serialization.Deserializers;
 using TopicTwister.Shared.Serialization.Serializers;
 using TopicTwister.Shared.Serialization.Shared;
 using UnityEngine;
@@ -15,7 +13,7 @@ using TopicTwister.Shared.DAOs;
 
 namespace TopicTwister.Shared.Repositories
 {
-    public class MatchesRepositoryJson : IMatchesRepository
+    public class MatchesRepositoryJson : MatchesReadOnlyRepositoryJson, IMatchesRepository
     {
         private string _path;
         private List<MatchDaoJson> _matchesReadCache;
@@ -23,12 +21,12 @@ namespace TopicTwister.Shared.Repositories
         private IUniqueIdGenerator _idGenerator;
         private IdaoMapper<Match, MatchDaoJson> _mapper;
 
-        public MatchesRepositoryJson(string matchesResourceName)
+        public MatchesRepositoryJson(string matchesResourceName, IUniqueIdGenerator idGenerator): base(matchesResourceName)
         {
             _path = $"{Application.dataPath}/Resources/JSON/{matchesResourceName}.json";
             _mapper = new MatchDaoJsonMapper();
             _matchesReadCache = _mapper.ToDAOs(GetAll());
-            _idGenerator = new MatchesIdGenerator(matchesRepository: this);
+            _idGenerator = idGenerator;
         }
 
         public Match Persist(Match match)
@@ -53,26 +51,6 @@ namespace TopicTwister.Shared.Repositories
             {
                 throw new MatchNotPersistedByRepositoryException();
             }
-        }
-
-        public List<Match> GetAll()
-        {
-            string data = File.ReadAllText(_path);
-            _matchesReadCache = new MatchDaosCollectionDeserializer().Deserialize(data).Matches;
-            List<Match> matches = _mapper.FromDAOs(_matchesReadCache.ToList());
-            return matches;
-        }
-
-        public Match Get(int id)
-        {
-            _matchesReadCache = _mapper.ToDAOs(GetAll());
-            MatchDaoJson matchDAO = _matchesReadCache.SingleOrDefault(match => match.Id == id);
-            if(matchDAO == null)
-            {
-                throw new MatchNotFoundByRespositoryException();
-            }
-            Match match = _mapper.FromDAO(matchDAO);
-            return match;
         }
 
         public void Delete(int id)

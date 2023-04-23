@@ -6,7 +6,7 @@ using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Repositories;
-
+using TopicTwister.Shared.Repositories.IdGenerators;
 
 namespace TopicTwister.Home.Scripts.Shared.Providers
 {
@@ -20,10 +20,17 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
                         new CreateBotMatchService(
                             new CreateBotMatchUseCase(
                                 new MatchesRepositoryJson(
-                                    matchesResourceName: "DevelopmentData/Matches"),
+                                    matchesResourceName: "DevelopmentData/Matches",
+                                    idGenerator: new MatchesIdGenerator(
+                                        matchesRepository: new MatchesReadOnlyRepositoryJson(
+                                        matchesResourceName: "DevelopmentData/Matches"))),
                                 new UserMatchesRepositoryJson(
                                     userMatchesResourceName: "DevelopmentData/UserMatches",
-                                    matchesRepository: new MatchesRepositoryJson(matchesResourceName: "DevelopmentData/Matches"),
+                                    matchesRepository: new MatchesRepositoryJson(
+                                        matchesResourceName: "DevelopmentData/Matches",
+                                        idGenerator: new MatchesIdGenerator(
+                                            matchesRepository: new MatchesReadOnlyRepositoryJson(
+                                            matchesResourceName: "DevelopmentData/Matches"))),
                                     userRepository: new UserRepositoryInMemory()),
                                 new UserRepositoryInMemory(),
                                 new MatchDtoMapper())))

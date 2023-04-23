@@ -10,10 +10,10 @@ namespace TopicTwister.Shared.Repositories.IdGenerators
     public class MatchesIdGenerator: IUniqueIdGenerator
     {
         private int _currentId;
-        private IMatchesRepository _matchesRepository;
+        private IMatchesReadOnlyRepository _matchesRepository;
         private List<Match> _matches;
 
-        public MatchesIdGenerator(IMatchesRepository matchesRepository)
+        public MatchesIdGenerator(IMatchesReadOnlyRepository matchesRepository)
         {
             _matchesRepository = matchesRepository;
         }
