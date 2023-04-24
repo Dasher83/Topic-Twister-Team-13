@@ -8,7 +8,7 @@ using TopicTwister.Shared.DTOs;
 
 namespace TopicTwister.TurnResult.Actions
 {
-    public class EvaluateAnswersAction : IAction
+    public class EvaluateAnswersAction : ICommand
     {
         private ITurnResultPresenter _turnResultPresenter;
         private readonly IAnswersEvaluationService _answersEvaluationService;

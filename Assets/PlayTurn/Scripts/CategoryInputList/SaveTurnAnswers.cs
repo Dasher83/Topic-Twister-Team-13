@@ -10,7 +10,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
 {
     public class SaveTurnAnswers : MonoBehaviour
     {
-        [SerializeField] private NewRoundScriptable _newRoundData;
+        [SerializeField] private RoundCacheScriptable _newRoundData;
         [SerializeField] private TurnAnswersScriptable _turnAnswersData;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;

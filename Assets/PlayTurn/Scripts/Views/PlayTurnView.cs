@@ -10,7 +10,7 @@ namespace TopicTwister.PlayTurn.Views
     public class PlayTurnView : MonoBehaviour
     {
         [SerializeField]
-        private NewRoundScriptable _newRoundData;
+        private RoundCacheScriptable _roundCache;
 
         [SerializeField]
         private TurnAnswersDraftScriptable _turnAnswersDraftData;
@@ -30,16 +30,16 @@ namespace TopicTwister.PlayTurn.Views
         private void LoadRoundData()
         {
             TurnAnswerDraftDTO[] turnAnswerDrafts = new TurnAnswerDraftDTO[_categoryListRoot.childCount];
-            _roundNumber.text = $"{_roundNumber.text.Split(' ')[0]} {_newRoundData.RoundNumber}";
-            _initialLetter.text = _newRoundData.InitialLetter.ToString();
+            _roundNumber.text = $"{_roundNumber.text.Split(' ')[0]} {_roundCache.RoundDto.RoundNumber}";
+            _initialLetter.text = _roundCache.RoundDto.InitialLetter.ToString();
             GameObject child;
 
             for(int i = 0; i < _categoryListRoot.childCount; i++)
             {
                 child = _categoryListRoot.GetChild(i).Find("Category").gameObject;
-                child.GetComponent<TextMeshProUGUI>().text = _newRoundData.Categories[i].Name;
+                child.GetComponent<TextMeshProUGUI>().text = _roundCache.Categories[i].Name;
                 turnAnswerDrafts[i] = new TurnAnswerDraftDTO(
-                    category: _newRoundData.Categories[i],
+                    category: _roundCache.Categories[i],
                     order: i);
             }
             _turnAnswersDraftData.Initialize(turnAnswerDrafts);

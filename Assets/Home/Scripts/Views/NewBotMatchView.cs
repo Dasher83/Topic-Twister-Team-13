@@ -18,7 +18,7 @@ namespace TopicTwister.Home.Views
         private LoadSceneEventScriptable _loadSceneEventContainer;
 
         [SerializeField]
-        private NewRoundScriptable _newRoundData;
+        private RoundCacheScriptable _newRoundData;
 
         [SerializeField]
         private FakeMatchScriptable _fakeMatchScriptable;
@@ -34,7 +34,6 @@ namespace TopicTwister.Home.Views
         public void StartMatchWithBot()
         {
             _fakeMatchScriptable.Initialize();
-            _newRoundData.Initialize();
             StartMatchVersusBot?.Invoke();
             _loadSceneEventContainer.LoadSceneWithoutDelay(Scenes.BeginRoundScene);
         }

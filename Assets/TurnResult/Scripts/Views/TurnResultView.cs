@@ -31,7 +31,7 @@ namespace TopicTwister.TurnResult.Views
         private AnswerImageResultScriptable _answerImageResultReferences;
 
         [SerializeField]
-        private NewRoundScriptable _newRoundData;
+        private RoundCacheScriptable _roundCache;
 
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
@@ -46,8 +46,9 @@ namespace TopicTwister.TurnResult.Views
 
         void Start()
         {
-            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>().text = _newRoundData.InitialLetter.ToString();
-            _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>().text = $"Ronda {_newRoundData.RoundNumber}";
+            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
+                .text = _roundCache.RoundDto.InitialLetter.ToString();
+            _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>().text = $"Ronda {_roundCache.RoundDto.RoundNumber}";
             LoadCategoryResultList();
             _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
             OnLoad?.Invoke();
@@ -76,13 +77,13 @@ namespace TopicTwister.TurnResult.Views
             }
             _fakeMatchData.AddRound(
                 userAnswers: evaluatedAnswers,
-                roundNumber: _newRoundData.RoundNumber,
-                initialLetter: _newRoundData.InitialLetter.ToString());
+                roundNumber: _roundCache.RoundDto.RoundNumber,
+                initialLetter: _roundCache.RoundDto.InitialLetter.ToString());
         }
 
         public AnswersToEvaluateDTO GetAnswersToEvaluate()
         {
-            return new AnswersToEvaluateDTO(_newRoundData.InitialLetter, _turnResultViewList);
+            return new AnswersToEvaluateDTO(_roundCache.RoundDto.InitialLetter, _turnResultViewList);
         }
 
         public void LoadCategoryResultList()
