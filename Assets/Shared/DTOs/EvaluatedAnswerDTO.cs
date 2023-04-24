@@ -24,5 +24,22 @@ namespace TopicTwister.Shared.DTOs
             _isCorrect = isCorrect;
             _order = order;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            EvaluatedAnswerDTO other = (EvaluatedAnswerDTO)obj;
+            return this._category == other._category &&
+                this._answer == other._answer &&
+                this._isCorrect == other._isCorrect &&
+                this._order == other._order;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_category, _answer, _isCorrect, _order);
+        }
     }
 }

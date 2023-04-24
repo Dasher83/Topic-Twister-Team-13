@@ -5,7 +5,6 @@ using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.TurnResult.UseCases;
 using TopicTwister.TurnResult.Repositories;
-using System.Collections;
 using System.Linq;
 using System;
 
@@ -16,7 +15,7 @@ public class EvaluateAnswersUseCaseTest
     [SetUp]
     public void SetUp()
     {
-        _useCase = new EvaluateAnswersUseCase(new WordsRepositoryJson(wordsResourceName: "WordsTest"));
+        _useCase = new EvaluateAnswersUseCase(new WordsRepositoryJson(wordsResourceName: "JSON/TestData/WordsTest"));
     }
 
     [Test]
