@@ -1,5 +1,6 @@
 using System;
 
+
 namespace TopicTwister.Shared.Models
 {
     public class User
