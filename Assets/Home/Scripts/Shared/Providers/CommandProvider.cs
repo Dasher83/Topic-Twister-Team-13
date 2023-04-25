@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TopicTwister.Home.Scripts.Commands;
+using TopicTwister.Home.Commands;
 using TopicTwister.Home.Services;
 using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.Interfaces;
@@ -8,9 +8,10 @@ using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.IdGenerators;
 
-namespace TopicTwister.Home.Scripts.Shared.Providers
+
+namespace TopicTwister.Home.Shared.Providers
 {
-    public class CommandProvider<T> where T : ICommand
+    public class CommandProvider<Command, Presenter> where Command : ICommand<Presenter>
     {
         private readonly Dictionary<Type, object> _commands = new()
         {
@@ -37,10 +38,10 @@ namespace TopicTwister.Home.Scripts.Shared.Providers
             }
         };
 
-        public T Provide()
+        public Command Provide()
         {
-            _commands.TryGetValue(typeof(T), out object command);
-            return (T)command;
+            _commands.TryGetValue(typeof(Command), out object command);
+            return (Command)command;
         }
     }
 }

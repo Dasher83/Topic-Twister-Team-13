@@ -1,13 +1,11 @@
-﻿using System;
-using TopicTwister.Home.Scripts.Shared.Interfaces;
-using TopicTwister.Home.Shared.Interfaces;
+﻿using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
 
-namespace TopicTwister.Home.Scripts.Commands
+namespace TopicTwister.Home.Commands
 {
-    public class CreateNewBotMatchCommand : ICommand
+    public class CreateNewBotMatchCommand : ICommand<INewBotMatchPresenter>
     {
         private INewBotMatchPresenter _presenter;
 

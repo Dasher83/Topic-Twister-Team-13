@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace TopicTwister.Home.Scripts.Shared.Interfaces
+namespace TopicTwister.Home.Shared.Interfaces
 {
     public interface INewBotMatchView
     {

@@ -1,6 +1,6 @@
 using System;
 using TopicTwister.Home.Presenters;
-using TopicTwister.Home.Scripts.Shared.Interfaces;
+using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.ScriptableObjects;
 using TopicTwister.Shared.ScriptableObjects.FakeMatch;

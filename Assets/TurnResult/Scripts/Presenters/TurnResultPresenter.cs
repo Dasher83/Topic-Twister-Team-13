@@ -4,6 +4,7 @@ using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.Providers;
 using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.Interfaces;
 
 
 namespace TopicTwister.TurnResult.Presenters
@@ -11,7 +12,7 @@ namespace TopicTwister.TurnResult.Presenters
     public class TurnResultPresenter : ITurnResultPresenter
     {
         private readonly ITurnResultView _turnResultView;
-        private EvaluateAnswersAction _evaluateAnswerAction;
+        private ICommand<ITurnResultPresenter> _evaluateAnswerCommand;
         private List<EvaluatedAnswerDTO> _evaluatedAnswers;
 
         public List<EvaluatedAnswerDTO> EvaluatedAnswers {
@@ -26,8 +27,8 @@ namespace TopicTwister.TurnResult.Presenters
         {
             _turnResultView = turnResultView;
             _turnResultView.OnLoad += OnLoadHandler;
-            _evaluateAnswerAction = new ActionProvider<EvaluateAnswersAction>().Provide();
-            _evaluateAnswerAction.TurnResultPresenter = this;
+            _evaluateAnswerCommand = new ActionProvider<EvaluateAnswersAction, ITurnResultPresenter>().Provide();
+            _evaluateAnswerCommand.Presenter = this;
         }
 
         ~TurnResultPresenter()
@@ -42,9 +43,9 @@ namespace TopicTwister.TurnResult.Presenters
         
         public void EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            _evaluateAnswerAction.TurnAnswers = answerToEvaluate.turnAnswers;
-            _evaluateAnswerAction.InitialLetter = answerToEvaluate.initialLetter;
-            _evaluateAnswerAction.Execute();
+            ((EvaluateAnswersAction)_evaluateAnswerCommand).TurnAnswers = answerToEvaluate.turnAnswers;
+            ((EvaluateAnswersAction)_evaluateAnswerCommand).InitialLetter = answerToEvaluate.initialLetter;
+            _evaluateAnswerCommand.Execute();
         }
     }
 }
