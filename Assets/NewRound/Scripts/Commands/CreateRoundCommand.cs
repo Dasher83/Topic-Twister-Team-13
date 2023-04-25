@@ -1,4 +1,5 @@
 ﻿using TopicTwister.NewRound.Shared.Interfaces;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
 
@@ -8,6 +9,9 @@ namespace TopicTwister.NewRound.Commands
     {
 
         private ICreateRoundPresenter _presenter;
+        private readonly ICreateRoundGatewayService _gatewayService;
+
+        private MatchDTO _matchDto;
 
         public ICreateRoundPresenter Presenter
         {
@@ -15,9 +19,15 @@ namespace TopicTwister.NewRound.Commands
             set => _presenter = value;
         }
 
+        public CreateRoundCommand(ICreateRoundGatewayService gatewayService)
+        {
+            _gatewayService = gatewayService;
+        }
+
         public void Execute()
         {
-            throw new System.NotImplementedException();
+            RoundWithCategoriesDto roundWithCategoriesDto = _gatewayService.Create(matchDto: _matchDto);
+            _presenter.UpdateRound(roundWithCategoriesDto);
         }
     }
 }

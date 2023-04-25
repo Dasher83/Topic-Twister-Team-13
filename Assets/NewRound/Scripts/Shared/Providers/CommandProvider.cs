@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TopicTwister.NewRound.Commands;
+using TopicTwister.NewRound.Services;
 using TopicTwister.Shared.Interfaces;
 
 
@@ -12,7 +13,8 @@ namespace TopicTwister.NewRound.Shared.Providers
         {
             {
                 typeof(CreateRoundCommand),
-                new CreateRoundCommand()
+                new CreateRoundCommand(
+                    gatewayService: new CreateRoundGatewayService())
             }
         };
 

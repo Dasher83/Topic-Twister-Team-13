@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TMPro;
 using TopicTwister.NewRound.Presenters;
 using TopicTwister.NewRound.Shared.Interfaces;
@@ -52,9 +51,11 @@ namespace TopicTwister.NewRound.Views
             _initialLetterButton.enabled = false;
         }
 
-        public void UpdateNewRoundData(RoundDto roundDto, List<CategoryDTO> categoryDtos)
+        public void UpdateNewRoundData(RoundWithCategoriesDto roundWithCategoriesDto)
         {
-            _newRoundData.Initialize(roundDto: roundDto, categoryDtos: categoryDtos);
+            _newRoundData.Initialize(
+                roundDto: roundWithCategoriesDto.RoundDto,
+                categoryDtos: roundWithCategoriesDto.CategoryDtos);
         }
     }
 }

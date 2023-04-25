@@ -2,6 +2,7 @@ using System;
 using TopicTwister.NewRound.Commands;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.Providers;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
 
@@ -23,6 +24,11 @@ namespace TopicTwister.NewRound.Presenters
         public void CreateRound(object sender, EventArgs e)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void UpdateRound(RoundWithCategoriesDto roundWithCategoriesDto)
+        {
+            _view.UpdateNewRoundData(roundWithCategoriesDto: roundWithCategoriesDto);
         }
     }
 }
