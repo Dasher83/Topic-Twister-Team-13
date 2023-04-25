@@ -6,9 +6,16 @@ namespace TopicTwister.NewRound.Services
 {
     public class CreateRoundGatewayService : ICreateRoundGatewayService
     {
+        private ICreateRoundUseCase _useCase;
+
+        public CreateRoundGatewayService(ICreateRoundUseCase useCase)
+        {
+            _useCase = useCase;
+        }
+
         public RoundWithCategoriesDto Create(MatchDTO matchDto)
         {
-            throw new System.NotImplementedException();
+            return _useCase.Create(matchDto);
         }
     }
 }
