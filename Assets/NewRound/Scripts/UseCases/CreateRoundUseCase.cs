@@ -30,14 +30,21 @@ namespace TopicTwister.NewRound.UseCases
 
         public RoundWithCategoriesDto Create(MatchDTO matchDto)
         {
+            Match match;
             try
             {
-                _matchesRepository.Get(id: matchDto.Id);
+                match = _matchesRepository.Get(id: matchDto.Id);
             }
             catch (MatchNotFoundByRespositoryException exception)
             {
                 throw new RoundNotCreatedInUseCaseException(inner: exception);
             }
+
+            if (match.IsActive == false)
+            {
+                throw new NewRoundForInactiveMatchUseCaseException(message: $"matchDto.Id: {matchDto}");
+            }
+
             return null;
         }
     }

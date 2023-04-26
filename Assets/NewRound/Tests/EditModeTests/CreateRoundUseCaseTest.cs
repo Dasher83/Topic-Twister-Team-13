@@ -37,7 +37,7 @@ namespace NewRoundTests
                     int id = (int)args[0];
                     if (id < 0)
                     {
-                        throw new MatchNotFoundByRespositoryException(message: $"matchId: {matchDto}");
+                        throw new MatchNotFoundByRespositoryException();
                     }
                     return new Match(id, startDateTime: DateTime.UtcNow);
                 });
@@ -53,11 +53,50 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act & Assert --
-            RoundNotCreatedInUseCaseException exception = Assert.Throws<RoundNotCreatedInUseCaseException>(() => _useCase.Create(matchDto: matchDto));
+            RoundNotCreatedInUseCaseException exception = Assert.Throws<RoundNotCreatedInUseCaseException>(
+                () => _useCase.Create(matchDto: matchDto));
             Assert.IsNotNull(exception);
-            Assert.IsNotNull(exception.InnerException);
-            Assert.IsInstanceOf<MatchNotFoundByRespositoryException>(exception.InnerException);
-            Assert.AreEqual(expected: $"matchId: {matchDto}", actual: exception.InnerException.Message);
+            #endregion
+        }
+
+        [Test]
+        public void Test_fail_due_to_match_already_ended()
+        {
+            #region -- Arrange --
+            DateTime startDateTime = DateTime.UtcNow - TimeSpan.FromSeconds(10);
+            DateTime endDateTime = DateTime.UtcNow;
+
+            MatchDTO matchDto = new MatchDTO(
+                id: 0,
+                startDateTime: startDateTime,
+                endDateTime: endDateTime);
+            _roundRepository = Substitute.For<IRoundsRepository>();
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+
+            _matchesRepository.Get(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    int id = (int)args[0];
+                    return new Match(
+                        id: id,
+                        startDateTime: startDateTime,
+                        endDateTime: endDateTime); ;
+                });
+
+            _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+            _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDtoMapper>>();
+
+            _useCase = new CreateRoundUseCase(
+                roundsRepository: _roundRepository,
+                matchesRepository: _matchesRepository,
+                matchDtoMapper: _matchDtoMapper,
+                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
+            #endregion
+
+            #region -- Act & Assert --
+            NewRoundForInactiveMatchUseCaseException exception = Assert.Throws<NewRoundForInactiveMatchUseCaseException>(
+                () => _useCase.Create(matchDto: matchDto));
+            Assert.AreEqual(expected: $"matchDto.Id: {matchDto}", actual: exception.Message);
             #endregion
         }
     }

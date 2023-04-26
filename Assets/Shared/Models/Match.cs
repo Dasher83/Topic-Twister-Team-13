@@ -28,6 +28,8 @@ namespace TopicTwister.Shared.Models
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
         }
 
+        public bool IsActive => string.IsNullOrEmpty(_endDateTime);
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
