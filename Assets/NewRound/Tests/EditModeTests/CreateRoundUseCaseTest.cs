@@ -21,11 +21,7 @@ namespace NewRoundTests
         private IdtoMapper<Match, MatchDTO> _matchDtoMapper;
         private IdtoMapper<Round, RoundWithCategoriesDtoMapper> _roundWithCategoriesDtoMapper;
 
-        /*[Test]
-        public void Test_ok_creation_of_match_and_usermatches()
-        {
-            // Use the Assert class to test conditions
-        }*/
+        // TODO: public void Test_ok_creation_of_match_and_usermatches()
 
         [Test]
         public void Test_fail_due_to_unknown_match()
@@ -33,18 +29,8 @@ namespace NewRoundTests
             #region -- Arrange --
             MatchDTO matchDto = new MatchDTO(id: -1, startDateTime: DateTime.UtcNow);
             _roundRepository = Substitute.For<IRoundsRepository>();
-            _roundRepository.Save(Arg.Any<Round>()).Returns(
-                (args) =>
-                {
-                    Round round = (Round)args[0];
-                    if (round.Id < 0)
-                    {
-                        throw new RoundNotSavedByRepositoryException();
-                    }
-                    return new Round(id: round.Id);
-                });
-
             _matchesRepository = Substitute.For<IMatchesRepository>();
+            
             _matchesRepository.Get(Arg.Any<int>()).Returns(
                 (args) =>
                 {
@@ -57,17 +43,6 @@ namespace NewRoundTests
                 });
 
             _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
-            _matchDtoMapper.FromDTO(Arg.Any<MatchDTO>()).Returns(
-                (args) =>
-                {
-                    MatchDTO lambdaMatchDto = (MatchDTO)args[0];
-                    Match match = new Match(
-                        id: lambdaMatchDto.Id,
-                        startDateTime: lambdaMatchDto.StartDateTime,
-                        endDateTime: lambdaMatchDto.EndDateTime);
-                    return match;
-                });
-
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDtoMapper>>();
 
             _useCase = new CreateRoundUseCase(
