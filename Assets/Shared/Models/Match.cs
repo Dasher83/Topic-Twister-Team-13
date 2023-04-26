@@ -21,7 +21,7 @@ namespace TopicTwister.Shared.Models
             _endDateTime = "";
         }
 
-        public Match(int id, DateTime startDateTime, DateTime? endDateTime)
+        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601

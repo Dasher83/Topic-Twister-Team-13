@@ -7,6 +7,6 @@ namespace TopicTwister.Shared.Repositories.Exceptions
     {
         public RoundNotCreatedInUseCaseException() { }
         public RoundNotCreatedInUseCaseException(string message) : base(message) { }
-        public RoundNotCreatedInUseCaseException(string mensaje = "", Exception inner = null) : base(mensaje, inner) { }
+        public RoundNotCreatedInUseCaseException(string message = "", Exception inner = null) : base(message, inner) { }
     }
 }

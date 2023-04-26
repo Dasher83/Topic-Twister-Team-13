@@ -8,6 +8,7 @@ using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Serialization.Deserializers;
 using UnityEngine;
 using TopicTwister.Shared.DAOs;
+using TopicTwister.Shared.DTOs;
 
 
 namespace TopicTwister.Shared.Repositories
@@ -39,7 +40,7 @@ namespace TopicTwister.Shared.Repositories
             MatchDaoJson matchDAO = _matchesReadCache.SingleOrDefault(match => match.Id == id && match.Id >= 0);
             if(matchDAO == null)
             {
-                throw new MatchNotFoundByRespositoryException();
+                throw new MatchNotFoundByRespositoryException(message: $"matchId: {id}");
             }
             Match match = _mapper.FromDAO(matchDAO);
             return match;

@@ -21,7 +21,6 @@ namespace TopicTwister.NewRound.Shared.Mappers
         public RoundWithCategoriesDtoMapper ToDTO(Round model)
         {
             throw new System.NotImplementedException();
-            //return new RoundWithCategoriesDto(roundDto: ) <--------------------- TODO
         }
 
         public List<RoundWithCategoriesDtoMapper> ToDTOs(List<Round> models)

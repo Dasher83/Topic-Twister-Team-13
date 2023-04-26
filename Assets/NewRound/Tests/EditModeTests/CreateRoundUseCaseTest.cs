@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using TopicTwister.NewRound.Models;
 using TopicTwister.NewRound.Shared.Interfaces;
+using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
@@ -16,7 +17,9 @@ namespace NewRoundTests
     {
         private ICreateRoundUseCase _useCase;
         private IRoundsRepository _roundRepository;
-        private IdtoMapper<Match, MatchDTO> _mapper;
+        private IMatchesRepository _matchesRepository;
+        private IdtoMapper<Match, MatchDTO> _matchDtoMapper;
+        private IdtoMapper<Round, RoundWithCategoriesDtoMapper> _roundWithCategoriesDtoMapper;
 
         /*[Test]
         public void Test_ok_creation_of_match_and_usermatches()
@@ -40,8 +43,21 @@ namespace NewRoundTests
                     }
                     return new Round(id: round.Id);
                 });
-            _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
-            _mapper.FromDTO(Arg.Any<MatchDTO>()).Returns(
+
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _matchesRepository.Get(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    int id = (int)args[0];
+                    if (id < 0)
+                    {
+                        throw new MatchNotFoundByRespositoryException(message: $"matchId: {matchDto}");
+                    }
+                    return new Match(id, startDateTime: DateTime.UtcNow);
+                });
+
+            _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+            _matchDtoMapper.FromDTO(Arg.Any<MatchDTO>()).Returns(
                 (args) =>
                 {
                     MatchDTO lambdaMatchDto = (MatchDTO)args[0];
@@ -52,14 +68,20 @@ namespace NewRoundTests
                     return match;
                 });
 
-            _useCase = new CreateRoundUseCase(roundsRepository: _roundRepository, mapper: _mapper);
+            _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDtoMapper>>();
+
+            _useCase = new CreateRoundUseCase(
+                roundsRepository: _roundRepository,
+                matchesRepository: _matchesRepository,
+                matchDtoMapper: _matchDtoMapper,
+                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
             #region -- Act & Assert --
             RoundNotCreatedInUseCaseException exception = Assert.Throws<RoundNotCreatedInUseCaseException>(() => _useCase.Create(matchDto: matchDto));
             Assert.IsNotNull(exception);
             Assert.IsNotNull(exception.InnerException);
-            Assert.IsInstanceOf<RoundNotSavedByRepositoryException>(exception.InnerException);
+            Assert.IsInstanceOf<MatchNotFoundByRespositoryException>(exception.InnerException);
             Assert.AreEqual(expected: $"matchId: {matchDto}", actual: exception.InnerException.Message);
             #endregion
         }

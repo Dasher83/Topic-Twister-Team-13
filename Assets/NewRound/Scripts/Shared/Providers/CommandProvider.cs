@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using TopicTwister.NewRound.Commands;
 using TopicTwister.NewRound.Repositories;
 using TopicTwister.NewRound.Services;
+using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
+using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.Repositories.IdGenerators;
 
 
 namespace TopicTwister.NewRound.Shared.Providers
@@ -18,7 +22,14 @@ namespace TopicTwister.NewRound.Shared.Providers
                 new CreateRoundCommand(
                     gatewayService: new CreateRoundGatewayService(
                         useCase: new CreateRoundUseCase(
-                            roundsRepository: new RoundsRespositoryJson())))
+                            roundsRepository: new RoundsRespositoryJson(),
+                            matchesRepository: new MatchesRepositoryJson(
+                                matchesResourceName: "DevelopmentData/Matches",
+                                idGenerator: new MatchesIdGenerator(
+                                    matchesRepository: new MatchesReadOnlyRepositoryJson(
+                                        matchesResourceName: "DevelopmentData/Matches"))),
+                            matchDtoMapper: new MatchDtoMapper(),
+                            roundWithCategoriesDtoMapper: new RoundWithCategoriesDtoMapper())))
             }
         };
 
