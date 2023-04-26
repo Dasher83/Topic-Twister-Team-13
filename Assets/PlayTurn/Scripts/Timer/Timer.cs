@@ -1,6 +1,7 @@
 using TMPro;
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using UnityEngine;
+using System;
 
 
 namespace TopicTwister.PlayTurn.Timer
@@ -10,6 +11,8 @@ namespace TopicTwister.PlayTurn.Timer
         private TextMeshProUGUI _timerText;
         private float _numericTime;
         private bool _invokedTimedOut;
+        private DateTime _timeInit;
+        private TimeSpan _timerTime;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
 
@@ -19,6 +22,7 @@ namespace TopicTwister.PlayTurn.Timer
             _numericTime = float.Parse(_timerText.text);
             _invokedTimedOut = false;
             _interruptTurnEventContainer.InterruptTurn += InterruptTurnEventHandler;
+            _timeInit = DateTime.UtcNow;
         }
 
         private float NumericTime
@@ -37,9 +41,9 @@ namespace TopicTwister.PlayTurn.Timer
 
         void Update()
         {
-            if (_timerText.text != "0")
+            if (DifferenceTimes())
             {
-                CountDown();
+                
             }
             else if (!_invokedTimedOut)
             {
@@ -53,6 +57,32 @@ namespace TopicTwister.PlayTurn.Timer
             NumericTime -= Time.deltaTime;
         }
         
+        private bool DifferenceTimes()
+        {
+            
+            
+            _timerTime = DateTime.UtcNow.Subtract(_timeInit);
+
+            
+            if (_timerTime.TotalSeconds > 60)
+            {
+                NumericTime = 0f;
+                return false;
+            }
+
+            if (_timerTime.TotalSeconds >= 1)
+            {
+                NumericTime = 60f - (float)_timerTime.TotalSeconds;
+                return true;
+            }
+
+            if (_timerTime.TotalSeconds > 60)
+            {
+                return false;
+            }
+            return true;
+        }
+
         private void InterruptTurnEventHandler()
         {
             NumericTime = 0;
