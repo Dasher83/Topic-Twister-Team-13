@@ -28,7 +28,7 @@ public class CreateBotMatchUseCaseTests
     }
 
     [Test]
-    public void Test_ok_creation_and_persistance_of_match_and_usermatches()
+    public void Test_ok_creation_of_match_and_usermatches()
     {
         #region -- Arrange --
         int testUserId = 1;
@@ -63,7 +63,7 @@ public class CreateBotMatchUseCaseTests
             });
 
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Persist(Arg.Any<Match>()).Returns(
+        _matchesRepository.Save(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 Match match = (Match)args[0];
@@ -74,7 +74,7 @@ public class CreateBotMatchUseCaseTests
             });
 
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _userMatchesRepository.Persist(Arg.Any<UserMatch>()).Returns(
+        _userMatchesRepository.Save(Arg.Any<UserMatch>()).Returns(
             (args) =>
             {
                 UserMatch userMatch = (UserMatch)args[0];
@@ -158,7 +158,7 @@ public class CreateBotMatchUseCaseTests
             mapper: _mapper);
         #endregion
 
-        #region -- Act & Assert--
+        #region -- Act & Assert --
         UserNotFoundInUseCaseException exception = Assert.Throws<UserNotFoundInUseCaseException>(() => _useCase.Create(userId));
         Assert.IsNotNull(exception);
         Assert.AreEqual(expected: $"userId: {userId}", actual: exception.Message);
@@ -170,7 +170,7 @@ public class CreateBotMatchUseCaseTests
     {
         #region -- Arrange --
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Persist(Arg.Any<Match>()).Returns(args => { throw new MatchNotPersistedByRepositoryException();});
+        _matchesRepository.Save(Arg.Any<Match>()).Returns(args => { throw new MatchNotSavedByRepositoryException();});
 
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _userRepository = Substitute.For<IUserRepository>();
@@ -193,7 +193,7 @@ public class CreateBotMatchUseCaseTests
     {
         #region -- Arrange --
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Persist(Arg.Any<Match>()).Returns(args =>  new Match(id: 1,startDateTime: DateTime.UtcNow,endDateTime: null ));
+        _matchesRepository.Save(Arg.Any<Match>()).Returns(args =>  new Match(id: 1,startDateTime: DateTime.UtcNow,endDateTime: null ));
 
         _userRepository = Substitute.For<IUserRepository>();
         _userRepository.Get(Arg.Any<int>()).Returns(
@@ -206,7 +206,7 @@ public class CreateBotMatchUseCaseTests
 
         _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _userMatchesRepository.Persist(Arg.Any<UserMatch>()).Returns(args => { throw new UserMatchNotPersistedByRepositoryException(); });
+        _userMatchesRepository.Save(Arg.Any<UserMatch>()).Returns(args => { throw new UserMatchNotSabedByRepositoryException(); });
 
         _useCase = new CreateBotMatchUseCase(
             matchesRepository: _matchesRepository,

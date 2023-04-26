@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using TopicTwister.NewRound.Commands;
+using TopicTwister.NewRound.Repositories;
 using TopicTwister.NewRound.Services;
+using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.Interfaces;
 
 
@@ -14,7 +16,9 @@ namespace TopicTwister.NewRound.Shared.Providers
             {
                 typeof(CreateRoundCommand),
                 new CreateRoundCommand(
-                    gatewayService: new CreateRoundGatewayService())
+                    gatewayService: new CreateRoundGatewayService(
+                        useCase: new CreateRoundUseCase(
+                            roundsRepository: new RoundsRespositoryJson())))
             }
         };
 

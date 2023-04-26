@@ -29,7 +29,7 @@ namespace TopicTwister.Shared.Repositories
             _idGenerator = idGenerator;
         }
 
-        public Match Persist(Match match)
+        public Match Save(Match match)
         {
             _matchesReadCache = _mapper.ToDAOs(GetAll());
             _matchesWriteCache = _matchesReadCache.ToList();
@@ -49,7 +49,7 @@ namespace TopicTwister.Shared.Repositories
             }
             catch (MatchNotFoundByRespositoryException)
             {
-                throw new MatchNotPersistedByRepositoryException();
+                throw new MatchNotSavedByRepositoryException();
             }
         }
 

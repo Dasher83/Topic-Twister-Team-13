@@ -6,7 +6,7 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface IMatchesRepository: IMatchesReadOnlyRepository
     {
-        Match Persist(Match match);
+        Match Save(Match match);
         void Delete(int id);
     }
 }

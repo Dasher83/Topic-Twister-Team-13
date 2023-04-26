@@ -42,9 +42,9 @@ namespace TopicTwister.Home.UseCases
             Match match = new Match();
             try
             {
-                match = _matchesRepository.Persist(match);
+                match = _matchesRepository.Save(match);
             }
-            catch (MatchNotPersistedByRepositoryException ex)
+            catch (MatchNotSavedByRepositoryException ex)
             {
                 throw new MatchNotCreatedInUseCaseException(inner: ex);
             }
@@ -58,9 +58,9 @@ namespace TopicTwister.Home.UseCases
 
             try
             {
-                _userMatchesRepository.Persist(userMatch);
+                _userMatchesRepository.Save(userMatch);
             }
-            catch(UserMatchNotPersistedByRepositoryException ex)
+            catch(UserMatchNotSabedByRepositoryException ex)
             {
                 _matchesRepository.Delete(match.Id);
                 throw new MatchNotCreatedInUseCaseException(inner: ex);
@@ -75,9 +75,9 @@ namespace TopicTwister.Home.UseCases
 
             try
             {
-                _userMatchesRepository.Persist(userMatch);
+                _userMatchesRepository.Save(userMatch);
             }
-            catch (UserMatchNotPersistedByRepositoryException ex)
+            catch (UserMatchNotSabedByRepositoryException ex)
             {
                 _matchesRepository.Delete(match.Id);
                 throw new MatchNotCreatedInUseCaseException(inner: ex);

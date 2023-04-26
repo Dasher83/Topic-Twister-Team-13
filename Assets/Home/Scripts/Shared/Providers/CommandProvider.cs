@@ -32,8 +32,8 @@ namespace TopicTwister.Home.Shared.Providers
                                         idGenerator: new MatchesIdGenerator(
                                             matchesRepository: new MatchesReadOnlyRepositoryJson(
                                             matchesResourceName: "DevelopmentData/Matches"))),
-                                    userRepository: new UserRepositoryInMemory()),
-                                new UserRepositoryInMemory(),
+                                    userRepository: new UsersRepositoryInMemory()),
+                                new UsersRepositoryInMemory(),
                                 new MatchDtoMapper())))
             }
         };

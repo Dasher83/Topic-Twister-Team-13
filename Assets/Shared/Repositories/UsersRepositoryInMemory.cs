@@ -7,11 +7,11 @@ using TopicTwister.Shared.Repositories.Exceptions;
 
 namespace TopicTwister.Shared.Repositories
 {
-    public class UserRepositoryInMemory : IUserRepository
+    public class UsersRepositoryInMemory : IUserRepository
     {
         private List<User> _readCache;
 
-        public UserRepositoryInMemory()
+        public UsersRepositoryInMemory()
         {
             _readCache = new List<User>()
             {

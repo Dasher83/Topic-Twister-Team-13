@@ -29,7 +29,7 @@ namespace TopicTwister.Shared.Repositories
             _userMatchesReadCache = _mapper.ToDAOs(GetAll());
         }
 
-        public UserMatch Persist(UserMatch userMatch)
+        public UserMatch Save(UserMatch userMatch)
         {
             _userMatchesReadCache = _mapper.ToDAOs(GetAll());
             _userMatchesWriteCache = _userMatchesReadCache.ToList();
@@ -45,7 +45,7 @@ namespace TopicTwister.Shared.Repositories
             }
             catch (UserMatchNotFoundByRepositoryException)
             {
-                throw new UserMatchNotPersistedByRepositoryException();
+                throw new UserMatchNotSabedByRepositoryException();
             }
             return newUserMatch;
         }

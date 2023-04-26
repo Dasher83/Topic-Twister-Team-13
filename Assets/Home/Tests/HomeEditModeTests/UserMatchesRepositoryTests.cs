@@ -22,7 +22,7 @@ public class UserMatchesRepositoryTests
     [SetUp]
     public void SetUp()
     {
-        _userRepository = new UserRepositoryInMemory();
+        _userRepository = new UsersRepositoryInMemory();
         _idGenerator = new MatchesIdGenerator(new MatchesReadOnlyRepositoryJson(matchesResourceName: "TestData/MatchesTest"));
         _matchRepository = new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest",idGenerator: _idGenerator);
         _userMatchesRepository = new UserMatchesRepositoryJson(
@@ -42,7 +42,7 @@ public class UserMatchesRepositoryTests
     public void Test_ok_all_operations()
     {
         Match match = new Match();
-        match = _matchRepository.Persist(match);
+        match = _matchRepository.Save(match);
 
         List<UserMatch> userMatches = new List<UserMatch>() {
             new UserMatch(
@@ -62,7 +62,7 @@ public class UserMatchesRepositoryTests
 
         for (int i = 0; i < userMatches.Count; i++)
         {
-            userMatches[i] = _userMatchesRepository.Persist(userMatches[i]);
+            userMatches[i] = _userMatchesRepository.Save(userMatches[i]);
 
             UserMatch expectedUserMatch = new UserMatch(
                 score: userMatches[i].Score,

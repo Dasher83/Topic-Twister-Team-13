@@ -41,7 +41,7 @@ public class MatchRepositoryTests
 
         for(int i = 0; i < matches.Count; i++)
         {
-            matches[i] = _matchesRepository.Persist(matches[i]);
+            matches[i] = _matchesRepository.Save(matches[i]);
             Match expectedMatch = new Match(id: ids[i], startDateTime: DateTime.UtcNow, endDateTime: null);
             Assert.AreEqual(expected: expectedMatch, actual: matches[i]);
         }
@@ -78,12 +78,12 @@ public class MatchRepositoryTests
 
         try
         {
-            Assert.Throws<MatchNotPersistedByRepositoryException>(
+            Assert.Throws<MatchNotSavedByRepositoryException>(
             () =>
             {
-                _matchesRepository.Persist(match: new Match(id: -1, startDateTime: DateTime.UtcNow, endDateTime: null));
+                _matchesRepository.Save(match: new Match(id: -1, startDateTime: DateTime.UtcNow, endDateTime: null));
             });
         }
-        catch (MatchNotPersistedByRepositoryException) { }
+        catch (MatchNotSavedByRepositoryException) { }
     }
 }

@@ -7,6 +7,8 @@ namespace TopicTwister.Shared.DTOs
     [Serializable]
     public class RoundDto
     {
+        [SerializeField] private string _id;
+
         [SerializeField] private int _roundNumber;
 
         [SerializeField] private char _initialLetter;
