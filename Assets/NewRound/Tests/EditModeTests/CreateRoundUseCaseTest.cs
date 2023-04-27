@@ -96,7 +96,7 @@ namespace NewRoundTests
             #region -- Act & Assert --
             NewRoundForInactiveMatchUseCaseException exception = Assert.Throws<NewRoundForInactiveMatchUseCaseException>(
                 () => _useCase.Create(matchDto: matchDto));
-            Assert.AreEqual(expected: $"matchDto.Id: {matchDto}", actual: exception.Message);
+            Assert.AreEqual(expected: $"matchDto.Id: {matchDto.Id}", actual: exception.Message);
             #endregion
         }
     }

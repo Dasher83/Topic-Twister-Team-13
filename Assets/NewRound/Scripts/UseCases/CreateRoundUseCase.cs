@@ -5,6 +5,7 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories.Exceptions;
+using TopicTwister.Shared.UseCases.Utils;
 
 
 namespace TopicTwister.NewRound.UseCases
@@ -28,7 +29,7 @@ namespace TopicTwister.NewRound.UseCases
             _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         }
 
-        public RoundWithCategoriesDto Create(MatchDTO matchDto)
+        public UseCaseResult<RoundWithCategoriesDto> Create(MatchDTO matchDto)
         {
             Match match;
             try
@@ -42,7 +43,7 @@ namespace TopicTwister.NewRound.UseCases
 
             if (match.IsActive == false)
             {
-                throw new NewRoundForInactiveMatchUseCaseException(message: $"matchDto.Id: {matchDto}");
+                throw new NewRoundForInactiveMatchUseCaseException(message: $"matchDto.Id: {matchDto.Id}");
             }
 
             return null;

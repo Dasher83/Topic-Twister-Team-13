@@ -1,6 +1,6 @@
 using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
-
+using TopicTwister.Shared.UseCases.Utils;
 
 namespace TopicTwister.Home.Services
 {
@@ -16,7 +16,8 @@ namespace TopicTwister.Home.Services
 
         public MatchDTO Create()
         {
-            return _useCase.Create(userId: UserTestId);
+            UseCaseResult<MatchDTO> useCaseResult = _useCase.Create(userId: UserTestId);
+            return useCaseResult.WasOk ? useCaseResult.Outcome : null;
         }
     }
 }

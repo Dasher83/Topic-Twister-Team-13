@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
-using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.UseCases.Utils;
 
 
 namespace TopicTwister.TurnResult.UseCases
@@ -18,7 +18,7 @@ namespace TopicTwister.TurnResult.UseCases
             _wordRepository = wordsRepository;
         }
 
-        public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
+        public UseCaseResult<List<EvaluatedAnswerDTO>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
             List<EvaluatedAnswerDTO> result = new List<EvaluatedAnswerDTO>();
             EvaluatedAnswerDTO evaluatedAnswer;
@@ -47,7 +47,8 @@ namespace TopicTwister.TurnResult.UseCases
                 result.Add(evaluatedAnswer);
             }
 
-            return result;
+            UseCaseResult<List<EvaluatedAnswerDTO>> useCaseResult = UseCaseResult<List<EvaluatedAnswerDTO>>.Success(outcome: result);
+            return useCaseResult;
         }
     }
 }

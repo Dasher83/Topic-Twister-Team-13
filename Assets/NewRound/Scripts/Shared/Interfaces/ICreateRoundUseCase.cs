@@ -1,10 +1,11 @@
 ﻿using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.UseCases.Utils;
 
 
 namespace TopicTwister.NewRound.Shared.Interfaces
 {
     public interface ICreateRoundUseCase
     {
-        RoundWithCategoriesDto Create(MatchDTO matchDto);
+        UseCaseResult<RoundWithCategoriesDto> Create(MatchDTO matchDto);
     }
 }

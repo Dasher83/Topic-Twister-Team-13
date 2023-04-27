@@ -3,6 +3,7 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories.Exceptions;
+using TopicTwister.Shared.UseCases.Utils;
 
 
 namespace TopicTwister.Home.UseCases
@@ -27,7 +28,7 @@ namespace TopicTwister.Home.UseCases
             _mapper = mapper;
         }
 
-        public MatchDTO Create(int userId)
+        public UseCaseResult<MatchDTO> Create(int userId)
         {
             User user;
             try
@@ -83,7 +84,8 @@ namespace TopicTwister.Home.UseCases
                 throw new MatchNotCreatedInUseCaseException(inner: ex);
             }
 
-            return _mapper.ToDTO(match);
+            UseCaseResult<MatchDTO> useCaseResult = UseCaseResult<MatchDTO>.Success(outcome: _mapper.ToDTO(match));
+            return useCaseResult;
         }
     }
 }
