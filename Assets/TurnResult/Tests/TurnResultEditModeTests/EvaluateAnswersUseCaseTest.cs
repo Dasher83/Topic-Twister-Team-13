@@ -7,6 +7,8 @@ using TopicTwister.TurnResult.UseCases;
 using TopicTwister.TurnResult.Repositories;
 using System.Linq;
 using System;
+using TopicTwister.Shared.UseCases.Utils;
+
 
 public class EvaluateAnswersUseCaseTest
 {
@@ -35,7 +37,7 @@ public class EvaluateAnswersUseCaseTest
         #endregion
 
         #region -- Act --
-        List<EvaluatedAnswerDTO> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
@@ -49,7 +51,7 @@ public class EvaluateAnswersUseCaseTest
                 order: answer.Order));
         }
 
-        Assert.AreEqual(expectedResult, actualResult);
+        Assert.AreEqual(expectedResult, actualResult.Outcome);
         #endregion
     }
 
@@ -70,7 +72,7 @@ public class EvaluateAnswersUseCaseTest
         #endregion
 
         #region -- Act --
-        List<EvaluatedAnswerDTO> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
@@ -84,7 +86,7 @@ public class EvaluateAnswersUseCaseTest
                 order: answer.Order));
         }
 
-        Assert.AreEqual(expectedResult, actualResult);
+        Assert.AreEqual(expectedResult, actualResult.Outcome);
         #endregion
     }
 
@@ -121,10 +123,10 @@ public class EvaluateAnswersUseCaseTest
                         userInput: $"{letter} test", order: 4),
                 };
                 AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter: letter, turnAnswers);
-        #endregion
+                #endregion
 
                 #region -- Act --
-                List<EvaluatedAnswerDTO> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+                UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
                 #endregion
 
                 #region -- Assert --
@@ -138,7 +140,7 @@ public class EvaluateAnswersUseCaseTest
                         order: answer.Order));
                 }
 
-                Assert.AreEqual(expectedResult, actualResult);
+                Assert.AreEqual(expectedResult, actualResult.Outcome);
                 #endregion
             }
         }
@@ -180,7 +182,7 @@ public class EvaluateAnswersUseCaseTest
             #endregion
 
             #region -- Act --
-            List<EvaluatedAnswerDTO> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+            UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
             #endregion
 
             #region -- Assert --
@@ -213,7 +215,7 @@ public class EvaluateAnswersUseCaseTest
                     order: turnAnswers[4].Order)
             };
 
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedResult, actualResult.Outcome);
             #endregion
         }
     }

@@ -10,6 +10,7 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories.Exceptions;
+using TopicTwister.Shared.UseCases.Utils;
 
 
 public class CreateBotMatchUseCaseTests
@@ -110,12 +111,12 @@ public class CreateBotMatchUseCaseTests
         #endregion
 
         #region -- Act --
-        MatchDTO actualResult = _useCase.Create(testUserId);
+        UseCaseResult<MatchDTO> actualResult = _useCase.Create(testUserId);
         #endregion
 
         #region -- Assert --
-        MatchDTO expectedMatch = new MatchDTO(id: actualResult.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
-        Assert.AreEqual(expectedMatch, actualResult);
+        MatchDTO expectedMatch = new MatchDTO(id: actualResult.Outcome.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
+        Assert.AreEqual(expectedMatch, actualResult.Outcome);
 
         UserMatch expectedUserMatch = new UserMatch(
             score: 0, isWinner: false, hasInitiative: true, user: _userRepository.Get(testUserId), match: _mapper.FromDTO(expectedMatch));
