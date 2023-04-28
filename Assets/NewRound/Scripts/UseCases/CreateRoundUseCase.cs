@@ -4,8 +4,7 @@ using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
-using TopicTwister.Shared.Repositories.Exceptions;
-using TopicTwister.Shared.UseCases.Utils;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.NewRound.UseCases
@@ -29,24 +28,22 @@ namespace TopicTwister.NewRound.UseCases
             _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         }
 
-        public UseCaseResult<RoundWithCategoriesDto> Create(MatchDTO matchDto)
+        public Result<RoundWithCategoriesDto> Create(MatchDTO matchDto)
         {
-            Match match;
-            try
+            Result<Match> getMatchOperationResult = _matchesRepository.Get(id: matchDto.Id);
+            if(getMatchOperationResult.WasOk == false)
             {
-                match = _matchesRepository.Get(id: matchDto.Id);
-            }
-            catch (MatchNotFoundByRespositoryException exception)
-            {
-                throw new RoundNotCreatedInUseCaseException(inner: exception);
+                return Result<RoundWithCategoriesDto>.Failure(errorMessage: getMatchOperationResult.ErrorMessage);
             }
 
+            Match match = getMatchOperationResult.Outcome;
             if (match.IsActive == false)
             {
-                throw new NewRoundForInactiveMatchUseCaseException(message: $"matchDto.Id: {matchDto.Id}");
+                return Result<RoundWithCategoriesDto>.Failure(
+                    errorMessage: $"Cannot create new round for inactive match with id: {matchDto.Id}");
             }
 
-            return null;
+            return Result<RoundWithCategoriesDto>.Success(outcome: null);
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Shared.Interfaces
 {
     public interface IUserMatchesRepository
     {
-        UserMatch Save(UserMatch userMatch);
-        UserMatch Get(int userId, int matchId);
-        List<UserMatch> GetAll();
+        Result<UserMatch> Save(UserMatch userMatch);
+        Result<UserMatch> Get(int userId, int matchId);
+        Result<List<UserMatch>> GetAll();
     }
 }

@@ -7,7 +7,7 @@ using TopicTwister.TurnResult.UseCases;
 using TopicTwister.TurnResult.Repositories;
 using System.Linq;
 using System;
-using TopicTwister.Shared.UseCases.Utils;
+using TopicTwister.Shared.Utils;
 
 
 public class EvaluateAnswersUseCaseTest
@@ -37,7 +37,7 @@ public class EvaluateAnswersUseCaseTest
         #endregion
 
         #region -- Act --
-        UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
@@ -72,7 +72,7 @@ public class EvaluateAnswersUseCaseTest
         #endregion
 
         #region -- Act --
-        UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
@@ -126,7 +126,7 @@ public class EvaluateAnswersUseCaseTest
                 #endregion
 
                 #region -- Act --
-                UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+                Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
                 #endregion
 
                 #region -- Assert --
@@ -182,7 +182,7 @@ public class EvaluateAnswersUseCaseTest
             #endregion
 
             #region -- Act --
-            UseCaseResult<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+            Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
             #endregion
 
             #region -- Assert --

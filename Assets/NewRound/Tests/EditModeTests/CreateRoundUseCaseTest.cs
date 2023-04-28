@@ -8,7 +8,7 @@ using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
-using TopicTwister.Shared.Repositories.Exceptions;
+using TopicTwister.Shared.Utils;
 
 
 namespace NewRoundTests
@@ -37,9 +37,9 @@ namespace NewRoundTests
                     int id = (int)args[0];
                     if (id < 0)
                     {
-                        throw new MatchNotFoundByRespositoryException();
+                        return Result<Match>.Failure(errorMessage: $"Match not found with id: {id}");
                     }
-                    return new Match(id, startDateTime: DateTime.UtcNow);
+                    return Result<Match>.Success(outcome: new Match(id, startDateTime: DateTime.UtcNow));
                 });
 
             _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
@@ -52,10 +52,13 @@ namespace NewRoundTests
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
-            #region -- Act & Assert --
-            RoundNotCreatedInUseCaseException exception = Assert.Throws<RoundNotCreatedInUseCaseException>(
-                () => _useCase.Create(matchDto: matchDto));
-            Assert.IsNotNull(exception);
+            #region -- Act --
+            Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            #endregion
+
+            #region -- Assert --
+            Assert.IsFalse(useCaseOperationResult.WasOk);
+            Assert.AreEqual(expected: $"Match not found with id: {matchDto.Id}", actual: useCaseOperationResult.ErrorMessage);
             #endregion
         }
 
@@ -77,10 +80,11 @@ namespace NewRoundTests
                 (args) =>
                 {
                     int id = (int)args[0];
-                    return new Match(
-                        id: id,
-                        startDateTime: startDateTime,
-                        endDateTime: endDateTime); ;
+                    return Result<Match>.Success(
+                        outcome: new Match(
+                            id: id,
+                            startDateTime: startDateTime,
+                            endDateTime: endDateTime));
                 });
 
             _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
@@ -93,10 +97,15 @@ namespace NewRoundTests
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
-            #region -- Act & Assert --
-            NewRoundForInactiveMatchUseCaseException exception = Assert.Throws<NewRoundForInactiveMatchUseCaseException>(
-                () => _useCase.Create(matchDto: matchDto));
-            Assert.AreEqual(expected: $"matchDto.Id: {matchDto.Id}", actual: exception.Message);
+            #region -- Act --
+            Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            #endregion
+
+            #region -- Assert --
+            Assert.IsFalse(useCaseOperationResult.WasOk);
+            Assert.AreEqual(
+                expected: $"Cannot create new round for inactive match with id: {matchDto.Id}",
+                actual: useCaseOperationResult.ErrorMessage);
             #endregion
         }
     }

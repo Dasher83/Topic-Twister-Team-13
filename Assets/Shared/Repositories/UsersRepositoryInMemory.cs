@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
-using TopicTwister.Shared.Repositories.Exceptions;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Shared.Repositories
@@ -21,14 +21,14 @@ namespace TopicTwister.Shared.Repositories
 
         }
 
-        public User Get(int id)
+        public Result<User> Get(int id)
         {
             User user = _readCache.SingleOrDefault(user => user.Id == id);
             if(user == null)
             {
-                throw new UserNotFoundByRepositoryException();
+                return Result<User>.Failure(errorMessage: $"User not found with id: {id}");
             }
-            return user;
+            return Result<User>.Success(outcome: user);
         }
     }
 }

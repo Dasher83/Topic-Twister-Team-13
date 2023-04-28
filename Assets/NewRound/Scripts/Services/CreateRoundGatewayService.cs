@@ -1,6 +1,6 @@
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
-using TopicTwister.Shared.UseCases.Utils;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.NewRound.Services
@@ -16,7 +16,7 @@ namespace TopicTwister.NewRound.Services
 
         public RoundWithCategoriesDto Create(MatchDTO matchDto)
         {
-            UseCaseResult<RoundWithCategoriesDto> useCaseResult = _useCase.Create(matchDto);
+            Result<RoundWithCategoriesDto> useCaseResult = _useCase.Create(matchDto);
             return useCaseResult.WasOk ? useCaseResult.Outcome : null;
         }
     }

@@ -42,7 +42,7 @@ public class UserMatchesRepositoryTests
     public void Test_ok_all_operations()
     {
         Match match = new Match();
-        match = _matchRepository.Save(match);
+        match = _matchRepository.Save(match).Outcome;
 
         List<UserMatch> userMatches = new List<UserMatch>() {
             new UserMatch(
@@ -62,7 +62,7 @@ public class UserMatchesRepositoryTests
 
         for (int i = 0; i < userMatches.Count; i++)
         {
-            userMatches[i] = _userMatchesRepository.Save(userMatches[i]);
+            userMatches[i] = _userMatchesRepository.Save(userMatches[i]).Outcome;
 
             UserMatch expectedUserMatch = new UserMatch(
                 score: userMatches[i].Score,
@@ -76,12 +76,14 @@ public class UserMatchesRepositoryTests
 
         for (int i = 0; i < userMatches.Count; i++)
         {
-            UserMatch actualUserMatch = _userMatchesRepository.Get(userId: userMatches[i].User.Id, matchId: userMatches[i].Match.Id);
+            UserMatch actualUserMatch = _userMatchesRepository.Get(
+                userId: userMatches[i].User.Id,
+                matchId: userMatches[i].Match.Id).Outcome;
             UserMatch expectedUserMatch = userMatches[i];
             Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         }
 
-        List<UserMatch> expectedUserMatches = _userMatchesRepository.GetAll();
+        List<UserMatch> expectedUserMatches = _userMatchesRepository.GetAll().Outcome;
         Assert.AreEqual(expected: expectedUserMatches, actual: userMatches);
     }
 }

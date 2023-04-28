@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TopicTwister.Shared.DTOs;
-using TopicTwister.Shared.UseCases.Utils;
+using TopicTwister.Shared.Utils;
 using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
 
@@ -20,7 +20,7 @@ namespace TopicTwister.TurnResult.Services
 
         public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            UseCaseResult<List<EvaluatedAnswerDTO>> useCaseResult = _useCase.EvaluateAnswers(answerToEvaluate);
+            Result<List<EvaluatedAnswerDTO>> useCaseResult = _useCase.EvaluateAnswers(answerToEvaluate);
             return useCaseResult.WasOk ? useCaseResult.Outcome : null;
         }
     }

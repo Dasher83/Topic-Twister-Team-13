@@ -1,11 +1,11 @@
 using TopicTwister.Shared.DTOs;
-using TopicTwister.Shared.UseCases.Utils;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Home.Shared.Interfaces
 {
     public interface ICreateBotMatchUseCase
     {
-        UseCaseResult<MatchDTO> Create(int userId);
+        Result<MatchDTO> Create(int userId);
     }
 }

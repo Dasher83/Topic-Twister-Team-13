@@ -2,8 +2,7 @@ using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
-using TopicTwister.Shared.Repositories.Exceptions;
-using TopicTwister.Shared.UseCases.Utils;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Home.UseCases
@@ -28,27 +27,25 @@ namespace TopicTwister.Home.UseCases
             _mapper = mapper;
         }
 
-        public UseCaseResult<MatchDTO> Create(int userId)
+        public Result<MatchDTO> Create(int userId)
         {
-            User user;
-            try
+            Result<User> getUserOperationResult = _userRepository.Get(userId);
+
+            if (getUserOperationResult.WasOk == false)
             {
-               user = _userRepository.Get(userId);
-            }
-            catch (UserNotFoundByRepositoryException)
-            {
-                throw new UserNotFoundInUseCaseException(message: $"userId: {userId}");
+                return Result<MatchDTO>.Failure(errorMessage: getUserOperationResult.ErrorMessage);
             }
 
+            User user = getUserOperationResult.Outcome;
             Match match = new Match();
-            try
+            Result<Match> saveMatchOperation = _matchesRepository.Save(match);
+
+            if(saveMatchOperation.WasOk == false)
             {
-                match = _matchesRepository.Save(match);
+                return Result<MatchDTO>.Failure(errorMessage: saveMatchOperation.ErrorMessage);
             }
-            catch (MatchNotSavedByRepositoryException ex)
-            {
-                throw new MatchNotCreatedInUseCaseException(inner: ex);
-            }
+
+            match = saveMatchOperation.Outcome;
 
             UserMatch userMatch = new UserMatch(
                 score: 0,
@@ -57,34 +54,30 @@ namespace TopicTwister.Home.UseCases
                 user: user,
                 match: match);
 
-            try
-            {
-                _userMatchesRepository.Save(userMatch);
-            }
-            catch(UserMatchNotSabedByRepositoryException ex)
+            Result<UserMatch> saveUserMatchOperation = _userMatchesRepository.Save(userMatch);
+
+            if(saveUserMatchOperation.WasOk == false)
             {
                 _matchesRepository.Delete(match.Id);
-                throw new MatchNotCreatedInUseCaseException(inner: ex);
+                return Result<MatchDTO>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
             }
 
             userMatch = new UserMatch(
                 score: 0,
                 isWinner: false,
                 hasInitiative: false,
-                user: _userRepository.Get(BotId),
+                user: _userRepository.Get(BotId).Outcome,
                 match: match);
 
-            try
-            {
-                _userMatchesRepository.Save(userMatch);
-            }
-            catch (UserMatchNotSabedByRepositoryException ex)
+            saveUserMatchOperation = _userMatchesRepository.Save(userMatch);
+
+            if (saveUserMatchOperation.WasOk == false)
             {
                 _matchesRepository.Delete(match.Id);
-                throw new MatchNotCreatedInUseCaseException(inner: ex);
+                return Result<MatchDTO>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
             }
 
-            UseCaseResult<MatchDTO> useCaseResult = UseCaseResult<MatchDTO>.Success(outcome: _mapper.ToDTO(match));
+            Result<MatchDTO> useCaseResult = Result<MatchDTO>.Success(outcome: _mapper.ToDTO(match));
             return useCaseResult;
         }
     }

@@ -1,6 +1,6 @@
-﻿namespace TopicTwister.Shared.UseCases.Utils
+﻿namespace TopicTwister.Shared.Utils
 {
-    public class UseCaseResult<T>
+    public class Result<T>
     {
         private readonly T _outcome;
         private readonly string _errorMessage;
@@ -10,21 +10,21 @@
         public string ErrorMessage { get => _errorMessage; }
         public bool WasOk { get => _wasOk; }
 
-        private UseCaseResult(T outcome, string errorMessage, bool wasOk)
+        private Result(T outcome, string errorMessage, bool wasOk)
         {
             _outcome = outcome;
             _errorMessage = errorMessage;
             _wasOk = wasOk;
         }
 
-        public static UseCaseResult<T> Success(T outcome)
+        public static Result<T> Success(T outcome)
         {
-            return new UseCaseResult<T>(outcome, null, true);
+            return new Result<T>(outcome, null, true);
         }
 
-        public static UseCaseResult<T> Failure(string errorMessage)
+        public static Result<T> Failure(string errorMessage)
         {
-            return new UseCaseResult<T>(default, errorMessage, false);
+            return new Result<T>(default, errorMessage, false);
         }
     }
 }

@@ -35,8 +35,8 @@ namespace TopicTwister.Shared.Mappers
                 score: userMatchDTO.Score,
                 isWinner: userMatchDTO.IsWinner,
                 hasInitiative: userMatchDTO.HasInitiative,
-                user: _userRepository.Get(userMatchDTO.UserId),
-                match: _matchesRepository.Get(id: userMatchDTO.MatchId)
+                user: _userRepository.Get(userMatchDTO.UserId).Outcome,
+                match: _matchesRepository.Get(id: userMatchDTO.MatchId).Outcome
                 );
         }
 
