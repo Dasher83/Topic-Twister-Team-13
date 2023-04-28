@@ -30,6 +30,16 @@ namespace TopicTwister.Shared.Models
 
         public bool IsActive => string.IsNullOrEmpty(_endDateTime);
 
+        public bool IsValid
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_startDateTime)) return false;
+                if (string.IsNullOrEmpty(_endDateTime) == false && StartDateTime > EndDateTime) return false;
+                return true;
+            }
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

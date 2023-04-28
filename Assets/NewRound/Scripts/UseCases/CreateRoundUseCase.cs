@@ -31,12 +31,20 @@ namespace TopicTwister.NewRound.UseCases
         public Result<RoundWithCategoriesDto> Create(MatchDTO matchDto)
         {
             Result<Match> getMatchOperationResult = _matchesRepository.Get(id: matchDto.Id);
+
             if(getMatchOperationResult.WasOk == false)
             {
                 return Result<RoundWithCategoriesDto>.Failure(errorMessage: getMatchOperationResult.ErrorMessage);
             }
 
             Match match = getMatchOperationResult.Outcome;
+
+            if (match.IsValid == false)
+            {
+                return Result<RoundWithCategoriesDto>.Failure(
+                    errorMessage: $"Cannot create new round for invalid match with id: {matchDto.Id}");
+            }
+
             if (match.IsActive == false)
             {
                 return Result<RoundWithCategoriesDto>.Failure(
