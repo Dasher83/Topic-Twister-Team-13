@@ -11,8 +11,9 @@ namespace TopicTwister.PlayTurn.Timer
         private TextMeshProUGUI _timerText;
         private float _numericTime;
         private bool _invokedTimedOut;
-        private DateTime _timeInit;
-        private TimeSpan _timerTime;
+        private DateTime _initialDateTime;
+        private TimeSpan _elapsedTime;
+        private const float TurnMaxDuration = 60f;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
 
@@ -22,7 +23,7 @@ namespace TopicTwister.PlayTurn.Timer
             _numericTime = float.Parse(_timerText.text);
             _invokedTimedOut = false;
             _interruptTurnEventContainer.InterruptTurn += InterruptTurnEventHandler;
-            _timeInit = DateTime.UtcNow;
+            _initialDateTime = DateTime.UtcNow;
         }
 
         private float NumericTime
@@ -41,51 +42,30 @@ namespace TopicTwister.PlayTurn.Timer
 
         void Update()
         {
-            if (DifferenceTimes())
+            DifferenceTimes();
+        }
+
+
+        
+        private void DifferenceTimes()
+        {
+            _elapsedTime = DateTime.UtcNow.Subtract(_initialDateTime);
+
+            if (_elapsedTime.TotalSeconds > TurnMaxDuration && !_invokedTimedOut) 
             {
-                
-            }
-            else if (!_invokedTimedOut)
-            {
+                NumericTime = 0f;
                 _timeOutEventContainer.TimeOut?.Invoke();
                 _invokedTimedOut = true;
             }
-        }
-
-        private void CountDown()
-        {
-            NumericTime -= Time.deltaTime;
-        }
-        
-        private bool DifferenceTimes()
-        {
-            
-            
-            _timerTime = DateTime.UtcNow.Subtract(_timeInit);
-
-            
-            if (_timerTime.TotalSeconds > 60)
+            else if (_elapsedTime.TotalSeconds >= 1 && !_invokedTimedOut)
             {
-                NumericTime = 0f;
-                return false;
+                NumericTime = TurnMaxDuration - (float)_elapsedTime.TotalSeconds;
             }
-
-            if (_timerTime.TotalSeconds >= 1)
-            {
-                NumericTime = 60f - (float)_timerTime.TotalSeconds;
-                return true;
-            }
-
-            if (_timerTime.TotalSeconds > 60)
-            {
-                return false;
-            }
-            return true;
         }
 
         private void InterruptTurnEventHandler()
         {
-            NumericTime = 0;
+            NumericTime = 0f;
             _invokedTimedOut = true;
         }
 
