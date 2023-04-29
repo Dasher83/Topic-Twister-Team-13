@@ -13,13 +13,13 @@ namespace TopicTwister.Shared.ScriptableObjects
         private RoundDto _roundDto;
 
         [SerializeField]
-        private List<CategoryDTO> _categoryDtos;
+        private List<CategoryDto> _categoryDtos;
 
         public RoundDto RoundDto => _roundDto;
 
-        public List<CategoryDTO> Categories => _categoryDtos.ToList();
+        public List<CategoryDto> Categories => _categoryDtos.ToList();
 
-        public void Initialize(RoundDto roundDto, List<CategoryDTO> categoryDtos)
+        public void Initialize(RoundDto roundDto, List<CategoryDto> categoryDtos)
         {
             _roundDto = roundDto;
             _categoryDtos = categoryDtos.ToList();

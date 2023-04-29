@@ -15,9 +15,9 @@ namespace TopicTwister.NewRound.Services
             _useCase = useCase;
         }
 
-        public CategoryDTO[] GetRandomCategories(int numberOfCategories)
+        public CategoryDto[] GetRandomCategories(int numberOfCategories)
         {
-            CategoryDTO[] categories = _useCase.GetRandomCategories(numberOfCategories);
+            CategoryDto[] categories = _useCase.GetRandomCategories(numberOfCategories);
             return categories;
         }
     }

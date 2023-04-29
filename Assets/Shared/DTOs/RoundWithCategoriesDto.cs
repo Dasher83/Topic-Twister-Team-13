@@ -6,12 +6,12 @@ namespace TopicTwister.Shared.DTOs
     public class RoundWithCategoriesDto
     {
         private RoundDto _roundDto;
-        private List<CategoryDTO> _categoryDtos;
+        private List<CategoryDto> _categoryDtos;
 
         public RoundDto RoundDto => _roundDto;
-        public List<CategoryDTO> CategoryDtos => _categoryDtos;
+        public List<CategoryDto> CategoryDtos => _categoryDtos;
 
-        public RoundWithCategoriesDto(RoundDto roundDto, List<CategoryDTO> categoryDtos)
+        public RoundWithCategoriesDto(RoundDto roundDto, List<CategoryDto> categoryDtos)
         { 
             _roundDto = roundDto;
             _categoryDtos = categoryDtos;

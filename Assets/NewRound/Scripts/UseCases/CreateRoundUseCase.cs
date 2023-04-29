@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TopicTwister.NewRound.Models;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.Mappers;
@@ -13,18 +14,18 @@ namespace TopicTwister.NewRound.UseCases
     {
         private IRoundsRepository _roundsRepository;
         private IMatchesRepository _matchesRepository;
-        private IdtoMapper<Match, MatchDTO> _matchDtoMapper;
-        private IdtoMapper<Round, RoundWithCategoriesDtoMapper> _roundWithCategoriesDtoMapper;
+        private ICategoriesReadOnlyRepository _categoryRepository;
+        private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
 
         public CreateRoundUseCase(
             IRoundsRepository roundsRepository,
             IMatchesRepository matchesRepository,
-            IdtoMapper<Match, MatchDTO> matchDtoMapper,
-            IdtoMapper<Round, RoundWithCategoriesDtoMapper> roundWithCategoriesDtoMapper)
+            ICategoriesReadOnlyRepository categoryRepository,
+            IdtoMapper<Round, RoundWithCategoriesDto> roundWithCategoriesDtoMapper)
         {
             _roundsRepository = roundsRepository;
             _matchesRepository = matchesRepository;
-            _matchDtoMapper = matchDtoMapper;
+            _categoryRepository = categoryRepository;
             _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         }
 
@@ -50,6 +51,14 @@ namespace TopicTwister.NewRound.UseCases
                 return Result<RoundWithCategoriesDto>.Failure(
                     errorMessage: $"Cannot create new round for inactive match with id: {matchDto.Id}");
             }
+
+            Round round = new Round(
+                roundNumber: 0,
+                initialLetter: 'A',
+                isActive: true,
+                categories: _categoryRepository.GetRandomCategories(5));
+
+
 
             return Result<RoundWithCategoriesDto>.Success(outcome: null);
         }

@@ -1,10 +1,11 @@
 ﻿using TopicTwister.NewRound.Models;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.NewRound.Shared.Interfaces
 {
     public interface IRoundsRepository
     {
-        Round Save(Round round);
+        Result<Round> Save(Round round);
     }
 }

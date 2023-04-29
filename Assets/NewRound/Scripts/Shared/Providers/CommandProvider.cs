@@ -28,7 +28,6 @@ namespace TopicTwister.NewRound.Shared.Providers
                                 idGenerator: new MatchesIdGenerator(
                                     matchesRepository: new MatchesReadOnlyRepositoryJson(
                                         matchesResourceName: "DevelopmentData/Matches"))),
-                            matchDtoMapper: new MatchDtoMapper(),
                             roundWithCategoriesDtoMapper: new RoundWithCategoriesDtoMapper())))
             }
         };

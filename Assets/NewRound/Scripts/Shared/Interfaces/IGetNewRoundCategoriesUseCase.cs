@@ -5,6 +5,6 @@ namespace TopicTwister.NewRound.Shared.Interfaces
 {
     public interface IGetNewRoundCategoriesUseCase
     {
-        CategoryDTO[] GetRandomCategories(int numberOfCategories);
+        CategoryDto[] GetRandomCategories(int numberOfCategories);
     }
 }

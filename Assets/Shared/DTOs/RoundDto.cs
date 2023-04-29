@@ -7,7 +7,7 @@ namespace TopicTwister.Shared.DTOs
     [Serializable]
     public class RoundDto
     {
-        [SerializeField] private string _id;
+        [SerializeField] private int _id;
 
         [SerializeField] private int _roundNumber;
 
@@ -23,6 +23,11 @@ namespace TopicTwister.Shared.DTOs
             _roundNumber = roundNumber;
             _initialLetter = initialLetter;
             _isActive = isActive;
+        }
+
+        public RoundDto(int id, int roundNumber, char initialLetter, bool isActive) : this(roundNumber, initialLetter, isActive)
+        {
+            _id = id;
         }
     }
 }

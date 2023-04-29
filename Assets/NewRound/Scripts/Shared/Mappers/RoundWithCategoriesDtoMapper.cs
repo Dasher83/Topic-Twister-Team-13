@@ -6,24 +6,24 @@ using TopicTwister.Shared.Interfaces;
 
 namespace TopicTwister.NewRound.Shared.Mappers
 {
-    public class RoundWithCategoriesDtoMapper : IdtoMapper<Round, RoundWithCategoriesDtoMapper>
+    public class RoundWithCategoriesDtoMapper : IdtoMapper<Round, RoundWithCategoriesDto>
     {
-        public Round FromDTO(RoundWithCategoriesDtoMapper DTO)
+        public Round FromDTO(RoundWithCategoriesDto dto)
         {
             throw new System.NotImplementedException();
         }
 
-        public List<Round> FromDTOs(List<RoundWithCategoriesDtoMapper> DTOs)
+        public List<Round> FromDTOs(List<RoundWithCategoriesDto> dtos)
         {
             throw new System.NotImplementedException();
         }
 
-        public RoundWithCategoriesDtoMapper ToDTO(Round model)
+        public RoundWithCategoriesDto ToDTO(Round round)
         {
             throw new System.NotImplementedException();
         }
 
-        public List<RoundWithCategoriesDtoMapper> ToDTOs(List<Round> models)
+        public List<RoundWithCategoriesDto> ToDTOs(List<Round> rounds)
         {
             throw new System.NotImplementedException();
         }

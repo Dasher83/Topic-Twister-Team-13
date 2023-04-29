@@ -8,20 +8,20 @@ namespace TopicTwister.PlayTurn.Shared.DTOs
     [Serializable]
     public class TurnAnswerDraftDTO
     {
-        [SerializeField] private CategoryDTO _category;
+        [SerializeField] private CategoryDto _category;
         [SerializeField] private string _userInput;
         [SerializeField] private int _order;
 
         private TurnAnswerDraftDTO() { }
 
-        public TurnAnswerDraftDTO(CategoryDTO category, int order)
+        public TurnAnswerDraftDTO(CategoryDto category, int order)
         {
             _category = category;
             _userInput = "";
             _order = order;
         }
 
-        public CategoryDTO Category => _category;
+        public CategoryDto Category => _category;
         
         public string UserInput 
         {

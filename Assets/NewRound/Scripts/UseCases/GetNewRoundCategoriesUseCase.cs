@@ -7,14 +7,14 @@ namespace TopicTwister.NewRound.UseCases
 {
     public class GetNewRoundCategoriesUseCase : IGetNewRoundCategoriesUseCase
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoriesReadOnlyRepository _categoryRepository;
 
-        public GetNewRoundCategoriesUseCase(ICategoryRepository categoryRepository)
+        public GetNewRoundCategoriesUseCase(ICategoriesReadOnlyRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
 
-        public CategoryDTO[] GetRandomCategories(int numberOfCategories)
+        public CategoryDto[] GetRandomCategories(int numberOfCategories)
         {
             return _categoryRepository.GetRandomCategories(numberOfCategories);
         }

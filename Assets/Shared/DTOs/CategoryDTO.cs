@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class CategoryDTO
+    public class CategoryDto
     {
         [SerializeField]
         private string _id;
@@ -16,9 +16,9 @@ namespace TopicTwister.Shared.DTOs
         public string Id => _id;
         public string Name => _name;
 
-        private CategoryDTO() { }
+        private CategoryDto() { }
 
-        public CategoryDTO(string id, string name)
+        public CategoryDto(string id, string name)
         {
             _id = id;
             _name = name;
@@ -29,7 +29,7 @@ namespace TopicTwister.Shared.DTOs
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            CategoryDTO other = (CategoryDTO)obj;
+            CategoryDto other = (CategoryDto)obj;
             return this._id == other._id &&
                 this._name == other._name;
         }
