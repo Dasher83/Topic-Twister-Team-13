@@ -42,12 +42,12 @@ namespace TopicTwister.PlayTurn.Timer
 
         void Update()
         {
-            DifferenceTimes();
+            SubstractTime();
         }
 
 
         
-        private void DifferenceTimes()
+        private void SubstractTime()
         {
             _elapsedTime = DateTime.UtcNow.Subtract(_initialDateTime);
 
@@ -57,7 +57,7 @@ namespace TopicTwister.PlayTurn.Timer
                 _timeOutEventContainer.TimeOut?.Invoke();
                 _invokedTimedOut = true;
             }
-            else if (_elapsedTime.TotalSeconds >= 1 && !_invokedTimedOut)
+            else if (!_invokedTimedOut)
             {
                 NumericTime = TurnMaxDuration - (float)_elapsedTime.TotalSeconds;
             }
