@@ -1,6 +1,7 @@
 using TMPro;
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using UnityEngine;
+using System;
 
 
 namespace TopicTwister.PlayTurn.Timer
@@ -10,6 +11,9 @@ namespace TopicTwister.PlayTurn.Timer
         private TextMeshProUGUI _timerText;
         private float _numericTime;
         private bool _invokedTimedOut;
+        private DateTime _initialDateTime;
+        private TimeSpan _elapsedTime;
+        private const float TurnMaxDuration = 60f;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
 
@@ -19,6 +23,7 @@ namespace TopicTwister.PlayTurn.Timer
             _numericTime = float.Parse(_timerText.text);
             _invokedTimedOut = false;
             _interruptTurnEventContainer.InterruptTurn += InterruptTurnEventHandler;
+            _initialDateTime = DateTime.UtcNow;
         }
 
         private float NumericTime
@@ -37,25 +42,30 @@ namespace TopicTwister.PlayTurn.Timer
 
         void Update()
         {
-            if (_timerText.text != "0")
+            SubstractTime();
+        }
+
+
+        
+        private void SubstractTime()
+        {
+            _elapsedTime = DateTime.UtcNow.Subtract(_initialDateTime);
+
+            if (_elapsedTime.TotalSeconds > TurnMaxDuration && !_invokedTimedOut) 
             {
-                CountDown();
-            }
-            else if (!_invokedTimedOut)
-            {
+                NumericTime = 0f;
                 _timeOutEventContainer.TimeOut?.Invoke();
                 _invokedTimedOut = true;
             }
+            else if (!_invokedTimedOut)
+            {
+                NumericTime = TurnMaxDuration - (float)_elapsedTime.TotalSeconds;
+            }
         }
 
-        private void CountDown()
-        {
-            NumericTime -= Time.deltaTime;
-        }
-        
         private void InterruptTurnEventHandler()
         {
-            NumericTime = 0;
+            NumericTime = 0f;
             _invokedTimedOut = true;
         }
 
