@@ -29,5 +29,23 @@ namespace TopicTwister.Shared.DTOs
         {
             _id = id;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            RoundDto other = (RoundDto)obj;
+
+            return _id == other._id &&
+                _roundNumber == other._roundNumber &&
+                _initialLetter == other._initialLetter &&
+                _isActive == other._isActive;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_id, _roundNumber, _initialLetter, _isActive);
+        }
     }
 }

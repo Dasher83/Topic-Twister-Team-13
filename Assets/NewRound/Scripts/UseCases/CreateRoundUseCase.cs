@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TopicTwister.NewRound.Models;
 using TopicTwister.NewRound.Shared.Interfaces;
-using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
@@ -52,15 +51,31 @@ namespace TopicTwister.NewRound.UseCases
                     errorMessage: $"Cannot create new round for inactive match with id: {matchDto.Id}");
             }
 
+            Result<List<Category>> getRandomCategoriesOperationResult = _categoryRepository
+                .GetRandomCategories(numberOfCategories: 5);
+
+            if(getRandomCategoriesOperationResult.WasOk == false)
+            {
+                return Result<RoundWithCategoriesDto>.Failure(
+                    errorMessage: getRandomCategoriesOperationResult.ErrorMessage);
+            }
+
             Round round = new Round(
                 roundNumber: 0,
                 initialLetter: 'A',
                 isActive: true,
-                categories: _categoryRepository.GetRandomCategories(5));
+                categories: getRandomCategoriesOperationResult.Outcome);
 
+            Result<Round> saveRoundOperationResult = _roundsRepository.Save(round);
 
+            if(saveRoundOperationResult.WasOk == false)
+            {
+                return Result<RoundWithCategoriesDto>.Failure(errorMessage: saveRoundOperationResult.ErrorMessage);
+            }
 
-            return Result<RoundWithCategoriesDto>.Success(outcome: null);
+            RoundWithCategoriesDto roundWithCategoriesDto = _roundWithCategoriesDtoMapper.ToDTO(model: round);
+
+            return Result<RoundWithCategoriesDto>.Success(outcome: roundWithCategoriesDto);
         }
     }
 }

@@ -27,11 +27,11 @@ public class EvaluateAnswersUseCaseTest
         char initialLetter = 'A';
         List<TurnAnswerDTO> turnAnswers = new List<TurnAnswerDTO>()
         {
-            new TurnAnswerDTO(category: new CategoryDto("1", ""), userInput: "", order: 0),
-            new TurnAnswerDTO(category: new CategoryDto("2", ""), userInput: "", order: 1),
-            new TurnAnswerDTO(category: new CategoryDto("3", ""), userInput: "", order: 2),
-            new TurnAnswerDTO(category: new CategoryDto("4", ""), userInput: "", order: 3),
-            new TurnAnswerDTO(category: new CategoryDto("5", ""), userInput: "", order: 4),
+            new TurnAnswerDTO(category: new CategoryDto(id: 1, ""), userInput: "", order: 0),
+            new TurnAnswerDTO(category: new CategoryDto(id: 2, ""), userInput: "", order: 1),
+            new TurnAnswerDTO(category: new CategoryDto(id: 3, ""), userInput: "", order: 2),
+            new TurnAnswerDTO(category: new CategoryDto(id: 4, ""), userInput: "", order: 3),
+            new TurnAnswerDTO(category: new CategoryDto(id: 5, ""), userInput: "", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
@@ -62,11 +62,11 @@ public class EvaluateAnswersUseCaseTest
         char initialLetter = 'A';
         List<TurnAnswerDTO> turnAnswers = new List<TurnAnswerDTO>()
         {
-            new TurnAnswerDTO(category: new CategoryDto("1", ""), userInput: "notTest", order: 0),
-            new TurnAnswerDTO(category: new CategoryDto("2", ""), userInput: "notTest", order: 1),
-            new TurnAnswerDTO(category: new CategoryDto("3", ""), userInput: "notTest", order: 2),
-            new TurnAnswerDTO(category: new CategoryDto("4", ""), userInput: "notTest", order: 3),
-            new TurnAnswerDTO(category: new CategoryDto("5", ""), userInput: "notTest", order: 4),
+            new TurnAnswerDTO(category: new CategoryDto(id: 1, ""), userInput: "notTest", order: 0),
+            new TurnAnswerDTO(category: new CategoryDto(id: 2, ""), userInput: "notTest", order: 1),
+            new TurnAnswerDTO(category: new CategoryDto(id: 3, ""), userInput: "notTest", order: 2),
+            new TurnAnswerDTO(category: new CategoryDto(id: 4, ""), userInput: "notTest", order: 3),
+            new TurnAnswerDTO(category: new CategoryDto(id: 5, ""), userInput: "notTest", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
@@ -95,12 +95,12 @@ public class EvaluateAnswersUseCaseTest
     {
         #region -- Arrange --
         string alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-        List<string> categoryIds = new List<string>()
+        List<int> categoryIds = new List<int>()
         {
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
         };
 
-        foreach (string categoryId in categoryIds)
+        foreach (int categoryId in categoryIds)
         {
             foreach (char letter in alphabet)
             {
@@ -152,11 +152,11 @@ public class EvaluateAnswersUseCaseTest
         #region -- Arrange --
         string alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
         Random random = new Random();
-        List<string> categoryIds = new List<string>()
+        List<int> categoryIds = new List<int>()
         {
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
         };
-        List<string> randomCategoryIds = new List<string>(categoryIds.OrderBy(x => random.Next()).Take(5));
+        List<int> randomCategoryIds = new List<int>(categoryIds.OrderBy(catgoryId => random.Next()).Take(5));
 
         foreach (char letter in alphabet)
         {

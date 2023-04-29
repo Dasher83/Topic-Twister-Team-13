@@ -1,7 +1,10 @@
+using TopicTwister.Shared.Utils;
+
+
 namespace TopicTwister.TurnResult.Shared.Interfaces
 {
     public interface IWordsRepository
     {
-        bool Exists(string text, string categoryId, char initialLetter);
+        Result<bool> Exists(string text, int categoryId, char initialLetter);
     }
 }

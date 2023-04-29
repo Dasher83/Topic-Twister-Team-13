@@ -1,45 +1,49 @@
-using TopicTwister.Shared.DTOs;
-using TopicTwister.NewRound.Shared.Serialization;
+using TopicTwister.NewRound.Shared.DAOs;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.Utils;
+using TopicTwister.NewRound.Shared.Serialization;
+using TopicTwister.Shared.Interfaces;
 
 
 namespace TopicTwister.NewRound.Repositories
 {
     public class CategoriesReadOnlyRepositoryJson : ICategoriesReadOnlyRepository
     {
-        private const string CategoryResourceName = "JSON/DevelopmentData/Category";
+        private readonly IdaoMapper<Category, CategoryDao> _mapper;
 
-        private readonly List<CategoryDto> _readCache;
+        private string _categoryResourceName;
+        private readonly List<CategoryDao> _readCache;
 
-        public CategoriesReadOnlyRepositoryJson()
+        public CategoriesReadOnlyRepositoryJson(string categoriesResourceName, IdaoMapper<Category, CategoryDao> mapper)
         {
-            string data = Resources.Load<TextAsset>(CategoryResourceName).text;
-
-            _readCache = JsonUtility.FromJson<CategoriesCollection>(data).Categories;
+            _categoryResourceName = categoriesResourceName;
+            string data = Resources.Load<TextAsset>($"JSON/{_categoryResourceName}").text;
+            _readCache = JsonUtility.FromJson<CategoryDaoCollection>(data).Categories;
+            _mapper = mapper;
         }
 
-        public Result<List<CategoryDto>> GetRandomCategories(int numberOfCategories)
+        public Result<List<Category>> GetRandomCategories(int numberOfCategories)
         {
-            return Result<List<CategoryDto>>.Success(
-                outcome: _readCache
-                .OrderBy(c => new System.Random()
-                .Next())
+            List<Category> randomCategories = _readCache
+                .OrderBy(categoryDao => new System.Random().Next())
                 .Take(numberOfCategories)
-                .ToArray());
+                .Select(categoryDao => _mapper.FromDAO(categoryDao))
+                .ToList();
+
+            return Result<List<Category>>.Success(outcome: randomCategories);
         }
 
         public Result<bool> Exists(string name)
         {
-            return _readCache.Any(catgory => catgory.Name == name);
+            return Result<bool>.Success(outcome: _readCache.Any(catgory => catgory.Name == name));
         }
 
         public Result<bool> Exists(string[] names)
         {
-            return names.All(name => Exists(name));
+            return Result<bool>.Success(outcome: names.All(name => Exists(name).Outcome));
         }
     }
 }

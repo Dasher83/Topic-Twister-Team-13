@@ -4,6 +4,7 @@ using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.Serializers;
 using UnityEngine;
 using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.TurnResult.Repositories
@@ -19,12 +20,16 @@ namespace TopicTwister.TurnResult.Repositories
             _words = JsonUtility.FromJson<WordsCollection>(data).Words;
         }
 
-        public bool Exists(string text, string categoryId, char initialLetter)
+        public Result<bool> Exists(string text, int categoryId, char initialLetter)
         {
-            return _words.Any(
-                word => word.Text.ToLower() == text.ToLower() &&
-                word.CategoryId == categoryId &&
-                word.Text.ToLower()[0] == initialLetter.ToString().ToLower()[0]);
+            bool exists = _words
+                .Any(
+                    word => word.Text.ToLower() == text.ToLower() &&
+                    word.CategoryId == categoryId &&
+                    word.Text.ToLower()[0] == initialLetter.ToString().ToLower()[0]);
+
+            Result<bool> filterWordsOperationResult = Result<bool>.Success(outcome: exists);
+            return filterWordsOperationResult;
         }
     }
 }

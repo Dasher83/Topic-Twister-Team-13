@@ -8,17 +8,17 @@ namespace TopicTwister.Shared.DTOs
     public class WordDTO
     {
         [SerializeField] private string _text;
-        [SerializeField] private string _categoryId;
+        [SerializeField] private int _categoryId;
 
         private WordDTO() { }
 
-        public WordDTO(string text, string categoryId)
+        public WordDTO(string text, int categoryId)
         {
             _text = text;
             _categoryId = categoryId;
         }
 
         public string Text => _text;
-        public string CategoryId => _categoryId;
+        public int CategoryId => _categoryId;
     }
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TopicTwister.NewRound.Models;
 using TopicTwister.NewRound.Shared.Interfaces;
-using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
@@ -20,10 +19,11 @@ namespace NewRoundTests
         private ICreateRoundUseCase _useCase;
         private IRoundsRepository _roundRepository;
         private IMatchesRepository _matchesRepository;
+        private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
 
         [Test]
-        public void Test_ok_creation_of_round()
+        public void Test_ok_creation_of_first_round()
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
@@ -55,6 +55,21 @@ namespace NewRoundTests
                     return Result<Match>.Success(outcome: new Match(id, startDateTime: startDateTime));
                 });
 
+            _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
+            _categoriesReadOnlyRepository.GetRandomCategories(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    List<Category> categories = new List<Category>()
+                    {
+                        new Category(id: 1, name: "Category_1"),
+                        new Category(id: 2, name: "Category_2"),
+                        new Category(id: 3, name: "Category_3"),
+                        new Category(id: 4, name: "Category_4"),
+                        new Category(id: 5, name: "Category_5"),
+                    };
+                    return Result<List<Category>>.Success(outcome:  categories);
+                });
+
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
             _roundWithCategoriesDtoMapper.ToDTO(Arg.Any<Round>()).Returns(
                 (args) =>
@@ -76,6 +91,7 @@ namespace NewRoundTests
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
+                categoryRepository: _categoriesReadOnlyRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
@@ -126,11 +142,13 @@ namespace NewRoundTests
                     return Result<Match>.Success(outcome: new Match(id, startDateTime: startDateTime));
                 });
 
+            _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
+                categoryRepository: _categoriesReadOnlyRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
@@ -169,11 +187,13 @@ namespace NewRoundTests
                             endDateTime: endDateTime));
                 });
 
+            _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
+                categoryRepository: _categoriesReadOnlyRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
@@ -214,11 +234,13 @@ namespace NewRoundTests
                             endDateTime: endDateTime));
                 });
 
+            _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
+                categoryRepository: _categoriesReadOnlyRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 

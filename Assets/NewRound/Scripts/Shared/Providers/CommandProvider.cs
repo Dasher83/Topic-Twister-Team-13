@@ -6,7 +6,6 @@ using TopicTwister.NewRound.Services;
 using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.Interfaces;
-using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.IdGenerators;
 
@@ -28,6 +27,9 @@ namespace TopicTwister.NewRound.Shared.Providers
                                 idGenerator: new MatchesIdGenerator(
                                     matchesRepository: new MatchesReadOnlyRepositoryJson(
                                         matchesResourceName: "DevelopmentData/Matches"))),
+                            categoryRepository: new CategoriesReadOnlyRepositoryJson(
+                                categoriesResourceName: "DevelopmentData/Categories",
+                                mapper: new CategoryDaoMapper()),
                             roundWithCategoriesDtoMapper: new RoundWithCategoriesDtoMapper())))
             }
         };
