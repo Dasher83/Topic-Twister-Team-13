@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TopicTwister.NewRound.Shared.DAOs;
+using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Utils;
 
 

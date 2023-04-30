@@ -6,6 +6,7 @@ using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.Utils;
 using TopicTwister.NewRound.Shared.Serialization;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Models;
 
 
 namespace TopicTwister.NewRound.Repositories

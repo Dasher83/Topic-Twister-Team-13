@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TopicTwister.NewRound.Shared.DAOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Models;
 
 
 namespace TopicTwister.NewRound.Shared.Mappers

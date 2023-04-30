@@ -3,7 +3,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TopicTwister.NewRound.Models;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.DTOs;
@@ -20,14 +19,18 @@ namespace NewRoundTests
         private IRoundsRepository _roundRepository;
         private IMatchesRepository _matchesRepository;
         private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
+        private ILetterRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
+        private const int MaxRounds = 3;
+        private const int MaxCategories = 5;
 
         [Test]
-        public void Test_ok_creation_of_first_round()
+        public void Test_ok_creation_of_all_rounds()
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
             MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
+            Match match = new Match(matchDto.Id, matchDto.StartDateTime);
 
             _roundRepository = Substitute.For<IRoundsRepository>();
             _roundRepository.Save(Arg.Any<Round>()).Returns(
@@ -40,7 +43,28 @@ namespace NewRoundTests
                             roundNumber: round.RoundNumber,
                             initialLetter: round.InitialLetter,
                             isActive: round.IsActive,
+                            match: match,
                             categories: round.Categories));
+                });
+
+            int fakeRoundNumber = 0;
+            _roundRepository.GetMany(Arg.Any<Match>()).Returns(
+                (args) =>
+                {
+                    Match match = (Match)args[0];
+                    List<Round> rounds = new List<Round>();
+
+                    for(int i = 0; i < fakeRoundNumber; i++)
+                    {
+                        rounds.Add(new Round(
+                            roundNumber: 0,
+                            initialLetter: 'a',
+                            isActive: true,
+                            match: match,
+                            categories: new List<Category>()));
+                    }
+                    fakeRoundNumber++;
+                    return Result<List<Round>>.Success(outcome: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();
@@ -55,19 +79,51 @@ namespace NewRoundTests
                     return Result<Match>.Success(outcome: new Match(id, startDateTime: startDateTime));
                 });
 
+            List<Category> categories = new List<Category>()
+            {
+                new Category(id: 1, name: "Category_1"),
+                new Category(id: 2, name: "Category_2"),
+                new Category(id: 3, name: "Category_3"),
+                new Category(id: 4, name: "Category_4"),
+                new Category(id: 5, name: "Category_5"),
+                new Category(id: 6, name: "Category_6"),
+                new Category(id: 7, name: "Category_7"),
+                new Category(id: 8, name: "Category_8"),
+                new Category(id: 9, name: "Category_9"),
+                new Category(id: 10, name: "Category_10"),
+            };
+            List<Category>[] randomCategories = new List<Category>[MaxRounds];
+            int randomCategoriesListIndex = 0;
+
+            Random random = new Random();
+            for(int i = 0; i < randomCategories.Length; i++)
+            {
+                randomCategories[i] = categories
+                    .OrderBy(category => random.Next())
+                    .Take(MaxCategories)
+                    .ToList();
+            }
+
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
             _categoriesReadOnlyRepository.GetRandomCategories(Arg.Any<int>()).Returns(
                 (args) =>
                 {
-                    List<Category> categories = new List<Category>()
-                    {
-                        new Category(id: 1, name: "Category_1"),
-                        new Category(id: 2, name: "Category_2"),
-                        new Category(id: 3, name: "Category_3"),
-                        new Category(id: 4, name: "Category_4"),
-                        new Category(id: 5, name: "Category_5"),
-                    };
-                    return Result<List<Category>>.Success(outcome:  categories);
+                    Result<List<Category>> getRandomCategoriesOperationResult = Result<List<Category>>.Success(
+                        outcome: randomCategories[randomCategoriesListIndex]);
+                    randomCategoriesListIndex++;
+                    return getRandomCategoriesOperationResult;
+                });
+
+            char[] letters = { 'l', 'd', 'm' };
+            int lettersIndex = 0;
+
+            _letterRepository = Substitute.For<ILetterRepository>();
+            _letterRepository.GetRandomLetter().Returns(
+                (args) =>
+                {
+                    Result<char> getRandomLetterOperationResult = Result<char>.Success(outcome: letters[lettersIndex]);
+                    lettersIndex++;
+                    return getRandomLetterOperationResult;
                 });
 
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
@@ -76,7 +132,7 @@ namespace NewRoundTests
                 {
                     Round round = (Round)args[0];
                     List<CategoryDto> categoryDtos = new List<CategoryDto>();
-                    foreach(Category category in round.Categories)
+                    foreach (Category category in round.Categories)
                     {
                         categoryDtos.Add(new CategoryDto(id: category.Id, name: category.Name));
                     }
@@ -92,33 +148,67 @@ namespace NewRoundTests
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
                 categoryRepository: _categoriesReadOnlyRepository,
+                letterRepository: _letterRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
             #region -- Act --
-            Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            List<Result<RoundWithCategoriesDto>> actualResults = new List<Result<RoundWithCategoriesDto>>();
+            for (int i = 0; i < MaxRounds; i++)
+            {
+                actualResults.Add(_useCase.Create(matchDto: matchDto));
+            }
             #endregion
 
             #region -- Assert --
-            RoundWithCategoriesDto expectedDto = new RoundWithCategoriesDto(
-                roundDto: new RoundDto(
-                    id: 0,
-                    roundNumber: 0,
-                    initialLetter: useCaseOperationResult.Outcome.RoundDto.InitialLetter,
-                    isActive: true),
-                categoryDtos: useCaseOperationResult.Outcome.CategoryDtos);
-            Assert.IsTrue(useCaseOperationResult.WasOk);
-            Assert.AreEqual(expected: expectedDto, actual: useCaseOperationResult.Outcome);
-            Assert.AreEqual(expected: 5, actual: useCaseOperationResult.Outcome.CategoryDtos.Count);
-            Assert.IsFalse(useCaseOperationResult.Outcome.CategoryDtos.Any(category => category == null));
+            List<RoundWithCategoriesDto> expectedDtos = new List<RoundWithCategoriesDto>();
+            IdtoMapper<Category, CategoryDto> categoryDtoMapper = Substitute.For<IdtoMapper<Category, CategoryDto>>();
+            categoryDtoMapper.ToDTOs(Arg.Any<List<Category>>()).Returns(
+                (args) =>
+                {
+                    List<Category> categories = (List<Category>)args[0];
+                    List<CategoryDto> categoryDtos = new List<CategoryDto>();
 
-            List<CategoryDto> duplicates = useCaseOperationResult.Outcome.CategoryDtos
-                .GroupBy(category => category.Id)
-                .Where(category => category.Count() > 1)
-                .SelectMany(category => category)
-                .ToList();
+                    foreach (Category category in categories)
+                    {
+                        categoryDtos.Add(new CategoryDto(id: category.Id, name: category.Name));
+                    }
+                    return categoryDtos;
+                });
 
-            Assert.IsEmpty(duplicates);
+            for (int i = 0; i < MaxRounds; i++)
+            {
+                RoundWithCategoriesDto expectedDto =
+                    new RoundWithCategoriesDto(
+                        roundDto: new RoundDto(
+                            id: i,
+                            roundNumber: i,
+                            initialLetter: letters[i],
+                            isActive: true),
+                        categoryDtos: categoryDtoMapper.ToDTOs(randomCategories[i]));
+
+                expectedDtos.Add(expectedDto);
+            }
+
+            for (int i = 0; i < MaxRounds; i++)
+            {
+                if (i < MaxRounds - 1)
+                {
+                    Assert.AreNotEqual(actualResults[i].Outcome, actualResults[i+1].Outcome);
+                }
+                Assert.IsTrue(actualResults[i].WasOk);
+                Assert.AreEqual(expected: expectedDtos[i], actual: actualResults[i].Outcome);
+                Assert.AreEqual(expected: MaxCategories, actual: actualResults[i].Outcome.CategoryDtos.Count);
+                Assert.IsFalse(actualResults[i].Outcome.CategoryDtos.Any(category => category == null));
+                List<CategoryDto> duplicates = actualResults[i].Outcome.CategoryDtos
+                    .GroupBy(category => category.Id)
+                    .Where(category => category.Count() > 1)
+                    .SelectMany(category => category)
+                    .ToList();
+
+                Assert.IsEmpty(duplicates);
+            }
+
             #endregion
         }
 
@@ -143,12 +233,14 @@ namespace NewRoundTests
                 });
 
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
+            _letterRepository = Substitute.For<ILetterRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
                 categoryRepository: _categoriesReadOnlyRepository,
+                letterRepository: _letterRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
@@ -188,12 +280,14 @@ namespace NewRoundTests
                 });
 
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
+            _letterRepository = Substitute.For<ILetterRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
                 categoryRepository: _categoriesReadOnlyRepository,
+                letterRepository: _letterRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
@@ -235,12 +329,14 @@ namespace NewRoundTests
                 });
 
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
+            _letterRepository = Substitute.For<ILetterRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundRepository,
                 matchesRepository: _matchesRepository,
                 categoryRepository: _categoriesReadOnlyRepository,
+                letterRepository: _letterRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 

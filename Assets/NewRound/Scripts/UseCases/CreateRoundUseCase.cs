@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using TopicTwister.NewRound.Models;
+using TopicTwister.Shared.Models;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
-using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Utils;
 
 
@@ -14,17 +13,20 @@ namespace TopicTwister.NewRound.UseCases
         private IRoundsRepository _roundsRepository;
         private IMatchesRepository _matchesRepository;
         private ICategoriesReadOnlyRepository _categoryRepository;
+        private ILetterRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
 
         public CreateRoundUseCase(
             IRoundsRepository roundsRepository,
             IMatchesRepository matchesRepository,
             ICategoriesReadOnlyRepository categoryRepository,
+            ILetterRepository letterRepository,
             IdtoMapper<Round, RoundWithCategoriesDto> roundWithCategoriesDtoMapper)
         {
             _roundsRepository = roundsRepository;
             _matchesRepository = matchesRepository;
             _categoryRepository = categoryRepository;
+            _letterRepository = letterRepository;
             _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         }
 
@@ -60,10 +62,18 @@ namespace TopicTwister.NewRound.UseCases
                     errorMessage: getRandomCategoriesOperationResult.ErrorMessage);
             }
 
+            Result<List<Round>> getRoundsOperationResult = _roundsRepository.GetMany(match);
+
+            if (getRoundsOperationResult.WasOk == false)
+            {
+                return Result<RoundWithCategoriesDto>.Failure(errorMessage: getRoundsOperationResult.ErrorMessage);
+            }
+
             Round round = new Round(
-                roundNumber: 0,
-                initialLetter: 'A',
+                roundNumber: getRoundsOperationResult.Outcome.Count,
+                initialLetter: _letterRepository.GetRandomLetter().Outcome,
                 isActive: true,
+                match: match,
                 categories: getRandomCategoriesOperationResult.Outcome);
 
             Result<Round> saveRoundOperationResult = _roundsRepository.Save(round);

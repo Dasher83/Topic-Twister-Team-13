@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TopicTwister.NewRound.Models
+
+namespace TopicTwister.Shared.Models
 {
     public class Round
     {
@@ -9,6 +10,7 @@ namespace TopicTwister.NewRound.Models
         private int _roundNumber;
         private char _initialLetter;
         private bool _isActive;
+        private Match _match;
         private List<Category> _categories;
 
         public int Id => _id;
@@ -17,16 +19,17 @@ namespace TopicTwister.NewRound.Models
         public bool IsActive => _isActive;
         public List<Category> Categories => _categories.ToList();
 
-        public Round(int roundNumber, char initialLetter, bool isActive, List<Category> categories)
+        public Round(int roundNumber, char initialLetter, bool isActive, Match match, List<Category> categories)
         {
             _roundNumber = roundNumber;
             _initialLetter = initialLetter;
             _isActive = isActive;
+            _match = match;
             _categories = categories;
         }
 
-        public Round(int id, int roundNumber, char initialLetter, bool isActive, List<Category> categories) :
-            this(roundNumber, initialLetter, isActive, categories)
+        public Round(int id, int roundNumber, char initialLetter, bool isActive, Match match, List<Category> categories) :
+            this(roundNumber, initialLetter, isActive, match, categories)
         {
             _id = id;
         }

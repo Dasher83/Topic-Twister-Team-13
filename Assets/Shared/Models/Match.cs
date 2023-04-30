@@ -10,7 +10,6 @@ namespace TopicTwister.Shared.Models
         private string _endDateTime;
 
         public int Id => _id;
-
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
 
