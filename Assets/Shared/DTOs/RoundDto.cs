@@ -37,10 +37,12 @@ namespace TopicTwister.Shared.DTOs
 
             RoundDto other = (RoundDto)obj;
 
-            return _id == other._id &&
-                _roundNumber == other._roundNumber &&
-                _initialLetter == other._initialLetter &&
-                _isActive == other._isActive;
+            bool idEquals = _id == other._id;
+            bool roundNumberEquals = _roundNumber == other._roundNumber;
+            bool initialLetterEquals = _initialLetter == other._initialLetter;
+            bool isActiveEquals = _isActive == other._isActive;
+
+            return idEquals && roundNumberEquals && initialLetterEquals && isActiveEquals;
         }
 
         public override int GetHashCode()

@@ -33,18 +33,23 @@ namespace NewRoundTests
             Match match = new Match(matchDto.Id, matchDto.StartDateTime);
 
             _roundRepository = Substitute.For<IRoundsRepository>();
+            int nextFakeId = 0;
             _roundRepository.Save(Arg.Any<Round>()).Returns(
                 (args) =>
                 {
                     Round round = (Round)args[0];
-                    return Result<Round>.Success(
+                    Result<Round> saveRoundOperationResult = Result<Round>
+                    .Success(
                         outcome: new Round(
-                            id: 0,
+                            id: nextFakeId,
                             roundNumber: round.RoundNumber,
                             initialLetter: round.InitialLetter,
                             isActive: round.IsActive,
                             match: match,
                             categories: round.Categories));
+
+                    nextFakeId++;
+                    return saveRoundOperationResult;
                 });
 
             int fakeRoundNumber = 0;
@@ -138,6 +143,7 @@ namespace NewRoundTests
                     }
                     return new RoundWithCategoriesDto(
                         roundDto: new RoundDto(
+                            id: round.Id,
                             roundNumber: round.RoundNumber,
                             initialLetter: round.InitialLetter,
                             isActive: round.IsActive),

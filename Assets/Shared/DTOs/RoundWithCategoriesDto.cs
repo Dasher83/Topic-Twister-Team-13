@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 
 namespace TopicTwister.Shared.DTOs
 {
@@ -25,13 +25,15 @@ namespace TopicTwister.Shared.DTOs
 
             RoundWithCategoriesDto other = (RoundWithCategoriesDto)obj;
 
-            return _roundDto.Equals(other._roundDto) &&
-                _categoryDtos.Equals(other._categoryDtos);
+            bool roundDtoEqual = _roundDto.Equals(other._roundDto);
+            bool categoryDtosEquals = Enumerable.SequenceEqual(_categoryDtos, other._categoryDtos);
+
+            return roundDtoEqual && categoryDtosEquals;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_roundDto, _categoryDtos);
+            return HashCode.Combine(_roundDto.GetHashCode(), _categoryDtos.GetHashCode());
         }
     }
 }

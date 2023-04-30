@@ -83,7 +83,8 @@ namespace TopicTwister.NewRound.UseCases
                 return Result<RoundWithCategoriesDto>.Failure(errorMessage: saveRoundOperationResult.ErrorMessage);
             }
 
-            RoundWithCategoriesDto roundWithCategoriesDto = _roundWithCategoriesDtoMapper.ToDTO(model: round);
+            RoundWithCategoriesDto roundWithCategoriesDto = _roundWithCategoriesDtoMapper.ToDTO(
+                model: saveRoundOperationResult.Outcome);
 
             return Result<RoundWithCategoriesDto>.Success(outcome: roundWithCategoriesDto);
         }

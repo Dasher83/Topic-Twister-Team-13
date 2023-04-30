@@ -30,8 +30,11 @@ namespace TopicTwister.Shared.DTOs
                 return false;
 
             CategoryDto other = (CategoryDto)obj;
-            return this._id == other._id &&
-                this._name == other._name;
+
+            bool idEquals = _id == other._id;
+            bool nameEquals = _name == other._name;
+
+            return idEquals && nameEquals;
         }
 
         public override int GetHashCode()

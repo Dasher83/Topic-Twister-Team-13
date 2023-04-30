@@ -21,6 +21,7 @@ namespace TopicTwister.Shared.Models
 
         public Round(int roundNumber, char initialLetter, bool isActive, Match match, List<Category> categories)
         {
+            _id = -1;
             _roundNumber = roundNumber;
             _initialLetter = initialLetter;
             _isActive = isActive;
@@ -28,10 +29,14 @@ namespace TopicTwister.Shared.Models
             _categories = categories;
         }
 
-        public Round(int id, int roundNumber, char initialLetter, bool isActive, Match match, List<Category> categories) :
-            this(roundNumber, initialLetter, isActive, match, categories)
+        public Round(int id, int roundNumber, char initialLetter, bool isActive, Match match, List<Category> categories)
         {
             _id = id;
+            _roundNumber = roundNumber;
+            _initialLetter = initialLetter;
+            _isActive = isActive;
+            _match = match;
+            _categories = categories;
         }
     }
 }
