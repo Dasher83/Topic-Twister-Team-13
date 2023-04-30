@@ -33,7 +33,7 @@ namespace TopicTwister.Shared.DTOs
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_roundDto.GetHashCode(), _categoryDtos.GetHashCode());
+            return HashCode.Combine(_roundDto, _categoryDtos);
         }
     }
 }
