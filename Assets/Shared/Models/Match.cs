@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TopicTwister.Shared.Models
 {
@@ -13,6 +14,7 @@ namespace TopicTwister.Shared.Models
         public int Id => _id;
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
+        public List<Round> Rounds => _rounds.ToList();
 
         public Match()
         {

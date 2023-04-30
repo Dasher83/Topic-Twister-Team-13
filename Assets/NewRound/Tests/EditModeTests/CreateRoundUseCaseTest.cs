@@ -31,6 +31,7 @@ namespace NewRoundTests
             DateTime startDateTime = DateTime.UtcNow;
             MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
             Match match = new Match(matchDto.Id, matchDto.StartDateTime);
+            List<Result<RoundWithCategoriesDto>> actualResults = new List<Result<RoundWithCategoriesDto>>();
 
             _roundRepository = Substitute.For<IRoundsRepository>();
             int nextFakeId = 0;
@@ -52,26 +53,6 @@ namespace NewRoundTests
                     return saveRoundOperationResult;
                 });
 
-            int fakeRoundNumber = 0;
-            _roundRepository.GetMany(Arg.Any<Match>()).Returns(
-                (args) =>
-                {
-                    Match match = (Match)args[0];
-                    List<Round> rounds = new List<Round>();
-
-                    for(int i = 0; i < fakeRoundNumber; i++)
-                    {
-                        rounds.Add(new Round(
-                            roundNumber: 0,
-                            initialLetter: 'a',
-                            isActive: true,
-                            match: match,
-                            categories: new List<Category>()));
-                    }
-                    fakeRoundNumber++;
-                    return Result<List<Round>>.Success(outcome: rounds);
-                });
-
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _matchesRepository.Get(Arg.Any<int>()).Returns(
                 (args) =>
@@ -81,7 +62,13 @@ namespace NewRoundTests
                     {
                         return Result<Match>.Failure(errorMessage: $"Match not found with id: {id}");
                     }
-                    return Result<Match>.Success(outcome: new Match(id, startDateTime: startDateTime));
+                    List<Round> rounds = new List<Round>();
+                    foreach (Result<RoundWithCategoriesDto> result in actualResults)
+                    {
+                        rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Outcome));
+                    }
+                    Match lambdaMatch = new Match(id, startDateTime, endDateTime: null, rounds: rounds);
+                    return Result<Match>.Success(outcome: lambdaMatch);
                 });
 
             List<Category> categories = new List<Category>()
@@ -159,7 +146,6 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act --
-            List<Result<RoundWithCategoriesDto>> actualResults = new List<Result<RoundWithCategoriesDto>>();
             for (int i = 0; i < MaxRounds; i++)
             {
                 actualResults.Add(_useCase.Create(matchDto: matchDto));
@@ -385,26 +371,6 @@ namespace NewRoundTests
 
                     nextFakeId++;
                     return saveRoundOperationResult;
-                });
-
-            int fakeRoundNumber = 0;
-            _roundRepository.GetMany(Arg.Any<Match>()).Returns(
-                (args) =>
-                {
-                    Match match = (Match)args[0];
-                    List<Round> rounds = new List<Round>();
-
-                    for (int i = 0; i < fakeRoundNumber; i++)
-                    {
-                        rounds.Add(new Round(
-                            roundNumber: 0,
-                            initialLetter: 'a',
-                            isActive: true,
-                            match: match,
-                            categories: new List<Category>()));
-                    }
-                    fakeRoundNumber++;
-                    return Result<List<Round>>.Success(outcome: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();

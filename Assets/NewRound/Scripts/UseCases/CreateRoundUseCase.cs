@@ -68,15 +68,8 @@ namespace TopicTwister.NewRound.UseCases
                     errorMessage: getRandomCategoriesOperationResult.ErrorMessage);
             }
 
-            Result<List<Round>> getRoundsOperationResult = _roundsRepository.GetMany(match);
-
-            if (getRoundsOperationResult.WasOk == false)
-            {
-                return Result<RoundWithCategoriesDto>.Failure(errorMessage: getRoundsOperationResult.ErrorMessage);
-            }
-
             Round round = new Round(
-                roundNumber: getRoundsOperationResult.Outcome.Count,
+                roundNumber: match.Rounds.Count,
                 initialLetter: _letterRepository.GetRandomLetter().Outcome,
                 isActive: true,
                 match: match,
