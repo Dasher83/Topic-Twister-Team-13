@@ -13,7 +13,7 @@ using TopicTwister.Shared.Utils;
 
 namespace NewRoundTests
 {
-    public class CreateRoundUseCaseTest
+    public class CreateRoundUseCaseUnitTests
     {
         private ICreateRoundUseCase _useCase;
         private IRoundsRepository _roundRepository;
