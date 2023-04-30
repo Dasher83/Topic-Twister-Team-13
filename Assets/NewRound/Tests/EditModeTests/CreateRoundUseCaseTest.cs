@@ -357,5 +357,180 @@ namespace NewRoundTests
                 actual: useCaseOperationResult.ErrorMessage);
             #endregion
         }
+
+        [Test]
+        public void Test_fail_creation_of_more_than_three_rounds()
+        {
+            #region -- Arrange --
+            DateTime startDateTime = DateTime.UtcNow;
+            MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
+            Match match = new Match(matchDto.Id, matchDto.StartDateTime);
+            List<Result<RoundWithCategoriesDto>> actualResults = new List<Result<RoundWithCategoriesDto>>();
+
+            _roundRepository = Substitute.For<IRoundsRepository>();
+            int nextFakeId = 0;
+            _roundRepository.Save(Arg.Any<Round>()).Returns(
+                (args) =>
+                {
+                    Round round = (Round)args[0];
+                    Result<Round> saveRoundOperationResult = Result<Round>
+                    .Success(
+                        outcome: new Round(
+                            id: nextFakeId,
+                            roundNumber: round.RoundNumber,
+                            initialLetter: round.InitialLetter,
+                            isActive: round.IsActive,
+                            match: match,
+                            categories: round.Categories));
+
+                    nextFakeId++;
+                    return saveRoundOperationResult;
+                });
+
+            int fakeRoundNumber = 0;
+            _roundRepository.GetMany(Arg.Any<Match>()).Returns(
+                (args) =>
+                {
+                    Match match = (Match)args[0];
+                    List<Round> rounds = new List<Round>();
+
+                    for (int i = 0; i < fakeRoundNumber; i++)
+                    {
+                        rounds.Add(new Round(
+                            roundNumber: 0,
+                            initialLetter: 'a',
+                            isActive: true,
+                            match: match,
+                            categories: new List<Category>()));
+                    }
+                    fakeRoundNumber++;
+                    return Result<List<Round>>.Success(outcome: rounds);
+                });
+
+            _matchesRepository = Substitute.For<IMatchesRepository>();
+            _matchesRepository.Get(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    int id = (int)args[0];
+                    if (id < 0)
+                    {
+                        return Result<Match>.Failure(errorMessage: $"Match not found with id: {id}");
+                    }
+                    List<Round> rounds = new List<Round>();
+                    foreach(Result<RoundWithCategoriesDto> result in actualResults)
+                    {
+                        rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Outcome));
+                    }
+                    Match lambdaMatch = new Match(id, startDateTime, endDateTime: null, rounds: rounds);
+                    return Result<Match>.Success(outcome: lambdaMatch);
+                });
+
+            List<Category> categories = new List<Category>()
+            {
+                new Category(id: 1, name: "Category_1"),
+                new Category(id: 2, name: "Category_2"),
+                new Category(id: 3, name: "Category_3"),
+                new Category(id: 4, name: "Category_4"),
+                new Category(id: 5, name: "Category_5"),
+                new Category(id: 6, name: "Category_6"),
+                new Category(id: 7, name: "Category_7"),
+                new Category(id: 8, name: "Category_8"),
+                new Category(id: 9, name: "Category_9"),
+                new Category(id: 10, name: "Category_10"),
+            };
+            List<Category>[] randomCategories = new List<Category>[MaxRounds];
+            int randomCategoriesListIndex = 0;
+
+            Random random = new Random();
+            for (int i = 0; i < randomCategories.Length; i++)
+            {
+                randomCategories[i] = categories
+                    .OrderBy(category => random.Next())
+                    .Take(MaxCategories)
+                    .ToList();
+            }
+
+            _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
+            _categoriesReadOnlyRepository.GetRandomCategories(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    Result<List<Category>> getRandomCategoriesOperationResult = Result<List<Category>>.Success(
+                        outcome: randomCategories[randomCategoriesListIndex]);
+                    randomCategoriesListIndex++;
+                    return getRandomCategoriesOperationResult;
+                });
+
+            char[] letters = { 'l', 'd', 'm' };
+            int lettersIndex = 0;
+
+            _letterRepository = Substitute.For<ILetterRepository>();
+            _letterRepository.GetRandomLetter().Returns(
+                (args) =>
+                {
+                    Result<char> getRandomLetterOperationResult = Result<char>.Success(outcome: letters[lettersIndex]);
+                    lettersIndex++;
+                    return getRandomLetterOperationResult;
+                });
+
+            _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
+            _roundWithCategoriesDtoMapper.ToDTO(Arg.Any<Round>()).Returns(
+                (args) =>
+                {
+                    Round round = (Round)args[0];
+                    List<CategoryDto> categoryDtos = new List<CategoryDto>();
+                    foreach (Category category in round.Categories)
+                    {
+                        categoryDtos.Add(new CategoryDto(id: category.Id, name: category.Name));
+                    }
+                    return new RoundWithCategoriesDto(
+                        roundDto: new RoundDto(
+                            id: round.Id,
+                            roundNumber: round.RoundNumber,
+                            initialLetter: round.InitialLetter,
+                            isActive: round.IsActive),
+                        categoryDtos: categoryDtos);
+                });
+
+            _roundWithCategoriesDtoMapper.FromDTO(Arg.Any<RoundWithCategoriesDto>()).Returns(
+                (args) =>
+                {
+                    RoundWithCategoriesDto roundWithCategoriesDto = (RoundWithCategoriesDto)args[0];
+                    Round round = new Round(
+                            id: roundWithCategoriesDto.RoundDto.Id,
+                            roundNumber: roundWithCategoriesDto.RoundDto.RoundNumber,
+                            initialLetter: roundWithCategoriesDto.RoundDto.InitialLetter,
+                            isActive: roundWithCategoriesDto.RoundDto.IsActive,
+                            match: match,
+                            categories: new List<Category>());
+                    return round;
+                });
+
+            _useCase = new CreateRoundUseCase(
+                roundsRepository: _roundRepository,
+                matchesRepository: _matchesRepository,
+                categoryRepository: _categoriesReadOnlyRepository,
+                letterRepository: _letterRepository,
+                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
+            #endregion
+
+            #region -- Act --
+            for (int i = 0; i < MaxRounds + 1; i++)
+            {
+                actualResults.Add(_useCase.Create(matchDto: matchDto));
+            }
+            #endregion
+
+            #region -- Assert --
+            for (int i = 0; i < MaxRounds; i++)
+            {
+                Assert.IsTrue(actualResults[i].WasOk);
+            }
+            Assert.IsFalse(actualResults[MaxRounds].WasOk);
+            Assert.AreEqual(
+                expected: $"All rounds are already created for match with id: {matchDto.Id}",
+                actual: actualResults[MaxRounds].ErrorMessage);
+
+            #endregion
+        }
     }
 }

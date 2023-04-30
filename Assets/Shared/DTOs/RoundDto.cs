@@ -15,8 +15,10 @@ namespace TopicTwister.Shared.DTOs
 
         [SerializeField] private bool _isActive;
 
+        public int Id => _id;
         public int RoundNumber => _roundNumber;
         public char InitialLetter => _initialLetter;
+        public bool IsActive => _isActive;
 
         public RoundDto(int roundNumber, char initialLetter, bool isActive)
         {

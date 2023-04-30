@@ -1,5 +1,5 @@
 using System;
-
+using System.Collections.Generic;
 
 namespace TopicTwister.Shared.Models
 {
@@ -8,6 +8,7 @@ namespace TopicTwister.Shared.Models
         private int _id;
         private string _startDateTime;
         private string _endDateTime;
+        private List<Round> _rounds = new List<Round>();
 
         public int Id => _id;
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
@@ -20,11 +21,12 @@ namespace TopicTwister.Shared.Models
             _endDateTime = "";
         }
 
-        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null)
+        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null, List<Round> rounds = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
+            _rounds = rounds == null ? new List<Round>() : rounds;
         }
 
         public bool IsActive => string.IsNullOrEmpty(_endDateTime);
@@ -35,9 +37,11 @@ namespace TopicTwister.Shared.Models
             {
                 if (string.IsNullOrEmpty(_startDateTime)) return false;
                 if (string.IsNullOrEmpty(_endDateTime) == false && StartDateTime > EndDateTime) return false;
+                if (_rounds.Count > 3) return false;
                 return true;
             }
         }
+        public bool AreAllRoundsCreated => _rounds.Count == 3;
 
         public override bool Equals(object obj)
         {

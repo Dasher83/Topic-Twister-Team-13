@@ -53,6 +53,12 @@ namespace TopicTwister.NewRound.UseCases
                     errorMessage: $"Cannot create new round for inactive match with id: {matchDto.Id}");
             }
 
+            if (match.AreAllRoundsCreated)
+            {
+                return Result<RoundWithCategoriesDto>.Failure(
+                    errorMessage: $"All rounds are already created for match with id: {matchDto.Id}");
+            }
+
             Result<List<Category>> getRandomCategoriesOperationResult = _categoryRepository
                 .GetRandomCategories(numberOfCategories: 5);
 
