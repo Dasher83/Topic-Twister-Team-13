@@ -8,8 +8,10 @@ using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.TestUtils;
 using TopicTwister.Shared.Utils;
 
@@ -20,16 +22,19 @@ namespace NewRoundTests
     {
         private ICreateRoundUseCase _useCase;
         private IRoundsRepository _roundsRepository;
-        private IMatchesReadOnlyRepository _matchesRepository;
+        private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+        private IMatchesRepository _matchesRepository;
         private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
         private ILetterReadOnlyRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
+        private IdtoMapper<Match, MatchDTO> _matchDtoMapper;
         private const int MaxRounds = 3;
         private const int MaxCategories = 5;
 
         [SetUp]
         public void SetUp()
         {
+            _matchDtoMapper = new MatchDtoMapper();
             _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper();
             _letterRepository = new LetterReadOnlyRepositoryInMemory();
 
@@ -37,14 +42,18 @@ namespace NewRoundTests
                 categoriesResourceName: "TestData/Category",
                 mapper: new CategoryDaoMapper());
 
-            _matchesRepository = new MatchesReadOnlyRepositoryJson(
+            _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
                 matchesResourceName: "TestData/Matches");
+
+            _matchesRepository = new MatchesRepositoryJson(
+                matchesResourceName: "TestData/Matches",
+                idGenerator: new MatchesIdGenerator(_matchesReadOnlyRepository));
 
             _roundsRepository = new RoundsRespositoryJson();
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundsRepository,
-                matchesRepository: _matchesRepository,
+                matchesRepository: _matchesReadOnlyRepository,
                 categoryRepository: _categoriesReadOnlyRepository,
                 letterRepository: _letterRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
@@ -137,20 +146,23 @@ namespace NewRoundTests
             DateTime startDateTime = DateTime.UtcNow - TimeSpan.FromSeconds(10);
             DateTime endDateTime = DateTime.UtcNow;
 
-            MatchDTO matchDto = new MatchDTO(
+            Match match = new Match(
                 id: 0,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
+
+            match = _matchesRepository.Save(match).Outcome;
+            MatchDTO matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
             #region -- Act --
-            Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto);
             #endregion
 
             #region -- Assert --
             Assert.IsFalse(useCaseOperationResult.WasOk);
             Assert.AreEqual(
-                expected: $"Cannot create new round for inactive match with id: {matchDto.Id}",
+                expected: $"Cannot create new round for inactive match with id: {match.Id}",
                 actual: useCaseOperationResult.ErrorMessage);
             #endregion
         }
