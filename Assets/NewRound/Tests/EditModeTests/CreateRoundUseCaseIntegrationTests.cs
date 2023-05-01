@@ -28,7 +28,7 @@ namespace NewRoundTests
         private const int MaxCategories = 5;
 
         [SetUp]
-        private void SetUp()
+        public void SetUp()
         {
             _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper();
             _letterRepository = new LetterReadOnlyRepositoryInMemory();
