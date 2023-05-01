@@ -174,20 +174,22 @@ namespace NewRoundTests
             DateTime startDateTime = DateTime.UtcNow;
             DateTime endDateTime = DateTime.UtcNow - TimeSpan.FromSeconds(10);
 
-            MatchDTO matchDto = new MatchDTO(
-                id: 0,
+            Match match = new Match(
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
+
+            match = _matchesRepository.Save(match).Outcome;
+            MatchDTO matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
             #region -- Act --
-            Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto);
             #endregion
 
             #region -- Assert --
             Assert.IsFalse(useCaseOperationResult.WasOk);
             Assert.AreEqual(
-                expected: $"Cannot create new round for invalid match with id: {matchDto.Id}",
+                expected: $"Cannot create new round for invalid match with id: {match.Id}",
                 actual: useCaseOperationResult.ErrorMessage);
             #endregion
         }
