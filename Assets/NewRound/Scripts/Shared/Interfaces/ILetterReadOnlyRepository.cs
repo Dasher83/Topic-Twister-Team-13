@@ -3,7 +3,7 @@
 
 namespace TopicTwister.NewRound.Shared.Interfaces
 {
-    public interface ILetterRepository
+    public interface ILetterReadOnlyRepository
     {
         Result<char> GetRandomLetter();
     }

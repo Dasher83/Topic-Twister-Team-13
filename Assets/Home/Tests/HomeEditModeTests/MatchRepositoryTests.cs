@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
-using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.TestUtils;
 using TopicTwister.Shared.Utils;
 
 
@@ -35,7 +35,7 @@ public class MatchRepositoryTests
             });
 
         _matchesRepository = new MatchesRepositoryJson(
-            matchesResourceName: "TestData/MatchesTest",
+            matchesResourceName: "TestData/Matches",
             idGenerator: idGenerator);
 
         List<Match> matches = new List<Match>() { new Match(), new Match()};
@@ -71,7 +71,7 @@ public class MatchRepositoryTests
                 return -1;
             });
         _matchesRepository = new MatchesRepositoryJson(
-            matchesResourceName: "TestData/MatchesTest",
+            matchesResourceName: "TestData/Matches",
             idGenerator: idGenerator);
 
         Result<Match> saveOperationResult = _matchesRepository.Save(

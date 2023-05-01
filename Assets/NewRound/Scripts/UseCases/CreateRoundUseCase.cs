@@ -11,16 +11,16 @@ namespace TopicTwister.NewRound.UseCases
     public class CreateRoundUseCase : ICreateRoundUseCase
     {
         private IRoundsRepository _roundsRepository;
-        private IMatchesRepository _matchesRepository;
+        private IMatchesReadOnlyRepository _matchesRepository;
         private ICategoriesReadOnlyRepository _categoryRepository;
-        private ILetterRepository _letterRepository;
+        private ILetterReadOnlyRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
 
         public CreateRoundUseCase(
             IRoundsRepository roundsRepository,
-            IMatchesRepository matchesRepository,
+            IMatchesReadOnlyRepository matchesRepository,
             ICategoriesReadOnlyRepository categoryRepository,
-            ILetterRepository letterRepository,
+            ILetterReadOnlyRepository letterRepository,
             IdtoMapper<Round, RoundWithCategoriesDto> roundWithCategoriesDtoMapper)
         {
             _roundsRepository = roundsRepository;

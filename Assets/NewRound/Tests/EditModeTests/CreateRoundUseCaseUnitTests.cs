@@ -19,7 +19,7 @@ namespace NewRoundTests
         private IRoundsRepository _roundRepository;
         private IMatchesRepository _matchesRepository;
         private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
-        private ILetterRepository _letterRepository;
+        private ILetterReadOnlyRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
         private const int MaxRounds = 3;
         private const int MaxCategories = 5;
@@ -109,7 +109,7 @@ namespace NewRoundTests
             char[] letters = { 'l', 'd', 'm' };
             int lettersIndex = 0;
 
-            _letterRepository = Substitute.For<ILetterRepository>();
+            _letterRepository = Substitute.For<ILetterReadOnlyRepository>();
             _letterRepository.GetRandomLetter().Returns(
                 (args) =>
                 {
@@ -225,7 +225,7 @@ namespace NewRoundTests
                 });
 
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
-            _letterRepository = Substitute.For<ILetterRepository>();
+            _letterRepository = Substitute.For<ILetterReadOnlyRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
@@ -272,7 +272,7 @@ namespace NewRoundTests
                 });
 
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
-            _letterRepository = Substitute.For<ILetterRepository>();
+            _letterRepository = Substitute.For<ILetterReadOnlyRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
@@ -321,7 +321,7 @@ namespace NewRoundTests
                 });
 
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
-            _letterRepository = Substitute.For<ILetterRepository>();
+            _letterRepository = Substitute.For<ILetterReadOnlyRepository>();
             _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
 
             _useCase = new CreateRoundUseCase(
@@ -429,7 +429,7 @@ namespace NewRoundTests
             char[] letters = { 'l', 'd', 'm' };
             int lettersIndex = 0;
 
-            _letterRepository = Substitute.For<ILetterRepository>();
+            _letterRepository = Substitute.For<ILetterReadOnlyRepository>();
             _letterRepository.GetRandomLetter().Returns(
                 (args) =>
                 {

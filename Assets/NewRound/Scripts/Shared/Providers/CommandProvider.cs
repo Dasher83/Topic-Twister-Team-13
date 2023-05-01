@@ -30,7 +30,7 @@ namespace TopicTwister.NewRound.Shared.Providers
                             categoryRepository: new CategoriesReadOnlyRepositoryJson(
                                 categoriesResourceName: "DevelopmentData/Categories",
                                 mapper: new CategoryDaoMapper()),
-                            letterRepository: new LetterRepository(),
+                            letterRepository: new LetterReadOnlyRepositoryInMemory(),
                             roundWithCategoriesDtoMapper: new RoundWithCategoriesDtoMapper())))
             }
         };

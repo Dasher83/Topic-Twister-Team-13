@@ -2,11 +2,11 @@ using NSubstitute;
 using NUnit.Framework;
 using System;
 using TopicTwister.Home.Shared.Interfaces;
-using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Home.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.TestUtils;
 using TopicTwister.Shared.Utils;
 
 

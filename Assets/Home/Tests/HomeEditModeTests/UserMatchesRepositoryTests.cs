@@ -1,15 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using NUnit.Framework;
-using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Repositories;
-using UnityEngine;
-using UnityEngine.TestTools;
-using NSubstitute;
 using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.TestUtils;
+
 
 public class UserMatchesRepositoryTests
 {
@@ -23,10 +19,10 @@ public class UserMatchesRepositoryTests
     public void SetUp()
     {
         _userRepository = new UsersRepositoryInMemory();
-        _idGenerator = new MatchesIdGenerator(new MatchesReadOnlyRepositoryJson(matchesResourceName: "TestData/MatchesTest"));
-        _matchRepository = new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest",idGenerator: _idGenerator);
+        _idGenerator = new MatchesIdGenerator(new MatchesReadOnlyRepositoryJson(matchesResourceName: "TestData/Matches"));
+        _matchRepository = new MatchesRepositoryJson(matchesResourceName: "TestData/Matches",idGenerator: _idGenerator);
         _userMatchesRepository = new UserMatchesRepositoryJson(
-            userMatchesResourceName: "TestData/UserMatchesTest",
+            userMatchesResourceName: "TestData/UserMatches",
             matchesRepository: _matchRepository,
             userRepository: _userRepository);
     }

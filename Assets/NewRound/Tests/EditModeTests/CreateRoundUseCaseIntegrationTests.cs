@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using TopicTwister.NewRound.Repositories;
 using TopicTwister.NewRound.Shared.Interfaces;
+using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.TestUtils;
 using TopicTwister.Shared.Utils;
 
 
@@ -15,13 +19,44 @@ namespace NewRoundTests
     public class CreateRoundUseCaseIntegrationTests
     {
         private ICreateRoundUseCase _useCase;
-        private IRoundsRepository _roundRepository;
-        private IMatchesRepository _matchesRepository;
+        private IRoundsRepository _roundsRepository;
+        private IMatchesReadOnlyRepository _matchesRepository;
         private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
-        private ILetterRepository _letterRepository;
+        private ILetterReadOnlyRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
         private const int MaxRounds = 3;
         private const int MaxCategories = 5;
+
+        [SetUp]
+        private void SetUp()
+        {
+            _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper();
+            _letterRepository = new LetterReadOnlyRepositoryInMemory();
+
+            _categoriesReadOnlyRepository = new CategoriesReadOnlyRepositoryJson(
+                categoriesResourceName: "TestData/Category",
+                mapper: new CategoryDaoMapper());
+
+            _matchesRepository = new MatchesReadOnlyRepositoryJson(
+                matchesResourceName: "TestData/Matches");
+
+            _roundsRepository = new RoundsRespositoryJson();
+
+            _useCase = new CreateRoundUseCase(
+                roundsRepository: _roundsRepository,
+                matchesRepository: _matchesRepository,
+                categoryRepository: _categoriesReadOnlyRepository,
+                letterRepository: _letterRepository,
+                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            new MatchesDeleteJson().Delete();
+            new UserMatchesDeleteJson().Delete();
+            new RoundsDeleteJson().Delete();
+        }
 
         [Test]
         public void Test_ok_creation_of_all_rounds()
@@ -29,13 +64,6 @@ namespace NewRoundTests
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
             MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
-
-            _useCase = new CreateRoundUseCase(
-                roundsRepository: _roundRepository,
-                matchesRepository: _matchesRepository,
-                categoryRepository: _categoriesReadOnlyRepository,
-                letterRepository: _letterRepository,
-                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
             #region -- Act --
@@ -90,13 +118,6 @@ namespace NewRoundTests
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
             MatchDTO matchDto = new MatchDTO(id: -1, startDateTime: startDateTime);
-
-            _useCase = new CreateRoundUseCase(
-                roundsRepository: _roundRepository,
-                matchesRepository: _matchesRepository,
-                categoryRepository: _categoriesReadOnlyRepository,
-                letterRepository: _letterRepository,
-                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
             #region -- Act --
@@ -120,13 +141,6 @@ namespace NewRoundTests
                 id: 0,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
-
-            _useCase = new CreateRoundUseCase(
-                roundsRepository: _roundRepository,
-                matchesRepository: _matchesRepository,
-                categoryRepository: _categoriesReadOnlyRepository,
-                letterRepository: _letterRepository,
-                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
             #region -- Act --
@@ -152,13 +166,6 @@ namespace NewRoundTests
                 id: 0,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
-
-            _useCase = new CreateRoundUseCase(
-                roundsRepository: _roundRepository,
-                matchesRepository: _matchesRepository,
-                categoryRepository: _categoriesReadOnlyRepository,
-                letterRepository: _letterRepository,
-                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
             #region -- Act --
@@ -179,13 +186,6 @@ namespace NewRoundTests
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
             MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
-
-            _useCase = new CreateRoundUseCase(
-                roundsRepository: _roundRepository,
-                matchesRepository: _matchesRepository,
-                categoryRepository: _categoriesReadOnlyRepository,
-                letterRepository: _letterRepository,
-                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
             #endregion
 
             #region -- Act --
