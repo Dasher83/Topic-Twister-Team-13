@@ -226,7 +226,21 @@ namespace NewRoundTests
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
-            MatchDto matchDto = new MatchDto(id: 0, startDateTime: startDateTime);
+            Match match = new Match(
+                startDateTime: startDateTime);
+
+            match = _matchesRepository.Save(match).Outcome;
+            MatchDto matchDto = _matchDtoMapper.ToDTO(match);
+
+            int idsIndex = 0;
+            int[] ids = new int[3] { 3, 8, 12 };
+            _idGenerator.GetNextId().Returns(
+                (args) =>
+                {
+                    int result = ids[idsIndex];
+                    idsIndex++;
+                    return result;
+                });
             #endregion
 
             #region -- Act --
