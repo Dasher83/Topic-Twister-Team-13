@@ -25,26 +25,26 @@ public class EvaluateAnswersUseCaseTest
     {
         #region -- Arrange --
         char initialLetter = 'A';
-        List<TurnAnswerDTO> turnAnswers = new List<TurnAnswerDTO>()
+        List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
         {
-            new TurnAnswerDTO(category: new CategoryDto(id: 1, ""), userInput: "", order: 0),
-            new TurnAnswerDTO(category: new CategoryDto(id: 2, ""), userInput: "", order: 1),
-            new TurnAnswerDTO(category: new CategoryDto(id: 3, ""), userInput: "", order: 2),
-            new TurnAnswerDTO(category: new CategoryDto(id: 4, ""), userInput: "", order: 3),
-            new TurnAnswerDTO(category: new CategoryDto(id: 5, ""), userInput: "", order: 4),
+            new TurnAnswerDto(category: new CategoryDto(id: 1, ""), userInput: "", order: 0),
+            new TurnAnswerDto(category: new CategoryDto(id: 2, ""), userInput: "", order: 1),
+            new TurnAnswerDto(category: new CategoryDto(id: 3, ""), userInput: "", order: 2),
+            new TurnAnswerDto(category: new CategoryDto(id: 4, ""), userInput: "", order: 3),
+            new TurnAnswerDto(category: new CategoryDto(id: 5, ""), userInput: "", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
 
         #region -- Act --
-        Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
-        List<EvaluatedAnswerDTO> expectedResult = new List<EvaluatedAnswerDTO>();
-        foreach (TurnAnswerDTO answer in turnAnswers)
+        List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>();
+        foreach (TurnAnswerDto answer in turnAnswers)
         {
-            expectedResult.Add(new EvaluatedAnswerDTO(
+            expectedResult.Add(new EvaluatedAnswerDto(
                 answer.Category,
                 answer.UserInput,
                 isCorrect: false,
@@ -60,26 +60,26 @@ public class EvaluateAnswersUseCaseTest
     {
         #region -- Arrange --
         char initialLetter = 'A';
-        List<TurnAnswerDTO> turnAnswers = new List<TurnAnswerDTO>()
+        List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
         {
-            new TurnAnswerDTO(category: new CategoryDto(id: 1, ""), userInput: "notTest", order: 0),
-            new TurnAnswerDTO(category: new CategoryDto(id: 2, ""), userInput: "notTest", order: 1),
-            new TurnAnswerDTO(category: new CategoryDto(id: 3, ""), userInput: "notTest", order: 2),
-            new TurnAnswerDTO(category: new CategoryDto(id: 4, ""), userInput: "notTest", order: 3),
-            new TurnAnswerDTO(category: new CategoryDto(id: 5, ""), userInput: "notTest", order: 4),
+            new TurnAnswerDto(category: new CategoryDto(id: 1, ""), userInput: "notTest", order: 0),
+            new TurnAnswerDto(category: new CategoryDto(id: 2, ""), userInput: "notTest", order: 1),
+            new TurnAnswerDto(category: new CategoryDto(id: 3, ""), userInput: "notTest", order: 2),
+            new TurnAnswerDto(category: new CategoryDto(id: 4, ""), userInput: "notTest", order: 3),
+            new TurnAnswerDto(category: new CategoryDto(id: 5, ""), userInput: "notTest", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
 
         #region -- Act --
-        Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
-        List<EvaluatedAnswerDTO> expectedResult = new List<EvaluatedAnswerDTO>();
-        foreach (TurnAnswerDTO answer in turnAnswers)
+        List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>();
+        foreach (TurnAnswerDto answer in turnAnswers)
         {
-            expectedResult.Add(new EvaluatedAnswerDTO(
+            expectedResult.Add(new EvaluatedAnswerDto(
                 answer.Category,
                 answer.UserInput,
                 isCorrect: false,
@@ -104,21 +104,21 @@ public class EvaluateAnswersUseCaseTest
         {
             foreach (char letter in alphabet)
             {
-                List<TurnAnswerDTO> turnAnswers = new List<TurnAnswerDTO>()
+                List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
                 {
-                    new TurnAnswerDTO(
+                    new TurnAnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 0),
-                    new TurnAnswerDTO(
+                    new TurnAnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 1),
-                    new TurnAnswerDTO(
+                    new TurnAnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 2),
-                    new TurnAnswerDTO(
+                    new TurnAnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 3),
-                    new TurnAnswerDTO(
+                    new TurnAnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 4),
                 };
@@ -126,14 +126,14 @@ public class EvaluateAnswersUseCaseTest
                 #endregion
 
                 #region -- Act --
-                Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+                Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
                 #endregion
 
                 #region -- Assert --
-                List<EvaluatedAnswerDTO> expectedResult = new List<EvaluatedAnswerDTO>();
-                foreach (TurnAnswerDTO answer in turnAnswers)
+                List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>();
+                foreach (TurnAnswerDto answer in turnAnswers)
                 {
-                    expectedResult.Add(new EvaluatedAnswerDTO(
+                    expectedResult.Add(new EvaluatedAnswerDto(
                         answer.Category,
                         answer.UserInput,
                         isCorrect: true,
@@ -160,21 +160,21 @@ public class EvaluateAnswersUseCaseTest
 
         foreach (char letter in alphabet)
         {
-            List<TurnAnswerDTO> turnAnswers = new List<TurnAnswerDTO>()
+            List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
             {
-                new TurnAnswerDTO(
+                new TurnAnswerDto(
                     category: new CategoryDto(randomCategoryIds[0], ""),
                     userInput: $"{letter} test", order: 0),
-                new TurnAnswerDTO(
+                new TurnAnswerDto(
                     category: new CategoryDto(randomCategoryIds[1], ""),
                     userInput: "", order: 1),
-                new TurnAnswerDTO(
+                new TurnAnswerDto(
                     category: new CategoryDto(randomCategoryIds[2], ""),
                     userInput: "notTest", order: 2),
-                new TurnAnswerDTO(
+                new TurnAnswerDto(
                     category: new CategoryDto(randomCategoryIds[3], ""),
                     userInput: "", order: 3),
-                new TurnAnswerDTO(
+                new TurnAnswerDto(
                     category: new CategoryDto(randomCategoryIds[4], ""),
                     userInput: $"{letter} test", order: 4),
             };
@@ -182,33 +182,33 @@ public class EvaluateAnswersUseCaseTest
             #endregion
 
             #region -- Act --
-            Result<List<EvaluatedAnswerDTO>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+            Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
             #endregion
 
             #region -- Assert --
-            List<EvaluatedAnswerDTO> expectedResult = new List<EvaluatedAnswerDTO>()
+            List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>()
             {
-                new EvaluatedAnswerDTO(
+                new EvaluatedAnswerDto(
                     category: turnAnswers[0].Category,
                     answer: turnAnswers[0].UserInput,
                     isCorrect: true,
                     order: turnAnswers[0].Order),
-                new EvaluatedAnswerDTO(
+                new EvaluatedAnswerDto(
                     category: turnAnswers[1].Category,
                     answer: turnAnswers[1].UserInput,
                     isCorrect: false,
                     order: turnAnswers[1].Order),
-                new EvaluatedAnswerDTO(
+                new EvaluatedAnswerDto(
                     category: turnAnswers[2].Category,
                     answer: turnAnswers[2].UserInput,
                     isCorrect: false,
                     order: turnAnswers[2].Order),
-                new EvaluatedAnswerDTO(
+                new EvaluatedAnswerDto(
                     category: turnAnswers[3].Category,
                     answer: turnAnswers[3].UserInput,
                     isCorrect: false,
                     order: turnAnswers[3].Order),
-                new EvaluatedAnswerDTO(
+                new EvaluatedAnswerDto(
                     category: turnAnswers[4].Category,
                     answer: turnAnswers[4].UserInput,
                     isCorrect: true,

@@ -13,9 +13,9 @@ namespace TopicTwister.TurnResult.Presenters
     {
         private readonly ITurnResultView _turnResultView;
         private ICommand<ITurnResultPresenter> _evaluateAnswerCommand;
-        private List<EvaluatedAnswerDTO> _evaluatedAnswers;
+        private List<EvaluatedAnswerDto> _evaluatedAnswers;
 
-        public List<EvaluatedAnswerDTO> EvaluatedAnswers {
+        public List<EvaluatedAnswerDto> EvaluatedAnswers {
             set
             {
                 _evaluatedAnswers = value;

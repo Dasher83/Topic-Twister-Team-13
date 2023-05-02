@@ -11,7 +11,7 @@ namespace TopicTwister.NewRound.Commands
         private ICreateRoundPresenter _presenter;
         private readonly ICreateRoundGatewayService _gatewayService;
 
-        private MatchDTO _matchDto;
+        private MatchDto _matchDto;
 
         public ICreateRoundPresenter Presenter
         {

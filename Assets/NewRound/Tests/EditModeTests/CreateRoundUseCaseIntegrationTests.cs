@@ -29,7 +29,7 @@ namespace NewRoundTests
         private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
         private ILetterReadOnlyRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
-        private IdtoMapper<Match, MatchDTO> _matchDtoMapper;
+        private IdtoMapper<Match, MatchDto> _matchDtoMapper;
         private IUniqueIdGenerator _idGenerator;
         private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
         private const int MaxRounds = 3;
@@ -89,7 +89,7 @@ namespace NewRoundTests
             DateTime startDateTime = DateTime.UtcNow;
             Match match = new Match(startDateTime: startDateTime);
             match = _matchesRepository.Save(match).Outcome;
-            MatchDTO matchDto = _matchDtoMapper.ToDTO(match);
+            MatchDto matchDto = _matchDtoMapper.ToDTO(match);
 
             int idsIndex = 0;
             int[] ids = new int[3] { 3, 8, 12 };
@@ -153,7 +153,7 @@ namespace NewRoundTests
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
-            MatchDTO matchDto = new MatchDTO(id: -1, startDateTime: startDateTime);
+            MatchDto matchDto = new MatchDto(id: -1, startDateTime: startDateTime);
             #endregion
 
             #region -- Act --
@@ -179,7 +179,7 @@ namespace NewRoundTests
                 endDateTime: endDateTime);
 
             match = _matchesRepository.Save(match).Outcome;
-            MatchDTO matchDto = _matchDtoMapper.ToDTO(match);
+            MatchDto matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
             #region -- Act --
@@ -206,7 +206,7 @@ namespace NewRoundTests
                 endDateTime: endDateTime);
 
             match = _matchesRepository.Save(match).Outcome;
-            MatchDTO matchDto = _matchDtoMapper.ToDTO(match);
+            MatchDto matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
             #region -- Act --
@@ -226,7 +226,7 @@ namespace NewRoundTests
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
-            MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
+            MatchDto matchDto = new MatchDto(id: 0, startDateTime: startDateTime);
             #endregion
 
             #region -- Act --

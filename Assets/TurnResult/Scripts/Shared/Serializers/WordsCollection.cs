@@ -10,8 +10,8 @@ namespace TopicTwister.TurnResult.Shared.Serializers
     [Serializable]
     public class WordsCollection
     {
-        [SerializeField] private WordDTO[] _words;
+        [SerializeField] private WordDto[] _words;
 
-        public List<WordDTO> Words => _words.ToList();
+        public List<WordDto> Words => _words.ToList();
     }
 }

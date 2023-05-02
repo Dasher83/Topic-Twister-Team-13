@@ -30,7 +30,7 @@ namespace TopicTwister.NewRound.UseCases
             _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         }
 
-        public Result<RoundWithCategoriesDto> Create(MatchDTO matchDto)
+        public Result<RoundWithCategoriesDto> Create(MatchDto matchDto)
         {
             Result<Match> getMatchOperationResult = _matchesRepository.Get(id: matchDto.Id);
 

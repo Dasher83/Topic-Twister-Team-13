@@ -18,13 +18,13 @@ namespace TopicTwister.TurnResult.UseCases
             _wordRepository = wordsRepository;
         }
 
-        public Result<List<EvaluatedAnswerDTO>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
+        public Result<List<EvaluatedAnswerDto>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            List<EvaluatedAnswerDTO> result = new List<EvaluatedAnswerDTO>();
-            EvaluatedAnswerDTO evaluatedAnswer;
+            List<EvaluatedAnswerDto> result = new List<EvaluatedAnswerDto>();
+            EvaluatedAnswerDto evaluatedAnswer;
             bool isCorrect;
 
-            foreach(TurnAnswerDTO turnAnswer in answerToEvaluate.turnAnswers)
+            foreach(TurnAnswerDto turnAnswer in answerToEvaluate.turnAnswers)
             {
                 if (string.IsNullOrEmpty(turnAnswer.UserInput))
                 {
@@ -38,7 +38,7 @@ namespace TopicTwister.TurnResult.UseCases
                         initialLetter: answerToEvaluate.initialLetter).Outcome;
                 }
 
-                evaluatedAnswer = new EvaluatedAnswerDTO(
+                evaluatedAnswer = new EvaluatedAnswerDto(
                     category: turnAnswer.Category,
                     answer: turnAnswer.UserInput,
                     isCorrect: isCorrect,
@@ -47,7 +47,7 @@ namespace TopicTwister.TurnResult.UseCases
                 result.Add(evaluatedAnswer);
             }
 
-            Result<List<EvaluatedAnswerDTO>> useCaseResult = Result<List<EvaluatedAnswerDTO>>.Success(outcome: result);
+            Result<List<EvaluatedAnswerDto>> useCaseResult = Result<List<EvaluatedAnswerDto>>.Success(outcome: result);
             return useCaseResult;
         }
     }

@@ -39,10 +39,10 @@ namespace TopicTwister.TurnResult.Views
         [SerializeField]
         private FakeMatchScriptable _fakeMatchData;
 
-        private List<TurnAnswerDTO> _turnResultViewList;
+        private List<TurnAnswerDto> _turnResultViewList;
         private TurnResultPresenter _turnResultPresenter;
         private Sprite _answerResultImage;
-        private EvaluatedAnswerDTO _evaluatedAnswer;
+        private EvaluatedAnswerDto _evaluatedAnswer;
 
         void Start()
         {
@@ -54,7 +54,7 @@ namespace TopicTwister.TurnResult.Views
             OnLoad?.Invoke();
         }
 
-        public void EvaluateAnswers(List<EvaluatedAnswerDTO> evaluatedAnswers)
+        public void EvaluateAnswers(List<EvaluatedAnswerDto> evaluatedAnswers)
         {
             for (int i = 0; i < _categoryResultList.childCount; i++)
             {

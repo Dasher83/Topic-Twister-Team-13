@@ -29,7 +29,7 @@ namespace NewRoundTests
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
-            MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
+            MatchDto matchDto = new MatchDto(id: 0, startDateTime: startDateTime);
             Match match = new Match(matchDto.Id, matchDto.StartDateTime);
             List<Result<RoundWithCategoriesDto>> actualResults = new List<Result<RoundWithCategoriesDto>>();
 
@@ -221,7 +221,7 @@ namespace NewRoundTests
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
-            MatchDTO matchDto = new MatchDTO(id: -1, startDateTime: startDateTime);
+            MatchDto matchDto = new MatchDto(id: -1, startDateTime: startDateTime);
             _roundRepository = Substitute.For<IRoundsRepository>();
             _matchesRepository = Substitute.For<IMatchesRepository>();
             
@@ -265,7 +265,7 @@ namespace NewRoundTests
             DateTime startDateTime = DateTime.UtcNow - TimeSpan.FromSeconds(10);
             DateTime endDateTime = DateTime.UtcNow;
 
-            MatchDTO matchDto = new MatchDTO(
+            MatchDto matchDto = new MatchDto(
                 id: 0,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
@@ -329,7 +329,7 @@ namespace NewRoundTests
             DateTime startDateTime = DateTime.UtcNow;
             DateTime endDateTime = DateTime.UtcNow - TimeSpan.FromSeconds(10);
 
-            MatchDTO matchDto = new MatchDTO(
+            MatchDto matchDto = new MatchDto(
                 id: 0,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
@@ -391,7 +391,7 @@ namespace NewRoundTests
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
-            MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
+            MatchDto matchDto = new MatchDto(id: 0, startDateTime: startDateTime);
             Match match = new Match(matchDto.Id, matchDto.StartDateTime);
             List<Result<RoundWithCategoriesDto>> actualResults = new List<Result<RoundWithCategoriesDto>>();
 

@@ -18,9 +18,9 @@ namespace TopicTwister.TurnResult.Services
             _useCase = evaluateAnswersUseCase;
         }
 
-        public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
+        public List<EvaluatedAnswerDto> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            Result<List<EvaluatedAnswerDTO>> useCaseResult = _useCase.EvaluateAnswers(answerToEvaluate);
+            Result<List<EvaluatedAnswerDto>> useCaseResult = _useCase.EvaluateAnswers(answerToEvaluate);
             return useCaseResult.WasOk ? useCaseResult.Outcome : null;
         }
     }

@@ -11,7 +11,7 @@ namespace TopicTwister.TurnResult.Repositories
 {
     public class WordsRepositoryJson: IWordsRepository
     {
-        private readonly List<WordDTO> _words;
+        private readonly List<WordDto> _words;
 
         public WordsRepositoryJson(string wordsResourceName)
         {

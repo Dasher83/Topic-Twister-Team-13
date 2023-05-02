@@ -14,9 +14,9 @@ namespace TopicTwister.Home.Services
             _useCase = useCase;
         }
 
-        public MatchDTO Create()
+        public MatchDto Create()
         {
-            Result<MatchDTO> useCaseResult = _useCase.Create(userId: UserTestId);
+            Result<MatchDto> useCaseResult = _useCase.Create(userId: UserTestId);
             return useCaseResult.WasOk ? useCaseResult.Outcome : null;
         }
     }

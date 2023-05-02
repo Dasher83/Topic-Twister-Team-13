@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class EvaluatedAnswerDTO
+    public class EvaluatedAnswerDto
     {
         [SerializeField] private CategoryDto _category;
         [SerializeField] private string _answer;
@@ -17,7 +17,7 @@ namespace TopicTwister.Shared.DTOs
         public bool IsCorrect => _isCorrect;
         public int Order => _order;
 
-        public EvaluatedAnswerDTO(CategoryDto category, string answer, bool isCorrect, int order)
+        public EvaluatedAnswerDto(CategoryDto category, string answer, bool isCorrect, int order)
         {
             _category = category;
             _answer = answer;
@@ -30,7 +30,7 @@ namespace TopicTwister.Shared.DTOs
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            EvaluatedAnswerDTO other = (EvaluatedAnswerDTO)obj;
+            EvaluatedAnswerDto other = (EvaluatedAnswerDto)obj;
             return this._category == other._category &&
                 this._answer == other._answer &&
                 this._isCorrect == other._isCorrect &&

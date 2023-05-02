@@ -6,6 +6,6 @@ namespace TopicTwister.NewRound.Shared.Interfaces
 {
     public interface ICreateRoundUseCase
     {
-        Result<RoundWithCategoriesDto> Create(MatchDTO matchDto);
+        Result<RoundWithCategoriesDto> Create(MatchDto matchDto);
     }
 }

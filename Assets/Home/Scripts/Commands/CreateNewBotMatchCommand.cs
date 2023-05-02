@@ -20,7 +20,7 @@ namespace TopicTwister.Home.Commands
 
         public void Execute()
         {
-            MatchDTO match = _service.Create();
+            MatchDto match = _service.Create();
         }
     }
 }

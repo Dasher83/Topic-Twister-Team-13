@@ -14,7 +14,7 @@ public class CreateBotMatchUseCaseTests
 {
     private ICreateBotMatchUseCase _useCase;
     private IUserMatchesRepository _userMatchesRepository;
-    private IdtoMapper<Match, MatchDTO> _mapper;
+    private IdtoMapper<Match, MatchDto> _mapper;
     private IMatchesRepository _matchesRepository;
     private IUserRepository _userRepository;
 
@@ -32,20 +32,20 @@ public class CreateBotMatchUseCaseTests
         int testUserId = 1;
         int botId = 2;
 
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
         _mapper.ToDTO(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 Match match = (Match)args[0];
-                return new MatchDTO(
+                return new MatchDto(
                     id: match.Id,
                     startDateTime: match.StartDateTime,
                     endDateTime: match.EndDateTime);
             });
-        _mapper.FromDTO(Arg.Any<MatchDTO>()).Returns(
+        _mapper.FromDTO(Arg.Any<MatchDto>()).Returns(
             (args) =>
             {
-                MatchDTO match = (MatchDTO)args[0];
+                MatchDto match = (MatchDto)args[0];
                 return new Match(
                     id: match.Id,
                     startDateTime: match.StartDateTime,
@@ -111,11 +111,11 @@ public class CreateBotMatchUseCaseTests
         #endregion
 
         #region -- Act --
-        Result<MatchDTO> actualResult = _useCase.Create(testUserId);
+        Result<MatchDto> actualResult = _useCase.Create(testUserId);
         #endregion
 
         #region -- Assert --
-        MatchDTO expectedMatch = new MatchDTO(id: actualResult.Outcome.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
+        MatchDto expectedMatch = new MatchDto(id: actualResult.Outcome.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
         Assert.AreEqual(expectedMatch, actualResult.Outcome);
 
         UserMatch expectedUserMatch = new UserMatch(
@@ -138,7 +138,7 @@ public class CreateBotMatchUseCaseTests
 
         _matchesRepository = Substitute.For<IMatchesRepository>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
 
         _userRepository = Substitute.For<IUserRepository>();
         _userRepository.Get(Arg.Any<int>()).Returns(
@@ -160,7 +160,7 @@ public class CreateBotMatchUseCaseTests
         #endregion
 
         #region -- Act --
-        Result<MatchDTO> useCaseOperationResult = _useCase.Create(userId);
+        Result<MatchDto> useCaseOperationResult = _useCase.Create(userId);
         #endregion
 
         #region -- Assert --
@@ -189,7 +189,7 @@ public class CreateBotMatchUseCaseTests
                 return Result<User>.Success(new User(id: userId));
             });
 
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
 
         _useCase = new CreateBotMatchUseCase(
             matchesRepository: _matchesRepository,
@@ -199,7 +199,7 @@ public class CreateBotMatchUseCaseTests
         #endregion
 
         #region -- Act --
-        Result<MatchDTO> useCaseOperationResult = _useCase.Create(0);
+        Result<MatchDto> useCaseOperationResult = _useCase.Create(0);
         #endregion
 
         #region -- Assert --
@@ -230,7 +230,7 @@ public class CreateBotMatchUseCaseTests
             });
 
 
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDTO>>();
+        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _userMatchesRepository.Save(Arg.Any<UserMatch>()).Returns(
             (args) =>
@@ -248,7 +248,7 @@ public class CreateBotMatchUseCaseTests
         #endregion
 
         #region -- Act --
-        Result<MatchDTO> useCaseOperationResult = _useCase.Create(0);
+        Result<MatchDto> useCaseOperationResult = _useCase.Create(0);
         #endregion
 
         #region -- Assert --

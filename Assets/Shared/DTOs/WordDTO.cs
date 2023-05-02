@@ -5,14 +5,14 @@ using UnityEngine;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class WordDTO
+    public class WordDto
     {
         [SerializeField] private string _text;
         [SerializeField] private int _categoryId;
 
-        private WordDTO() { }
+        private WordDto() { }
 
-        public WordDTO(string text, int categoryId)
+        public WordDto(string text, int categoryId)
         {
             _text = text;
             _categoryId = categoryId;

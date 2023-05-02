@@ -7,6 +7,6 @@ namespace TopicTwister.TurnResult.Shared.Interfaces
 {
     public interface IAnswersEvaluationService
     {
-        public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate);
+        public List<EvaluatedAnswerDto> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate);
     }
 }

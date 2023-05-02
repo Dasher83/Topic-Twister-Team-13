@@ -13,13 +13,13 @@ namespace TopicTwister.Home.UseCases
         private IUserMatchesRepository _userMatchesRepository;
         private IUserRepository _userRepository;
         private const int BotId = 2;
-        private IdtoMapper<Match, MatchDTO> _mapper;
+        private IdtoMapper<Match, MatchDto> _mapper;
 
         public CreateBotMatchUseCase(
             IMatchesRepository matchesRepository,
             IUserMatchesRepository userMatchesRepository,
             IUserRepository userRespository,
-            IdtoMapper<Match, MatchDTO> mapper)
+            IdtoMapper<Match, MatchDto> mapper)
         {
             _matchesRepository = matchesRepository;
             _userMatchesRepository = userMatchesRepository;
@@ -27,13 +27,13 @@ namespace TopicTwister.Home.UseCases
             _mapper = mapper;
         }
 
-        public Result<MatchDTO> Create(int userId)
+        public Result<MatchDto> Create(int userId)
         {
             Result<User> getUserOperationResult = _userRepository.Get(userId);
 
             if (getUserOperationResult.WasOk == false)
             {
-                return Result<MatchDTO>.Failure(errorMessage: getUserOperationResult.ErrorMessage);
+                return Result<MatchDto>.Failure(errorMessage: getUserOperationResult.ErrorMessage);
             }
 
             User user = getUserOperationResult.Outcome;
@@ -42,7 +42,7 @@ namespace TopicTwister.Home.UseCases
 
             if(saveMatchOperation.WasOk == false)
             {
-                return Result<MatchDTO>.Failure(errorMessage: saveMatchOperation.ErrorMessage);
+                return Result<MatchDto>.Failure(errorMessage: saveMatchOperation.ErrorMessage);
             }
 
             match = saveMatchOperation.Outcome;
@@ -59,7 +59,7 @@ namespace TopicTwister.Home.UseCases
             if(saveUserMatchOperation.WasOk == false)
             {
                 _matchesRepository.Delete(match.Id);
-                return Result<MatchDTO>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
+                return Result<MatchDto>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
             }
 
             userMatch = new UserMatch(
@@ -74,10 +74,10 @@ namespace TopicTwister.Home.UseCases
             if (saveUserMatchOperation.WasOk == false)
             {
                 _matchesRepository.Delete(match.Id);
-                return Result<MatchDTO>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
+                return Result<MatchDto>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
             }
 
-            Result<MatchDTO> useCaseResult = Result<MatchDTO>.Success(outcome: _mapper.ToDTO(match));
+            Result<MatchDto> useCaseResult = Result<MatchDto>.Success(outcome: _mapper.ToDTO(match));
             return useCaseResult;
         }
     }

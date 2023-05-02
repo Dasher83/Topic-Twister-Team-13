@@ -26,13 +26,13 @@ namespace TopicTwister.PlayTurn.CategoryInputList
         {
             _turnAnswersData.ClearAnswers();
 
-            TurnAnswerDTO[] turnAnswers = new TurnAnswerDTO[5];
+            TurnAnswerDto[] turnAnswers = new TurnAnswerDto[5];
             int index = 0;
 
             foreach (Transform childTransform in transform)
             {
                 string userInput = childTransform.Find("UserInput").gameObject.GetComponent<TextMeshProUGUI>().text.Trim();
-                turnAnswers[index] = new TurnAnswerDTO(
+                turnAnswers[index] = new TurnAnswerDto(
                     category: _newRoundData.Categories[index],
                     userInput: userInput,
                     order: index);

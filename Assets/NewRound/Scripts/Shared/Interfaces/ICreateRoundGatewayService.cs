@@ -5,6 +5,6 @@ namespace TopicTwister.NewRound.Shared.Interfaces
 {
     public interface ICreateRoundGatewayService
     {
-        RoundWithCategoriesDto Create(MatchDTO matchDto);
+        RoundWithCategoriesDto Create(MatchDto matchDto);
     }
 }
