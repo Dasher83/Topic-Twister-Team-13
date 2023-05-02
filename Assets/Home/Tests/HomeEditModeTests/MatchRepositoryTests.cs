@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
+using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.TestUtils;
@@ -13,6 +15,13 @@ public class MatchRepositoryTests
 {
     private IUniqueIdGenerator idGenerator;
     private IMatchesRepository _matchesRepository;
+    private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _matchDaoMapper = new MatchDaoJsonMapper();
+    }
 
     [TearDown]
     public void TearDown()
@@ -36,7 +45,8 @@ public class MatchRepositoryTests
 
         _matchesRepository = new MatchesRepositoryJson(
             matchesResourceName: "TestData/Matches",
-            idGenerator: idGenerator);
+            idGenerator: idGenerator,
+            matchDaoMapper: _matchDaoMapper);
 
         List<Match> matches = new List<Match>() { new Match(), new Match()};
 
@@ -72,7 +82,8 @@ public class MatchRepositoryTests
             });
         _matchesRepository = new MatchesRepositoryJson(
             matchesResourceName: "TestData/Matches",
-            idGenerator: idGenerator);
+            idGenerator: idGenerator,
+            matchDaoMapper: _matchDaoMapper);
 
         Result<Match> saveOperationResult = _matchesRepository.Save(
                 match: new Match(

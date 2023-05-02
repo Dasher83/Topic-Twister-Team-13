@@ -83,7 +83,32 @@ namespace TopicTwister.Shared.Repositories
 
             if (filteredRounds.Count != roundIds.Count)
             {
-                Result<List<Category>>.Failure(errorMessage: $"Rounds not found with ids: [{string.Join(", ", notFoundIds)}]");
+                Result<List<Round>>.Failure(errorMessage: $"Rounds not found with ids: [{string.Join(", ", notFoundIds)}]");
+            }
+
+            return Result<List<Round>>.Success(outcome: filteredRounds);
+        }
+
+        public Result<List<Round>> GetMany(int matchId)
+        {
+            Result<List<Round>> GetAllOperationResult = GetAll();
+
+            if (GetAllOperationResult.WasOk == false)
+            {
+                return Result<List<Round>>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
+            }
+
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+
+            List<Round> filteredRounds = _readCache
+                .Where(roundDao => matchId == roundDao.MatchId)
+                .Distinct()
+                .Select(roundDao => _mapper.FromDAO(roundDao))
+                .ToList();
+
+            if (filteredRounds.Count > 3)
+            {
+                Result<List<Round>>.Failure(errorMessage: $"Too many rounds found for match with id: {matchId}");
             }
 
             return Result<List<Round>>.Success(outcome: filteredRounds);

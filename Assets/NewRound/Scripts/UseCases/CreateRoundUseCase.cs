@@ -41,6 +41,15 @@ namespace TopicTwister.NewRound.UseCases
 
             Match match = getMatchOperationResult.Outcome;
 
+            Result<List<Round>> getRoundsOperationResult = _roundsRepository.GetMany(matchId: match.Id);
+
+            if (getRoundsOperationResult.WasOk == false)
+            {
+                return Result<RoundWithCategoriesDto>.Failure(errorMessage: getRoundsOperationResult.ErrorMessage);
+            }
+
+            match.Rounds = getRoundsOperationResult.Outcome;
+
             if (match.IsValid == false)
             {
                 return Result<RoundWithCategoriesDto>.Failure(

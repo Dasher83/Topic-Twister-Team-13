@@ -16,23 +16,22 @@ namespace TopicTwister.Shared.Repositories
     {
         protected string _path;
         protected List<MatchDaoJson> _readCache;
-        protected IdaoMapper<Match, MatchDaoJson> _mapper;
+        protected IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
 
         public MatchesReadOnlyRepositoryJson(
             string resourceName,
-            IRoundsReadOnlyRepository roundsRepository)
+            IdaoMapper<Match, MatchDaoJson> matchDaoMapper)
         {
             _path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
-            _mapper = new MatchDaoJsonMapper(
-                roundRepository: roundsRepository);
-            _readCache = _mapper.ToDAOs(GetAll().Outcome);
+            _matchDaoMapper = matchDaoMapper;
+            _readCache = _matchDaoMapper.ToDAOs(GetAll().Outcome);
         }
 
         public Result<List<Match>> GetAll()
         {
             string data = File.ReadAllText(_path);
             _readCache = new MatchDaosCollectionDeserializer().Deserialize(data).Matches;
-            List<Match> matches = _mapper.FromDAOs(_readCache.ToList());
+            List<Match> matches = _matchDaoMapper.FromDAOs(_readCache.ToList());
             return Result<List<Match>>.Success(outcome: matches);
         }
 
@@ -44,14 +43,14 @@ namespace TopicTwister.Shared.Repositories
                 return Result<Match>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _matchDaoMapper.ToDAOs(GetAllOperationResult.Outcome);
             MatchDaoJson matchDAO = _readCache.SingleOrDefault(match => match.Id == id && match.Id >= 0);
             if(matchDAO == null)
             {
                 return Result<Match>.Failure(errorMessage: $"Match not found with id: {id}");
 
             }
-            Match match = _mapper.FromDAO(matchDAO);
+            Match match = _matchDaoMapper.FromDAO(matchDAO);
 
             return Result<Match>.Success(outcome: match);
         }

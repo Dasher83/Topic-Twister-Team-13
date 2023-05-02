@@ -5,25 +5,38 @@ using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.TestUtils;
+using TopicTwister.Shared.DAOs;
+using TopicTwister.Shared.Mappers;
 
 
 public class UserMatchesRepositoryTests
 {
-
     private IUserMatchesRepository _userMatchesRepository;
-    private IMatchesRepository _matchRepository;
+    private IMatchesRepository _matchesRepository;
+    private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IUniqueIdGenerator _idGenerator;
     private IUserRepository _userRepository;
+    private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
 
     [SetUp]
     public void SetUp()
     {
+        _matchDaoMapper = new MatchDaoJsonMapper();
+
+        _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
+            resourceName: "TestData/Matches", matchDaoMapper: _matchDaoMapper);
+
         _userRepository = new UsersRepositoryInMemory();
-        _idGenerator = new MatchesIdGenerator(new MatchesReadOnlyRepositoryJson(resourceName: "TestData/Matches"));
-        _matchRepository = new MatchesRepositoryJson(matchesResourceName: "TestData/Matches",idGenerator: _idGenerator);
+        _idGenerator = new MatchesIdGenerator(matchesRepository: _matchesReadOnlyRepository);
+
+        _matchesRepository = new MatchesRepositoryJson(
+            matchesResourceName: "TestData/Matches",
+            idGenerator: _idGenerator,
+            matchDaoMapper: _matchDaoMapper);
+
         _userMatchesRepository = new UserMatchesRepositoryJson(
             userMatchesResourceName: "TestData/UserMatches",
-            matchesRepository: _matchRepository,
+            matchesRepository: _matchesRepository,
             userRepository: _userRepository);
     }
 
@@ -38,7 +51,7 @@ public class UserMatchesRepositoryTests
     public void Test_ok_all_operations()
     {
         Match match = new Match();
-        match = _matchRepository.Save(match).Outcome;
+        match = _matchesRepository.Save(match).Outcome;
 
         List<UserMatch> userMatches = new List<UserMatch>() {
             new UserMatch(

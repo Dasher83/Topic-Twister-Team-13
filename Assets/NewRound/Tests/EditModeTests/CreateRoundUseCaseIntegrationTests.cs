@@ -4,10 +4,10 @@ using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.NewRound.Repositories;
-using TopicTwister.NewRound.Repositories.IdGenerators;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
+using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
@@ -31,12 +31,14 @@ namespace NewRoundTests
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
         private IdtoMapper<Match, MatchDTO> _matchDtoMapper;
         private IUniqueIdGenerator _idGenerator;
+        private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
         private const int MaxRounds = 3;
         private const int MaxCategories = 5;
 
         [SetUp]
         public void SetUp()
         {
+            _matchDaoMapper = new MatchDaoJsonMapper();
             _idGenerator = Substitute.For<IUniqueIdGenerator>();
 
             _matchDtoMapper = new MatchDtoMapper();
@@ -50,11 +52,13 @@ namespace NewRoundTests
                 mapper: new CategoryDaoJsonMapper());
 
             _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
-                resourceName: "TestData/Matches");
+                resourceName: "TestData/Matches",
+                matchDaoMapper: _matchDaoMapper);
 
             _matchesRepository = new MatchesRepositoryJson(
                 matchesResourceName: "TestData/Matches",
-                idGenerator: new MatchesIdGenerator(_matchesReadOnlyRepository));
+                idGenerator: new MatchesIdGenerator(_matchesReadOnlyRepository),
+                matchDaoMapper: _matchDaoMapper);
 
             _roundsRepository = new RoundsRespositoryJson(
                 resourceName: "TestData/Rounds",

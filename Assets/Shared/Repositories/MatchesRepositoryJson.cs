@@ -20,7 +20,7 @@ namespace TopicTwister.Shared.Repositories
         public MatchesRepositoryJson(
             string matchesResourceName,
             IUniqueIdGenerator idGenerator,
-            IRoundsReadOnlyRepository roundRepository): base(matchesResourceName, roundRepository)
+            IdaoMapper<Match, MatchDaoJson> matchDaoMapper) : base(matchesResourceName, matchDaoMapper)
         {
             _idGenerator = idGenerator;
         }
@@ -33,9 +33,9 @@ namespace TopicTwister.Shared.Repositories
                 return Result<Match>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _matchDaoMapper.ToDAOs(GetAllOperationResult.Outcome);
             _writeCache = _readCache.ToList();
-            MatchDaoJson matchDao = _mapper.ToDAO(match);
+            MatchDaoJson matchDao = _matchDaoMapper.ToDAO(match);
 
             matchDao = new MatchDaoJson(id: _idGenerator.GetNextId(),
                 startDateTime: matchDao.StartDateTime,
@@ -57,7 +57,7 @@ namespace TopicTwister.Shared.Repositories
                 return Result<bool>.Failure(errorMessage: GetOperationResult.ErrorMessage);
             }
 
-            MatchDaoJson matchToDelete = _mapper.ToDAO(GetOperationResult.Outcome);
+            MatchDaoJson matchToDelete = _matchDaoMapper.ToDAO(GetOperationResult.Outcome);
             _writeCache = _readCache.ToList();
             _writeCache.Remove(matchToDelete);
             MatchDaosCollection collection = new MatchDaosCollection(_writeCache.ToArray());

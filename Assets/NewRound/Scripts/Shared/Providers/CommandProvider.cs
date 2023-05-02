@@ -8,6 +8,7 @@ using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.IdGenerators;
 
@@ -29,20 +30,24 @@ namespace TopicTwister.NewRound.Shared.Providers
                                     roundsRepository: new RoundsReadOnlyRepositoryJson(
                                         resourceName: "DevelopmentData/Rounds",
                                         matchesRepository: new MatchesReadOnlyRepositoryJson(
-                                            resourceName: "DevelopmentData/Matches"),
+                                            resourceName: "DevelopmentData/Matches",
+                                            matchDaoMapper: new MatchDaoJsonMapper()),
                                         categoriesRepository: new CategoriesReadOnlyRepositoryJson(
                                             categoriesResourceName: "DevelopmentData/Categories",
                                             mapper: new CategoryDaoJsonMapper()))),
                                 matchesRepository: new MatchesReadOnlyRepositoryJson(
-                                            resourceName: "DevelopmentData/Matches"),
+                                            resourceName: "DevelopmentData/Matches",
+                                            matchDaoMapper: new MatchDaoJsonMapper()),
                                 categoriesRepository: new CategoriesReadOnlyRepositoryJson(
                                             categoriesResourceName: "DevelopmentData/Categories",
                                             mapper: new CategoryDaoJsonMapper())),
                             matchesRepository: new MatchesRepositoryJson(
-                                matchesResourceName: "DevelopmentData/Matches",
-                                idGenerator: new MatchesIdGenerator(
-                                    matchesRepository: new MatchesReadOnlyRepositoryJson(
-                                        resourceName: "DevelopmentData/Matches"))),
+                                    matchesResourceName: "DevelopmentData/Matches",
+                                    idGenerator: new MatchesIdGenerator(
+                                        matchesRepository: new MatchesReadOnlyRepositoryJson(
+                                            resourceName: "DevelopmentData/Matches",
+                                            matchDaoMapper: new MatchDaoJsonMapper())),
+                                    matchDaoMapper: new MatchDaoJsonMapper()),
                             categoryRepository: new CategoriesReadOnlyRepositoryJson(
                                 categoriesResourceName: "DevelopmentData/Categories",
                                 mapper: new CategoryDaoJsonMapper()),

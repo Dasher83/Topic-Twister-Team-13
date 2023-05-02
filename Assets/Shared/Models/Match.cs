@@ -14,7 +14,18 @@ namespace TopicTwister.Shared.Models
         public int Id => _id;
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
-        public List<Round> Rounds => _rounds.ToList();
+        public List<Round> Rounds
+        {
+            get
+            {
+                return _rounds.ToList();
+            }
+
+            set
+            {
+                _rounds = value.ToList();
+            }
+        }
 
         public Match()
         {

@@ -53,6 +53,17 @@ namespace NewRoundTests
                     return saveRoundOperationResult;
                 });
 
+            _roundRepository.GetMany(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    List<Round> rounds = actualResults
+                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    .ToList();
+
+                    return Result<List<Round>>.Success(
+                        outcome: rounds);
+                });
+
             _matchesRepository = Substitute.For<IMatchesRepository>();
             _matchesRepository.Get(Arg.Any<int>()).Returns(
                 (args) =>
@@ -257,7 +268,21 @@ namespace NewRoundTests
                 id: 0,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
+
+            List<Result<RoundWithCategoriesDto>> useCaseOperationResults = new List<Result<RoundWithCategoriesDto>>();
             _roundRepository = Substitute.For<IRoundsRepository>();
+
+            _roundRepository.GetMany(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    List<Round> rounds = useCaseOperationResults
+                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    .ToList();
+
+                    return Result<List<Round>>.Success(
+                        outcome: rounds);
+                });
+
             _matchesRepository = Substitute.For<IMatchesRepository>();
 
             _matchesRepository.Get(Arg.Any<int>()).Returns(
@@ -285,6 +310,7 @@ namespace NewRoundTests
 
             #region -- Act --
             Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            useCaseOperationResults.Add(useCaseOperationResult);
             #endregion
 
             #region -- Assert --
@@ -306,7 +332,21 @@ namespace NewRoundTests
                 id: 0,
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
+
+            List<Result<RoundWithCategoriesDto>> useCaseOperationResults = new List<Result<RoundWithCategoriesDto>>();
             _roundRepository = Substitute.For<IRoundsRepository>();
+
+            _roundRepository.GetMany(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    List<Round> rounds = useCaseOperationResults
+                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    .ToList();
+
+                    return Result<List<Round>>.Success(
+                        outcome: rounds);
+                });
+
             _matchesRepository = Substitute.For<IMatchesRepository>();
 
             _matchesRepository.Get(Arg.Any<int>()).Returns(
@@ -334,6 +374,7 @@ namespace NewRoundTests
 
             #region -- Act --
             Result<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            useCaseOperationResults.Add(useCaseOperationResult);
             #endregion
 
             #region -- Assert --
@@ -355,6 +396,7 @@ namespace NewRoundTests
 
             _roundRepository = Substitute.For<IRoundsRepository>();
             int nextFakeId = 0;
+
             _roundRepository.Save(Arg.Any<Round>()).Returns(
                 (args) =>
                 {
@@ -371,6 +413,17 @@ namespace NewRoundTests
 
                     nextFakeId++;
                     return saveRoundOperationResult;
+                });
+
+            _roundRepository.GetMany(Arg.Any<int>()).Returns(
+                (args) =>
+                {
+                    List<Round> rounds = actualResults
+                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    .ToList();
+
+                    return Result<List<Round>>.Success(
+                        outcome: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();

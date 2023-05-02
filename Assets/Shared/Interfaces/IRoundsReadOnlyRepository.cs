@@ -10,6 +10,6 @@ namespace TopicTwister.Shared.Interfaces
         Result<List<Round>> GetAll();
         Result<Round> Get(int id);
         Result<List<Round>> GetMany(List<int> ids);
-
+        Result<List<Round>> GetMany(int matchId);
     }
 }
