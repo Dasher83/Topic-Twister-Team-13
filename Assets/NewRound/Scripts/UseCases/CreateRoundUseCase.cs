@@ -48,7 +48,11 @@ namespace TopicTwister.NewRound.UseCases
                 return Result<RoundWithCategoriesDto>.Failure(errorMessage: getRoundsOperationResult.ErrorMessage);
             }
 
-            match.Rounds = getRoundsOperationResult.Outcome;
+            match = new Match(
+                id: match.Id,
+                startDateTime: match.StartDateTime,
+                endDateTime: match.EndDateTime,
+                rounds: getRoundsOperationResult.Outcome);
 
             if (match.IsValid == false)
             {

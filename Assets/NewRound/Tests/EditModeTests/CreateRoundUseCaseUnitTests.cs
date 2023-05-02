@@ -78,8 +78,11 @@ namespace NewRoundTests
                     {
                         rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Outcome));
                     }
-                    Match lambdaMatch = new Match(id, startDateTime);
-                    lambdaMatch.Rounds = rounds;
+                    Match lambdaMatch = new Match(
+                        id,
+                        startDateTime,
+                        endDateTime: null,
+                        rounds: rounds);
                     return Result<Match>.Success(outcome: lambdaMatch);
                 });
 
@@ -441,8 +444,11 @@ namespace NewRoundTests
                     {
                         rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Outcome));
                     }
-                    Match lambdaMatch = new Match(id, startDateTime);
-                    lambdaMatch.Rounds = rounds;
+                    Match lambdaMatch = new Match(
+                        id,
+                        startDateTime,
+                        endDateTime: null,
+                        rounds: rounds);
                     return Result<Match>.Success(outcome: lambdaMatch);
                 });
 

@@ -14,18 +14,7 @@ namespace TopicTwister.Shared.Models
         public int Id => _id;
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
-        public List<Round> Rounds
-        {
-            get
-            {
-                return _rounds.ToList();
-            }
-
-            set
-            {
-                _rounds = value.ToList();
-            }
-        }
+        public List<Round> Rounds => _rounds.ToList();
 
         public Match()
         {
@@ -42,12 +31,12 @@ namespace TopicTwister.Shared.Models
             _rounds = null;
         }
 
-        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null)
+        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null, List<Round> rounds = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
-            _rounds = null;
+            _rounds = rounds;
         }
 
         public bool IsActive => string.IsNullOrEmpty(_endDateTime);
