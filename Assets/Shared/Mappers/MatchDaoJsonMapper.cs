@@ -9,12 +9,22 @@ namespace TopicTwister.Shared.Mappers
 {
     public class MatchDaoJsonMapper : IdaoMapper<Match, MatchDaoJson>
     {
-        public Match FromDAO(MatchDaoJson matchDAO)
+        IRoundsReadOnlyRepository _roundRepository;
+
+        public MatchDaoJsonMapper(IRoundsReadOnlyRepository roundRepository)
         {
+            this._roundRepository = roundRepository;
+        }
+
+        public Match FromDAO(MatchDaoJson matchDao)
+        {
+            List<Round> rounds = _roundRepository.GetMany(matchDao.RoundIds).Outcome;
+
             return new Match(
-                id: matchDAO.Id,
-                startDateTime: matchDAO.StartDateTime,
-                endDateTime: matchDAO.EndDateTime);
+                id: matchDao.Id,
+                startDateTime: matchDao.StartDateTime,
+                endDateTime: matchDao.EndDateTime,
+                rounds: rounds);
         }
 
         public List<Match> FromDAOs(List<MatchDaoJson> matchesDAOs)
@@ -27,7 +37,8 @@ namespace TopicTwister.Shared.Mappers
             return new MatchDaoJson(
                 id: match.Id,
                 startDateTime: match.StartDateTime,
-                endDateTime: match.EndDateTime);
+                endDateTime: match.EndDateTime,
+                roundIds: match.Rounds.Select(round => round.Id).ToList());
         }
 
         public List<MatchDaoJson> ToDAOs(List<Match> matches)

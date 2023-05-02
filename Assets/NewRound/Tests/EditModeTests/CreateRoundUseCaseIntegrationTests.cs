@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.NewRound.Repositories;
+using TopicTwister.NewRound.Repositories.IdGenerators;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.Mappers;
 using TopicTwister.NewRound.UseCases;
@@ -28,28 +30,37 @@ namespace NewRoundTests
         private ILetterReadOnlyRepository _letterRepository;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
         private IdtoMapper<Match, MatchDTO> _matchDtoMapper;
+        private IUniqueIdGenerator _idGenerator;
         private const int MaxRounds = 3;
         private const int MaxCategories = 5;
 
         [SetUp]
         public void SetUp()
         {
+            _idGenerator = Substitute.For<IUniqueIdGenerator>();
+
             _matchDtoMapper = new MatchDtoMapper();
-            _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper();
+            _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper(
+                categoryDtoMapper: new CategoryDtoMapper(),
+                roundDtoMapper: new RoundDtoMapper());
             _letterRepository = new LetterReadOnlyRepositoryInMemory();
 
             _categoriesReadOnlyRepository = new CategoriesReadOnlyRepositoryJson(
                 categoriesResourceName: "TestData/Category",
-                mapper: new CategoryDaoMapper());
+                mapper: new CategoryDaoJsonMapper());
 
             _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
-                matchesResourceName: "TestData/Matches");
+                resourceName: "TestData/Matches");
 
             _matchesRepository = new MatchesRepositoryJson(
                 matchesResourceName: "TestData/Matches",
                 idGenerator: new MatchesIdGenerator(_matchesReadOnlyRepository));
 
-            _roundsRepository = new RoundsRespositoryJson();
+            _roundsRepository = new RoundsRespositoryJson(
+                resourceName: "TestData/Rounds",
+                idGenerator: _idGenerator,
+                matchesRepository: _matchesReadOnlyRepository,
+                categoriesRepository: _categoriesReadOnlyRepository);
 
             _useCase = new CreateRoundUseCase(
                 roundsRepository: _roundsRepository,
@@ -72,7 +83,19 @@ namespace NewRoundTests
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
-            MatchDTO matchDto = new MatchDTO(id: 0, startDateTime: startDateTime);
+            Match match = new Match(startDateTime: startDateTime);
+            match = _matchesRepository.Save(match).Outcome;
+            MatchDTO matchDto = _matchDtoMapper.ToDTO(match);
+
+            int idsIndex = 0;
+            int[] ids = new int[3] { 3, 8, 12 };
+            _idGenerator.GetNextId().Returns(
+                (args) =>
+                {
+                    int result = ids[idsIndex];
+                    idsIndex++;
+                    return result;
+                });
             #endregion
 
             #region -- Act --
@@ -91,7 +114,7 @@ namespace NewRoundTests
                 RoundWithCategoriesDto expectedDto =
                     new RoundWithCategoriesDto(
                         roundDto: new RoundDto(
-                            id: i,
+                            id: ids[i],
                             roundNumber: i,
                             initialLetter: actualResults[i].Outcome.RoundDto.InitialLetter,
                             isActive: true),

@@ -17,6 +17,7 @@ namespace TopicTwister.Shared.Models
         public int RoundNumber => _roundNumber;
         public char InitialLetter => _initialLetter;
         public bool IsActive => _isActive;
+        public Match Match => _match;
         public List<Category> Categories => _categories.ToList();
 
         public Round(int roundNumber, char initialLetter, bool isActive, Match match, List<Category> categories)

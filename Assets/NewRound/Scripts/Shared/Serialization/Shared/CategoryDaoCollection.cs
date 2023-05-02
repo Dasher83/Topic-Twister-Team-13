@@ -5,7 +5,7 @@ using TopicTwister.NewRound.Shared.DAOs;
 using UnityEngine;
 
 
-namespace TopicTwister.NewRound.Shared.Serialization
+namespace TopicTwister.NewRound.Shared.Serialization.Shared
 {
     [Serializable]
     public class CategoryDaoCollection

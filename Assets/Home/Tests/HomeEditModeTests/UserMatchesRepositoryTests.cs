@@ -19,7 +19,7 @@ public class UserMatchesRepositoryTests
     public void SetUp()
     {
         _userRepository = new UsersRepositoryInMemory();
-        _idGenerator = new MatchesIdGenerator(new MatchesReadOnlyRepositoryJson(matchesResourceName: "TestData/Matches"));
+        _idGenerator = new MatchesIdGenerator(new MatchesReadOnlyRepositoryJson(resourceName: "TestData/Matches"));
         _matchRepository = new MatchesRepositoryJson(matchesResourceName: "TestData/Matches",idGenerator: _idGenerator);
         _userMatchesRepository = new UserMatchesRepositoryJson(
             userMatchesResourceName: "TestData/UserMatches",

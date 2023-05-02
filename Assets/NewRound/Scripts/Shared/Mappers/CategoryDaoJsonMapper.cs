@@ -6,7 +6,7 @@ using TopicTwister.Shared.Models;
 
 namespace TopicTwister.NewRound.Shared.Mappers
 {
-    public class CategoryDaoMapper : IdaoMapper<Category, CategoryDao>
+    public class CategoryDaoJsonMapper : IdaoMapper<Category, CategoryDao>
     {
         public Category FromDAO(CategoryDao categoryDao)
         {

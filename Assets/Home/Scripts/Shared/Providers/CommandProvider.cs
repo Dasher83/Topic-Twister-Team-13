@@ -24,14 +24,17 @@ namespace TopicTwister.Home.Shared.Providers
                                     matchesResourceName: "DevelopmentData/Matches",
                                     idGenerator: new MatchesIdGenerator(
                                         matchesRepository: new MatchesReadOnlyRepositoryJson(
-                                        matchesResourceName: "DevelopmentData/Matches"))),
+                                        resourceName: "DevelopmentData/Matches",
+                                        roundsRepository: new RoundsReadOnlyRepositoryJson(
+                                            resourceName: "DevelopmentData/Rounds",
+                                            matchesRepository: new MatchesReadOnlyRepositoryJson())))), // Todo: se descubre depenencia circular
                                 new UserMatchesRepositoryJson(
                                     userMatchesResourceName: "DevelopmentData/UserMatches",
                                     matchesRepository: new MatchesRepositoryJson(
                                         matchesResourceName: "DevelopmentData/Matches",
                                         idGenerator: new MatchesIdGenerator(
                                             matchesRepository: new MatchesReadOnlyRepositoryJson(
-                                            matchesResourceName: "DevelopmentData/Matches"))),
+                                            resourceName: "DevelopmentData/Matches"))),
                                     userRepository: new UsersRepositoryInMemory()),
                                 new UsersRepositoryInMemory(),
                                 new MatchDtoMapper())))

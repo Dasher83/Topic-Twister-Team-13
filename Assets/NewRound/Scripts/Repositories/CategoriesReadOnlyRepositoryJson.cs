@@ -4,9 +4,10 @@ using System.Linq;
 using UnityEngine;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.Utils;
-using TopicTwister.NewRound.Shared.Serialization;
+using TopicTwister.NewRound.Shared.Serialization.Shared;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.DTOs;
 
 
 namespace TopicTwister.NewRound.Repositories
@@ -35,6 +36,25 @@ namespace TopicTwister.NewRound.Repositories
                 .ToList();
 
             return Result<List<Category>>.Success(outcome: randomCategories);
+        }
+
+        public Result<List<Category>> GetMany(List<int> categoryIds)
+        {
+            List<Category> filteredCategories = _readCache
+                .Where(categoryDao => categoryIds.Contains(categoryDao.Id))
+                .Distinct()
+                .Select(categoryDao => _mapper.FromDAO(categoryDao))
+                .ToList();
+
+            List<int> idsFound = filteredCategories.Select(category => category.Id).ToList();
+            List<int> notFoundIds = categoryIds.Intersect(second: idsFound).ToList();
+
+            if(filteredCategories.Count != categoryIds.Count)
+            {
+                Result<List<Category>>.Failure(errorMessage: $"Categories not found with ids: [{string.Join(", ", notFoundIds)}]");
+            }
+
+            return Result<List<Category>>.Success(outcome: filteredCategories);
         }
 
         public Result<bool> Exists(string name)

@@ -18,7 +18,6 @@ namespace TopicTwister.Shared.Repositories
                 new User(id: 1),
                 new User(id: 2)
             };
-
         }
 
         public Result<User> Get(int id)

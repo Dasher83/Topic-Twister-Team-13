@@ -1,4 +1,7 @@
-﻿using TopicTwister.NewRound.Shared.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.Utils;
 
 
@@ -6,9 +9,29 @@ namespace TopicTwister.NewRound.Repositories
 {
     public class LetterReadOnlyRepositoryInMemory : ILetterReadOnlyRepository
     {
+        private List<char> _readCache;
+        private Random _random;
+
+        public LetterReadOnlyRepositoryInMemory()
+        {
+            _readCache = new List<char>()
+            {
+                'a', 'b', 'c', 'd', 'e',
+                'f', 'g', 'h', 'i', 'j',
+                'k', 'l', 'm', 'n', 'ñ',
+                'o', 'p', 'q', 'r', 's',
+                't', 'u', 'v', 'w', 'x',
+                'y', 'z'
+            };
+
+            _readCache.Select(letter => letter.ToString().ToLower()[0]).ToList();
+            _random = new Random();
+        }
+
         public Result<char> GetRandomLetter()
         {
-            throw new System.NotImplementedException();
+            char randomLetter = _readCache.ToList().OrderBy(_ => _random.Next()).First();
+            return Result<char>.Success(outcome: randomLetter);
         }
     }
 }

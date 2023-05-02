@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.NewRound.Shared.Interfaces
 {
-    public interface IRoundsRepository
+    public interface IRoundsRepository: IRoundsReadOnlyRepository
     {
         Result<Round> Save(Round round);
     }

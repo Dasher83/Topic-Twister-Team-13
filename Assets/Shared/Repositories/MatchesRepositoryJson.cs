@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TopicTwister.Shared.Interfaces;
-using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Serialization.Serializers;
 using TopicTwister.Shared.Serialization.Shared;
@@ -15,15 +14,14 @@ namespace TopicTwister.Shared.Repositories
 {
     public class MatchesRepositoryJson : MatchesReadOnlyRepositoryJson, IMatchesRepository
     {
-        private string _path;
-        private List<MatchDaoJson> _matchesWriteCache;
+        private List<MatchDaoJson> _writeCache;
         private IUniqueIdGenerator _idGenerator;
-        private IdaoMapper<Match, MatchDaoJson> _mapper;
 
-        public MatchesRepositoryJson(string matchesResourceName, IUniqueIdGenerator idGenerator): base(matchesResourceName)
+        public MatchesRepositoryJson(
+            string matchesResourceName,
+            IUniqueIdGenerator idGenerator,
+            IRoundsReadOnlyRepository roundRepository): base(matchesResourceName, roundRepository)
         {
-            _path = $"{Application.dataPath}/Resources/JSON/{matchesResourceName}.json";
-            _mapper = new MatchDaoJsonMapper();
             _idGenerator = idGenerator;
         }
 
@@ -35,19 +33,19 @@ namespace TopicTwister.Shared.Repositories
                 return Result<Match>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _matchesReadCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
-            _matchesWriteCache = _matchesReadCache.ToList();
-            MatchDaoJson matchDAO = _mapper.ToDAO(match);
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _writeCache = _readCache.ToList();
+            MatchDaoJson matchDao = _mapper.ToDAO(match);
 
-            matchDAO = new MatchDaoJson(id: _idGenerator.GetNextId(),
-                startDateTime: matchDAO.StartDateTime,
-                endDateTime: matchDAO.EndDateTime);
+            matchDao = new MatchDaoJson(id: _idGenerator.GetNextId(),
+                startDateTime: matchDao.StartDateTime,
+                endDateTime: matchDao.EndDateTime);
 
-            _matchesWriteCache.Add(matchDAO);
-            MatchDaosCollection collection = new MatchDaosCollection(_matchesWriteCache.ToArray());
+            _writeCache.Add(matchDao);
+            MatchDaosCollection collection = new MatchDaosCollection(_writeCache.ToArray());
             string data = new MatchDaosCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
-            Result<Match> getOperation = Get(matchDAO.Id);
+            Result<Match> getOperation = Get(matchDao.Id);
             return getOperation.WasOk ? getOperation : Result<Match>.Failure(errorMessage: "failure to save Match");
         }
 
@@ -60,9 +58,9 @@ namespace TopicTwister.Shared.Repositories
             }
 
             MatchDaoJson matchToDelete = _mapper.ToDAO(GetOperationResult.Outcome);
-            _matchesWriteCache = _matchesReadCache.ToList();
-            _matchesWriteCache.Remove(matchToDelete);
-            MatchDaosCollection collection = new MatchDaosCollection(_matchesWriteCache.ToArray());
+            _writeCache = _readCache.ToList();
+            _writeCache.Remove(matchToDelete);
+            MatchDaosCollection collection = new MatchDaosCollection(_writeCache.ToArray());
             string newData = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, newData);
 
