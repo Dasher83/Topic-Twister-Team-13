@@ -12,19 +12,16 @@ namespace TopicTwister.Shared.DAOs
         [SerializeField] private int _id;
         [SerializeField] private string _startDateTime;
         [SerializeField] private string _endDateTime;
-        [SerializeField] private List<int> _roundIds;
 
         public int Id => _id;
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
-        public List<int> RoundIds => _roundIds.ToList();
 
-        public MatchDaoJson(int id, DateTime startDateTime, DateTime? endDateTime = null, List<int> roundIds = null)
+        public MatchDaoJson(int id, DateTime startDateTime, DateTime? endDateTime = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? null : ((DateTime)endDateTime).ToString("s");
-            _roundIds = roundIds == null ? new List<int>() : roundIds;
         }
 
         public override bool Equals(object obj)
@@ -39,15 +36,20 @@ namespace TopicTwister.Shared.DAOs
 
             TimeSpan startDifference = other.StartDateTime - this.StartDateTime;
 
-            return this._id == other._id &&
-                startDifference.TotalSeconds < 1 &&
-                (this._endDateTime == null || ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1) &&
-                Enumerable.SequenceEqual(_roundIds, other._roundIds);
+            bool idEquals = this._id == other._id;
+            bool isStartDateTimeDifferenceAlmostNone = startDifference.TotalSeconds < 1;
+
+            bool isEndDateTimeDifferenceAlmostNone = (this._endDateTime == null ||
+                ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1);
+
+            return idEquals &&
+                isStartDateTimeDifferenceAlmostNone &&
+                isEndDateTimeDifferenceAlmostNone;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_id, _startDateTime, _endDateTime, _roundIds);
+            return HashCode.Combine(_id, _startDateTime, _endDateTime);
         }
     }
 }

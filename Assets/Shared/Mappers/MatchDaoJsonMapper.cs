@@ -27,8 +27,7 @@ namespace TopicTwister.Shared.Mappers
             return new MatchDaoJson(
                 id: match.Id,
                 startDateTime: match.StartDateTime,
-                endDateTime: match.EndDateTime,
-                roundIds: match.Rounds.Select(round => round.Id).ToList());
+                endDateTime: match.EndDateTime);
         }
 
         public List<MatchDaoJson> ToDAOs(List<Match> matches)

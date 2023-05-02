@@ -34,20 +34,20 @@ namespace TopicTwister.Shared.Models
             _endDateTime = "";
         }
 
-        public Match(DateTime startDateTime, DateTime? endDateTime = null, List<Round> rounds = null)
+        public Match(DateTime startDateTime, DateTime? endDateTime = null)
         {
             _id = -1;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
-            _rounds = rounds == null ? new List<Round>() : rounds;
+            _rounds = null;
         }
 
-        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null, List<Round> rounds = null)
+        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
-            _rounds = rounds == null ? new List<Round>() : rounds;
+            _rounds = null;
         }
 
         public bool IsActive => string.IsNullOrEmpty(_endDateTime);
