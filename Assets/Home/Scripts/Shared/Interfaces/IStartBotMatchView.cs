@@ -3,7 +3,7 @@
 
 namespace TopicTwister.Home.Shared.Interfaces
 {
-    public interface INewBotMatchView
+    public interface IStartBotMatchView
     {
         event Action StartMatchVersusBot;
     }

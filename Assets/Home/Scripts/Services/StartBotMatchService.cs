@@ -5,19 +5,19 @@ using TopicTwister.Shared.Utils;
 
 namespace TopicTwister.Home.Services
 {
-    public class CreateBotMatchService : ICreateBotMatchService
+    public class StartBotMatchService : IStartBotMatchService
     {
-        private ICreateBotMatchUseCase _useCase;
+        private IStartBotMatchUseCase _useCase;
         private const int UserTestId = 1;
 
-        public CreateBotMatchService(ICreateBotMatchUseCase useCase)
+        public StartBotMatchService(IStartBotMatchUseCase useCase)
         {
             _useCase = useCase;
         }
 
-        public MatchDto Create()
+        public MatchDto Start()
         {
-            Operation<MatchDto> useCaseOperation = _useCase.Create(userId: UserTestId);
+            Operation<MatchDto> useCaseOperation = _useCase.Start(userId: UserTestId);
             return useCaseOperation.WasOk ? useCaseOperation.Outcome : null;
         }
     }

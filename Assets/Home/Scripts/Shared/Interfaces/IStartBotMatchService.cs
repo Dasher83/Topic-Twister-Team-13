@@ -3,8 +3,8 @@
 
 namespace TopicTwister.Home.Shared.Interfaces
 {
-    public interface ICreateBotMatchService
+    public interface IStartBotMatchService
     {
-        MatchDto Create();
+        MatchDto Start();
     }
 }

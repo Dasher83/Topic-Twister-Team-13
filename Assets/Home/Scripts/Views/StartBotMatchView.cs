@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace TopicTwister.Home.Views
 {
-    public class NewBotMatchView : MonoBehaviour, INewBotMatchView
+    public class StartBotMatchView : MonoBehaviour, IStartBotMatchView
     {
         public event Action StartMatchVersusBot;
 
@@ -23,12 +23,12 @@ namespace TopicTwister.Home.Views
         [SerializeField]
         private FakeMatchScriptable _fakeMatchScriptable;
 
-        private INewBotMatchPresenter _presenter;
+        private IStartBotMatchPresenter _presenter;
 
         private void Start()
         {
             GetComponent<Button>().onClick.AddListener(StartMatchWithBot);
-            _presenter = new NewBotMatchPresenter(view: this);
+            _presenter = new StartBotMatchPresenter(view: this);
         }
 
         public void StartMatchWithBot()

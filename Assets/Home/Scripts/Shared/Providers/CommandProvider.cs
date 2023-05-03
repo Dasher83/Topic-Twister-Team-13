@@ -39,9 +39,9 @@ namespace TopicTwister.Home.Shared.Providers
         private IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
         private IdtoMapper<Round, RoundDto> _roundDtoMapper;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
-        private ICreateBotMatchUseCase _createBotMatchUseCase;
+        private IStartBotMatchUseCase _createBotMatchUseCase;
 
-        private ICreateBotMatchService _createBotMatchService;
+        private IStartBotMatchService _createBotMatchService;
 
         private readonly Dictionary<Type, object> _commands;
 
@@ -110,17 +110,17 @@ namespace TopicTwister.Home.Shared.Providers
                 letterReadOnlyRepository: _letterReadOnlyRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
 
-            _createBotMatchUseCase = new CreateBotMatchUseCase(
+            _createBotMatchUseCase = new StartBotMatchUseCase(
                 createMatchSubUseCase: _createMatchSubUseCase,
                 createRoundSubUseCase: _createRoundSubUseCase);
 
-            _createBotMatchService = new CreateBotMatchService(_createBotMatchUseCase);
+            _createBotMatchService = new StartBotMatchService(_createBotMatchUseCase);
 
             _commands = new Dictionary<Type, object>
             {
                 {
-                    typeof(CreateNewBotMatchCommand),
-                    new CreateNewBotMatchCommand(_createBotMatchService)
+                    typeof(StartNewBotMatchCommand),
+                    new StartNewBotMatchCommand(_createBotMatchService)
                 }
             };
         }

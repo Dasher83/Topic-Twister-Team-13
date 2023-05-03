@@ -6,13 +6,13 @@ using TopicTwister.Shared.Utils;
 
 namespace TopicTwister.Home.UseCases
 {
-    public class CreateBotMatchUseCase : ICreateBotMatchUseCase
+    public class StartBotMatchUseCase : IStartBotMatchUseCase
     {
         private ICreateMatchSubUseCase _createMatchSubUseCase;
         private ICreateRoundSubUseCase _createRoundSubUseCase;
         private const int BotId = 2;
 
-        public CreateBotMatchUseCase(
+        public StartBotMatchUseCase(
             ICreateMatchSubUseCase createMatchSubUseCase,
             ICreateRoundSubUseCase createRoundSubUseCase)
         {
@@ -20,7 +20,7 @@ namespace TopicTwister.Home.UseCases
             _createRoundSubUseCase = createRoundSubUseCase;
         }
 
-        public Operation<MatchDto> Create(int userId)
+        public Operation<MatchDto> Start(int userId)
         {
             Operation<MatchDto> createMatchSubUseCaseOperation = _createMatchSubUseCase.Create(
                 userIdPlayerOne: userId, userIdPlayerTwo: BotId);
