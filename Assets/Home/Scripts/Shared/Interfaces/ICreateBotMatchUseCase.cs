@@ -6,6 +6,6 @@ namespace TopicTwister.Home.Shared.Interfaces
 {
     public interface ICreateBotMatchUseCase
     {
-        Result<MatchDto> Create(int userId);
+        Operation<MatchDto> Create(int userId);
     }
 }

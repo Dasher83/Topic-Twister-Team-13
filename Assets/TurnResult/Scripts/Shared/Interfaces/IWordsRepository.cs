@@ -5,6 +5,6 @@ namespace TopicTwister.TurnResult.Shared.Interfaces
 {
     public interface IWordsRepository
     {
-        Result<bool> Exists(string text, int categoryId, char initialLetter);
+        Operation<bool> Exists(string text, int categoryId, char initialLetter);
     }
 }

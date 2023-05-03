@@ -37,21 +37,21 @@ public class EvaluateAnswersUseCaseTest
         #endregion
 
         #region -- Act --
-        Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        Operation<List<EvaluatedAnswerDto>> actualOperation = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
-        List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>();
+        List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>();
         foreach (TurnAnswerDto answer in turnAnswers)
         {
-            expectedResult.Add(new EvaluatedAnswerDto(
+            expectedOperation.Add(new EvaluatedAnswerDto(
                 answer.Category,
                 answer.UserInput,
                 isCorrect: false,
                 order: answer.Order));
         }
 
-        Assert.AreEqual(expectedResult, actualResult.Outcome);
+        Assert.AreEqual(expectedOperation, actualOperation.Outcome);
         #endregion
     }
 
@@ -72,21 +72,21 @@ public class EvaluateAnswersUseCaseTest
         #endregion
 
         #region -- Act --
-        Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+        Operation<List<EvaluatedAnswerDto>> actualOperation = _useCase.EvaluateAnswers(answersToEvaluateStruct);
         #endregion
 
         #region -- Assert --
-        List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>();
+        List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>();
         foreach (TurnAnswerDto answer in turnAnswers)
         {
-            expectedResult.Add(new EvaluatedAnswerDto(
+            expectedOperation.Add(new EvaluatedAnswerDto(
                 answer.Category,
                 answer.UserInput,
                 isCorrect: false,
                 order: answer.Order));
         }
 
-        Assert.AreEqual(expectedResult, actualResult.Outcome);
+        Assert.AreEqual(expectedOperation, actualOperation.Outcome);
         #endregion
     }
 
@@ -126,21 +126,21 @@ public class EvaluateAnswersUseCaseTest
                 #endregion
 
                 #region -- Act --
-                Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+                Operation<List<EvaluatedAnswerDto>> actualOperation = _useCase.EvaluateAnswers(answersToEvaluateStruct);
                 #endregion
 
                 #region -- Assert --
-                List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>();
+                List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>();
                 foreach (TurnAnswerDto answer in turnAnswers)
                 {
-                    expectedResult.Add(new EvaluatedAnswerDto(
+                    expectedOperation.Add(new EvaluatedAnswerDto(
                         answer.Category,
                         answer.UserInput,
                         isCorrect: true,
                         order: answer.Order));
                 }
 
-                Assert.AreEqual(expectedResult, actualResult.Outcome);
+                Assert.AreEqual(expectedOperation, actualOperation.Outcome);
                 #endregion
             }
         }
@@ -182,11 +182,11 @@ public class EvaluateAnswersUseCaseTest
             #endregion
 
             #region -- Act --
-            Result<List<EvaluatedAnswerDto>> actualResult = _useCase.EvaluateAnswers(answersToEvaluateStruct);
+            Operation<List<EvaluatedAnswerDto>> actualOperation = _useCase.EvaluateAnswers(answersToEvaluateStruct);
             #endregion
 
             #region -- Assert --
-            List<EvaluatedAnswerDto> expectedResult = new List<EvaluatedAnswerDto>()
+            List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>()
             {
                 new EvaluatedAnswerDto(
                     category: turnAnswers[0].Category,
@@ -215,7 +215,7 @@ public class EvaluateAnswersUseCaseTest
                     order: turnAnswers[4].Order)
             };
 
-            Assert.AreEqual(expectedResult, actualResult.Outcome);
+            Assert.AreEqual(expectedOperation, actualOperation.Outcome);
             #endregion
         }
     }

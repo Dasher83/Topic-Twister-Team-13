@@ -21,19 +21,22 @@ namespace TopicTwister.Shared.Repositories
         private IdaoMapper<UserMatch, UserMatchDaoJson> _mapper;
         
 
-        public UserMatchesRepositoryJson(string userMatchesResourceName, IMatchesRepository matchesRepository, IUserRepository userRepository)
+        public UserMatchesRepositoryJson(
+            string resourceName,
+            IMatchesRepository matchesRepository,
+            IUserReadOnlyRepository userReadOnlyRepository)
         {
-            _mapper = new UserMatchJsonDaoMapper(matchesRepository: matchesRepository, userRepository: userRepository);
-            _path = $"{Application.dataPath}/Resources/JSON/{userMatchesResourceName}.json";
+            _mapper = new UserMatchJsonDaoMapper(matchesRepository: matchesRepository, userReadOnlyRepository: userReadOnlyRepository);
+            _path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
             _userMatchesReadCache = _mapper.ToDAOs(GetAll().Outcome);
         }
 
-        public Result<UserMatch> Save(UserMatch userMatch)
+        public Operation<UserMatch> Save(UserMatch userMatch)
         {
-            Result<List<UserMatch>> GetAllOperationResult = GetAll();
+            Operation<List<UserMatch>> GetAllOperationResult = GetAll();
             if (GetAllOperationResult.WasOk == false)
             {
-                return Result<UserMatch>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
+                return Operation<UserMatch>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
             _userMatchesReadCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
@@ -43,19 +46,19 @@ namespace TopicTwister.Shared.Repositories
             UserMatchDaosCollection collection = new UserMatchDaosCollection(_userMatchesWriteCache.ToArray());
             string data = new UserMatchDaosCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
-            Result<UserMatch> getOperationResult = Get(userId: userMatch.User.Id, matchId: userMatch.Match.Id);
+            Operation<UserMatch> getOperationResult = Get(userId: userMatch.User.Id, matchId: userMatch.Match.Id);
 
             return getOperationResult.WasOk ?
                 getOperationResult :
-                Result<UserMatch>.Failure(errorMessage: "failure to save UserMatch");
+                Operation<UserMatch>.Failure(errorMessage: "failure to save UserMatch");
         }
 
-        public Result<UserMatch> Get(int userId, int matchId)
+        public Operation<UserMatch> Get(int userId, int matchId)
         {
-            Result<List<UserMatch>> GetAllOperationResult = GetAll();
+            Operation<List<UserMatch>> GetAllOperationResult = GetAll();
             if (GetAllOperationResult.WasOk == false)
             {
-                return Result<UserMatch>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
+                return Operation<UserMatch>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
             _userMatchesReadCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
@@ -63,19 +66,19 @@ namespace TopicTwister.Shared.Repositories
                 userMatch => userMatch.UserId == userId && userMatch.MatchId == matchId);
             if (userMatchObtained == null)
             {
-                return Result<UserMatch>.Failure(
+                return Operation<UserMatch>.Failure(
                     errorMessage: $"UserMatch not found with userId: {userId} & matchId: {matchId}");
             }
             UserMatch userMatch = _mapper.FromDAO(userMatchObtained);
-            return Result<UserMatch>.Success(outcome: userMatch);
+            return Operation<UserMatch>.Success(outcome: userMatch);
         }
 
-        public Result<List<UserMatch>> GetAll()
+        public Operation<List<UserMatch>> GetAll()
         {
             string data = File.ReadAllText(_path);
             _userMatchesReadCache = new UserMatchDaosCollectionDeserializer().Deserialize(data).UserMatches;
             List<UserMatch> userMatches = _mapper.FromDAOs(_userMatchesReadCache.ToList());
-            return Result<List<UserMatch>>.Success(outcome: userMatches);
+            return Operation<List<UserMatch>>.Success(outcome: userMatches);
         }
     }
 }

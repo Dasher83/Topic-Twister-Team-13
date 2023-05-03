@@ -10,9 +10,9 @@ namespace TopicTwister.Shared.Mappers
     public class UserMatchDtoMapper: IdtoMapper<UserMatch, UserMatchDto>
     {
         private IMatchesRepository _matchesRepository;
-        private IUserRepository _userRepository;
+        private IUserReadOnlyRepository _userRepository;
 
-        public UserMatchDtoMapper(IMatchesRepository matchesRepository, IUserRepository userRepository)
+        public UserMatchDtoMapper(IMatchesRepository matchesRepository, IUserReadOnlyRepository userRepository)
         {
             _matchesRepository = matchesRepository;
             _userRepository = userRepository;

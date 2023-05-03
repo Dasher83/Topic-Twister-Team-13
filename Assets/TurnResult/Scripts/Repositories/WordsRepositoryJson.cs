@@ -20,7 +20,7 @@ namespace TopicTwister.TurnResult.Repositories
             _words = JsonUtility.FromJson<WordsCollection>(data).Words;
         }
 
-        public Result<bool> Exists(string text, int categoryId, char initialLetter)
+        public Operation<bool> Exists(string text, int categoryId, char initialLetter)
         {
             bool exists = _words
                 .Any(
@@ -28,7 +28,7 @@ namespace TopicTwister.TurnResult.Repositories
                     word.CategoryId == categoryId &&
                     word.Text.ToLower()[0] == initialLetter.ToString().ToLower()[0]);
 
-            Result<bool> filterWordsOperationResult = Result<bool>.Success(outcome: exists);
+            Operation<bool> filterWordsOperationResult = Operation<bool>.Success(outcome: exists);
             return filterWordsOperationResult;
         }
     }

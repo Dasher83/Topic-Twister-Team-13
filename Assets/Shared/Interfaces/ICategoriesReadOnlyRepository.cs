@@ -7,9 +7,9 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface ICategoriesReadOnlyRepository
     {
-        Result<List<Category>> GetRandomCategories(int numberOfCategories);
-        Result<List<Category>> GetMany(List<int> categoryIds);
-        Result<bool> Exists(string name);
-        Result<bool> Exists(string[] names);
+        Operation<List<Category>> GetRandomCategories(int numberOfCategories);
+        Operation<List<Category>> GetMany(List<int> categoryIds);
+        Operation<bool> Exists(string name);
+        Operation<bool> Exists(string[] names);
     }
 }

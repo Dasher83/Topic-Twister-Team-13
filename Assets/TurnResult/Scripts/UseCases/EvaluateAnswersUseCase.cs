@@ -18,7 +18,7 @@ namespace TopicTwister.TurnResult.UseCases
             _wordRepository = wordsRepository;
         }
 
-        public Result<List<EvaluatedAnswerDto>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
+        public Operation<List<EvaluatedAnswerDto>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
             List<EvaluatedAnswerDto> result = new List<EvaluatedAnswerDto>();
             EvaluatedAnswerDto evaluatedAnswer;
@@ -47,7 +47,7 @@ namespace TopicTwister.TurnResult.UseCases
                 result.Add(evaluatedAnswer);
             }
 
-            Result<List<EvaluatedAnswerDto>> useCaseResult = Result<List<EvaluatedAnswerDto>>.Success(outcome: result);
+            Operation<List<EvaluatedAnswerDto>> useCaseResult = Operation<List<EvaluatedAnswerDto>>.Success(outcome: result);
             return useCaseResult;
         }
     }

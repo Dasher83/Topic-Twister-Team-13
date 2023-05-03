@@ -6,7 +6,7 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface IMatchesReadOnlyRepository
     {
-        Result<List<Match>> GetAll();
-        Result<Match> Get(int id);
+        Operation<List<Match>> GetAll();
+        Operation<Match> Get(int id);
     }
 }

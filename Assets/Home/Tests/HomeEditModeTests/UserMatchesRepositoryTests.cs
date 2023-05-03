@@ -14,8 +14,8 @@ public class UserMatchesRepositoryTests
     private IUserMatchesRepository _userMatchesRepository;
     private IMatchesRepository _matchesRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
-    private IUniqueIdGenerator _idGenerator;
-    private IUserRepository _userRepository;
+    private IUniqueIdGenerator _matchIdGenerator;
+    private IUserReadOnlyRepository _userReadOnlyRepository;
     private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
 
     [SetUp]
@@ -26,18 +26,18 @@ public class UserMatchesRepositoryTests
         _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
             resourceName: "TestData/Matches", matchDaoMapper: _matchDaoMapper);
 
-        _userRepository = new UsersRepositoryInMemory();
-        _idGenerator = new MatchesIdGenerator(matchesRepository: _matchesReadOnlyRepository);
+        _userReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+        _matchIdGenerator = new MatchesIdGenerator(matchesReadOnlyRepository: _matchesReadOnlyRepository);
 
         _matchesRepository = new MatchesRepositoryJson(
-            matchesResourceName: "TestData/Matches",
-            idGenerator: _idGenerator,
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: _matchIdGenerator,
             matchDaoMapper: _matchDaoMapper);
 
         _userMatchesRepository = new UserMatchesRepositoryJson(
-            userMatchesResourceName: "TestData/UserMatches",
+            resourceName: "TestData/UserMatches",
             matchesRepository: _matchesRepository,
-            userRepository: _userRepository);
+            userReadOnlyRepository: _userReadOnlyRepository);
     }
 
     [TearDown]

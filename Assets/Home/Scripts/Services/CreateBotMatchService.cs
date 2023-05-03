@@ -2,6 +2,7 @@ using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Utils;
 
+
 namespace TopicTwister.Home.Services
 {
     public class CreateBotMatchService : ICreateBotMatchService
@@ -16,8 +17,8 @@ namespace TopicTwister.Home.Services
 
         public MatchDto Create()
         {
-            Result<MatchDto> useCaseResult = _useCase.Create(userId: UserTestId);
-            return useCaseResult.WasOk ? useCaseResult.Outcome : null;
+            Operation<MatchDto> useCaseOperation = _useCase.Create(userId: UserTestId);
+            return useCaseOperation.WasOk ? useCaseOperation.Outcome : null;
         }
     }
 }

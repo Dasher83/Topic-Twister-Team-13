@@ -7,9 +7,9 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface IRoundsReadOnlyRepository
     {
-        Result<List<Round>> GetAll();
-        Result<Round> Get(int id);
-        Result<List<Round>> GetMany(List<int> ids);
-        Result<List<Round>> GetMany(int matchId);
+        Operation<List<Round>> GetAll();
+        Operation<Round> Get(int id);
+        Operation<List<Round>> GetMany(List<int> ids);
+        Operation<List<Round>> GetMany(int matchId);
     }
 }

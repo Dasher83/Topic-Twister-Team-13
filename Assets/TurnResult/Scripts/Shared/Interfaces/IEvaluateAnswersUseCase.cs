@@ -8,6 +8,6 @@ namespace TopicTwister.TurnResult.Shared.Interfaces
 {
     public interface IEvaluateAnswersUseCase
     {
-        Result<List<EvaluatedAnswerDto>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate);
+        Operation<List<EvaluatedAnswerDto>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate);
     }
 }

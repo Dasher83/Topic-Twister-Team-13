@@ -1,7 +1,6 @@
 using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
-using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Utils;
 
 
@@ -9,76 +8,38 @@ namespace TopicTwister.Home.UseCases
 {
     public class CreateBotMatchUseCase : ICreateBotMatchUseCase
     {
-        private IMatchesRepository _matchesRepository;
-        private IUserMatchesRepository _userMatchesRepository;
-        private IUserRepository _userRepository;
+        private ICreateMatchSubUseCase _createMatchSubUseCase;
+        private ICreateRoundSubUseCase _createRoundSubUseCase;
         private const int BotId = 2;
-        private IdtoMapper<Match, MatchDto> _mapper;
 
         public CreateBotMatchUseCase(
-            IMatchesRepository matchesRepository,
-            IUserMatchesRepository userMatchesRepository,
-            IUserRepository userRespository,
-            IdtoMapper<Match, MatchDto> mapper)
+            ICreateMatchSubUseCase createMatchSubUseCase,
+            ICreateRoundSubUseCase createRoundSubUseCase)
         {
-            _matchesRepository = matchesRepository;
-            _userMatchesRepository = userMatchesRepository;
-            _userRepository = userRespository;
-            _mapper = mapper;
+            _createMatchSubUseCase = createMatchSubUseCase;
+            _createRoundSubUseCase = createRoundSubUseCase;
         }
 
-        public Result<MatchDto> Create(int userId)
+        public Operation<MatchDto> Create(int userId)
         {
-            Result<User> getUserOperationResult = _userRepository.Get(userId);
+            Operation<MatchDto> createMatchSubUseCaseOperation = _createMatchSubUseCase.Create(
+                userIdPlayerOne: userId, userIdPlayerTwo: BotId);
 
-            if (getUserOperationResult.WasOk == false)
+            if(createMatchSubUseCaseOperation.WasOk == false)
             {
-                return Result<MatchDto>.Failure(errorMessage: getUserOperationResult.ErrorMessage);
+                return Operation<MatchDto>.Failure(errorMessage: createMatchSubUseCaseOperation.ErrorMessage);
             }
 
-            User user = getUserOperationResult.Outcome;
-            Match match = new Match();
-            Result<Match> saveMatchOperation = _matchesRepository.Save(match);
+            MatchDto matchDto = createMatchSubUseCaseOperation.Outcome;
 
-            if(saveMatchOperation.WasOk == false)
+            Operation<RoundWithCategoriesDto> createRoundSubUseCaseOberation = _createRoundSubUseCase.Create(matchDto);
+
+            if(createRoundSubUseCaseOberation.WasOk == false)
             {
-                return Result<MatchDto>.Failure(errorMessage: saveMatchOperation.ErrorMessage);
+                return Operation<MatchDto>.Failure(errorMessage: createRoundSubUseCaseOberation.ErrorMessage);
             }
 
-            match = saveMatchOperation.Outcome;
-
-            UserMatch userMatch = new UserMatch(
-                score: 0,
-                isWinner: false,
-                hasInitiative: true,
-                user: user,
-                match: match);
-
-            Result<UserMatch> saveUserMatchOperation = _userMatchesRepository.Save(userMatch);
-
-            if(saveUserMatchOperation.WasOk == false)
-            {
-                _matchesRepository.Delete(match.Id);
-                return Result<MatchDto>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
-            }
-
-            userMatch = new UserMatch(
-                score: 0,
-                isWinner: false,
-                hasInitiative: false,
-                user: _userRepository.Get(BotId).Outcome,
-                match: match);
-
-            saveUserMatchOperation = _userMatchesRepository.Save(userMatch);
-
-            if (saveUserMatchOperation.WasOk == false)
-            {
-                _matchesRepository.Delete(match.Id);
-                return Result<MatchDto>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
-            }
-
-            Result<MatchDto> useCaseResult = Result<MatchDto>.Success(outcome: _mapper.ToDTO(match));
-            return useCaseResult;
+            return createMatchSubUseCaseOperation;
         }
     }
 }

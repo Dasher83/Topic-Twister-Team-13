@@ -44,8 +44,8 @@ public class MatchRepositoryTests
             });
 
         _matchesRepository = new MatchesRepositoryJson(
-            matchesResourceName: "TestData/Matches",
-            idGenerator: idGenerator,
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: idGenerator,
             matchDaoMapper: _matchDaoMapper);
 
         List<Match> matches = new List<Match>() { new Match(), new Match()};
@@ -69,9 +69,9 @@ public class MatchRepositoryTests
 
         for(int i = 0; i < ids.Length; i++)
         {
-            Result<bool> deleteOperationResult = _matchesRepository.Delete(ids[i]);
-            Assert.IsTrue(deleteOperationResult.WasOk);
-            Assert.IsTrue(deleteOperationResult.Outcome);
+            Operation<bool> deleteOperation = _matchesRepository.Delete(ids[i]);
+            Assert.IsTrue(deleteOperation.WasOk);
+            Assert.IsTrue(deleteOperation.Outcome);
         }
 
         idGenerator = Substitute.For<IUniqueIdGenerator>();
@@ -81,14 +81,14 @@ public class MatchRepositoryTests
                 return -1;
             });
         _matchesRepository = new MatchesRepositoryJson(
-            matchesResourceName: "TestData/Matches",
-            idGenerator: idGenerator,
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: idGenerator,
             matchDaoMapper: _matchDaoMapper);
 
-        Result<Match> saveOperationResult = _matchesRepository.Save(
+        Operation<Match> saveOperation = _matchesRepository.Save(
                 match: new Match(
                     id: -1,
                     startDateTime: DateTime.UtcNow));
-        Assert.IsFalse(saveOperationResult.WasOk);
+        Assert.IsFalse(saveOperation.WasOk);
     }
 }
