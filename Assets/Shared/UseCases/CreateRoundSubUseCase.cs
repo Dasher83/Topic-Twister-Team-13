@@ -29,7 +29,7 @@ namespace TopicTwister.Shared.UseCases
             _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         }
 
-        public Operation<RoundWithCategoriesDto> Create(MatchDto matchDto)
+        public Operation<RoundWithCategoriesDto> Execute(MatchDto matchDto)
         {
             Operation<Match> getMatchOperationResult = _matchesReadOnlyRepository.Get(id: matchDto.Id);
 
@@ -69,6 +69,12 @@ namespace TopicTwister.Shared.UseCases
             {
                 return Operation<RoundWithCategoriesDto>.Failure(
                     errorMessage: $"All rounds are already created for match with id: {matchDto.Id}");
+            }
+
+            if (match.ActiveRound != null)
+            {
+                return Operation<RoundWithCategoriesDto>.Failure(
+                    errorMessage: $"Active round already exists for match with id: {matchDto.Id}");
             }
 
             Operation<List<Category>> getRandomCategoriesOperationResult = _categoryReadOnlyRepository

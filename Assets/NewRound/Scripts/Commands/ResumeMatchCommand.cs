@@ -5,21 +5,21 @@ using TopicTwister.Shared.Interfaces;
 
 namespace TopicTwister.NewRound.Commands
 {
-    public class CreateRoundCommand : ICommand<ICreateRoundPresenter>
+    public class ResumeMatchCommand : ICommand<IResumeMatchPresenter>
     {
 
-        private ICreateRoundPresenter _presenter;
-        private readonly ICreateRoundGatewayService _gatewayService;
+        private IResumeMatchPresenter _presenter;
+        private readonly IResumeMatchGatewayService _gatewayService;
 
         private MatchDto _matchDto;
 
-        public ICreateRoundPresenter Presenter
+        public IResumeMatchPresenter Presenter
         {
             private get => _presenter;
             set => _presenter = value;
         }
 
-        public CreateRoundCommand(ICreateRoundGatewayService gatewayService)
+        public ResumeMatchCommand(IResumeMatchGatewayService gatewayService)
         {
             _gatewayService = gatewayService;
         }
@@ -27,7 +27,7 @@ namespace TopicTwister.NewRound.Commands
         public void Execute()
         {
             RoundWithCategoriesDto roundWithCategoriesDto = _gatewayService.Create(matchDto: _matchDto);
-            _presenter.UpdateRound(roundWithCategoriesDto);
+            _presenter.UpdateView(roundWithCategoriesDto);
         }
     }
 }

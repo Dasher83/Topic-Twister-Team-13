@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using TopicTwister.NewRound.Commands;
 using TopicTwister.NewRound.Services;
+using TopicTwister.NewRound.Shared.Interfaces;
+using TopicTwister.NewRound.UseCases;
 using TopicTwister.Repositories.IdGenerators;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
@@ -28,6 +30,7 @@ namespace TopicTwister.NewRound.Shared.Providers
         private IdtoMapper<Round, RoundDto> _roundDtoMapper;
         private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
         private ICreateRoundSubUseCase _createRoundSubUseCase;
+        private IResumeMatchUseCase _resumeMatchUseCase;
 
         private readonly Dictionary<Type, object> _actions;
 
@@ -74,12 +77,15 @@ namespace TopicTwister.NewRound.Shared.Providers
                 letterReadOnlyRepository: _letterReadOnlyRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
 
+            _resumeMatchUseCase = new ResumeMatchUseCase(
+                createRoundSubUseCase: _createRoundSubUseCase);
+
             _actions = new()
             {
                 {
-                    typeof(CreateRoundCommand),
-                    new CreateRoundCommand(
-                    gatewayService: new CreateRoundGatewayService(_createRoundSubUseCase))
+                    typeof(ResumeMatchCommand),
+                    new ResumeMatchCommand(
+                    gatewayService: new ResumeMatchGatewayService(_resumeMatchUseCase))
                 }
             };
         }

@@ -55,12 +55,30 @@ namespace NewRoundTests
             _roundRepository.GetMany(Arg.Any<int>()).Returns(
                 (args) =>
                 {
-                    List<Round> rounds = actualResults
-                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    List<RoundWithCategoriesDto> roundWithCategoriesDtos = new List<RoundWithCategoriesDto>();
+
+                    foreach (
+                        RoundWithCategoriesDto roundWithCategoriesDto
+                        in actualResults.Select(actualResult => actualResult.Outcome))
+                    {
+                        RoundDto roundDto = new RoundDto(
+                            id: roundWithCategoriesDto.RoundDto.Id,
+                            roundNumber: roundWithCategoriesDto.RoundDto.RoundNumber,
+                            initialLetter: roundWithCategoriesDto.RoundDto.InitialLetter,
+                            isActive: false);
+
+                        RoundWithCategoriesDto newRoundWithCategoriesDto = new RoundWithCategoriesDto(
+                            roundDto: roundDto,
+                            categoryDtos: roundWithCategoriesDto.CategoryDtos);
+
+                        roundWithCategoriesDtos.Add(newRoundWithCategoriesDto);
+                    }
+
+                    List<Round> rounds = roundWithCategoriesDtos
+                    .Select(roundWithCategoriesDto => _roundWithCategoriesDtoMapper.FromDTO(roundWithCategoriesDto))
                     .ToList();
 
-                    return Operation<List<Round>>.Success(
-                        outcome: rounds);
+                    return Operation<List<Round>>.Success(outcome: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();
@@ -151,6 +169,20 @@ namespace NewRoundTests
                         categoryDtos: categoryDtos);
                 });
 
+            _roundWithCategoriesDtoMapper.FromDTO(Arg.Any<RoundWithCategoriesDto>()).Returns(
+                (args) =>
+                {
+                    RoundWithCategoriesDto roundWithCategoriesDto = (RoundWithCategoriesDto)args[0];
+                    Round round = new Round(
+                            id: roundWithCategoriesDto.RoundDto.Id,
+                            roundNumber: roundWithCategoriesDto.RoundDto.RoundNumber,
+                            initialLetter: roundWithCategoriesDto.RoundDto.InitialLetter,
+                            isActive: roundWithCategoriesDto.RoundDto.IsActive,
+                            match: match,
+                            categories: new List<Category>());
+                    return round;
+                });
+
             _useCase = new CreateRoundSubUseCase(
                 roundsRepository: _roundRepository,
                 matchesReadOnlyRepository: _matchesRepository,
@@ -162,7 +194,7 @@ namespace NewRoundTests
             #region -- Act --
             for (int i = 0; i < MaxRounds; i++)
             {
-                actualResults.Add(_useCase.Create(matchDto: matchDto));
+                actualResults.Add(_useCase.Execute(matchDto: matchDto));
             }
             #endregion
 
@@ -251,7 +283,7 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act --
-            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Create(matchDto: matchDto);
+            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Execute(matchDto: matchDto);
             #endregion
 
             #region -- Assert --
@@ -312,7 +344,7 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act --
-            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Create(matchDto: matchDto);
+            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Execute(matchDto: matchDto);
             useCaseOperations.Add(useCaseOperation);
             #endregion
 
@@ -376,7 +408,7 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act --
-            Operation<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Create(matchDto: matchDto);
+            Operation<RoundWithCategoriesDto> useCaseOperationResult = _useCase.Execute(matchDto: matchDto);
             useCaseOperations.Add(useCaseOperationResult);
             #endregion
 
@@ -421,8 +453,27 @@ namespace NewRoundTests
             _roundRepository.GetMany(Arg.Any<int>()).Returns(
                 (args) =>
                 {
-                    List<Round> rounds = actualResults
-                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    List<RoundWithCategoriesDto> roundWithCategoriesDtos = new List<RoundWithCategoriesDto>();
+
+                    foreach(
+                        RoundWithCategoriesDto roundWithCategoriesDto
+                        in actualResults.Select(actualResult => actualResult.Outcome))
+                    {
+                        RoundDto roundDto = new RoundDto(
+                            id: roundWithCategoriesDto.RoundDto.Id,
+                            roundNumber: roundWithCategoriesDto.RoundDto.RoundNumber,
+                            initialLetter: roundWithCategoriesDto.RoundDto.InitialLetter,
+                            isActive: false);
+
+                        RoundWithCategoriesDto newRoundWithCategoriesDto = new RoundWithCategoriesDto(
+                            roundDto: roundDto,
+                            categoryDtos: roundWithCategoriesDto.CategoryDtos);
+
+                        roundWithCategoriesDtos.Add(newRoundWithCategoriesDto);
+                    }
+
+                    List<Round> rounds = roundWithCategoriesDtos
+                    .Select(roundWithCategoriesDto => _roundWithCategoriesDtoMapper.FromDTO(roundWithCategoriesDto))
                     .ToList();
 
                     return Operation<List<Round>>.Success(
@@ -542,7 +593,7 @@ namespace NewRoundTests
             #region -- Act --
             for (int i = 0; i < MaxRounds + 1; i++)
             {
-                actualResults.Add(_useCase.Create(matchDto: matchDto));
+                actualResults.Add(_useCase.Execute(matchDto: matchDto));
             }
             #endregion
 

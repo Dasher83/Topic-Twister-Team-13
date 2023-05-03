@@ -1,23 +1,22 @@
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
-using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.NewRound.Services
 {
-    public class CreateRoundGatewayService : ICreateRoundGatewayService
+    public class ResumeMatchGatewayService : IResumeMatchGatewayService
     {
-        private ICreateRoundSubUseCase _useCase;
+        private IResumeMatchUseCase _useCase;
 
-        public CreateRoundGatewayService(ICreateRoundSubUseCase useCase)
+        public ResumeMatchGatewayService(IResumeMatchUseCase useCase)
         {
             _useCase = useCase;
         }
 
         public RoundWithCategoriesDto Create(MatchDto matchDto)
         {
-            Operation<RoundWithCategoriesDto> useCaseResult = _useCase.Create(matchDto);
+            Operation<RoundWithCategoriesDto> useCaseResult = _useCase.Execute(matchDto);
             return useCaseResult.WasOk ? useCaseResult.Outcome : null;
         }
     }

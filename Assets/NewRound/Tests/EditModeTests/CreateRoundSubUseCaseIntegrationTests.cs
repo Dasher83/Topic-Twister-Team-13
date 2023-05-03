@@ -103,7 +103,7 @@ namespace NewRoundTests
             List<Operation<RoundWithCategoriesDto>> actualResults = new List<Operation<RoundWithCategoriesDto>>();
             for (int i = 0; i < MaxRounds; i++)
             {
-                actualResults.Add(_useCase.Create(matchDto: matchDto));
+                actualResults.Add(_useCase.Execute(matchDto: matchDto));
             }
             #endregion
 
@@ -154,7 +154,7 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act --
-            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Create(matchDto: matchDto);
+            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Execute(matchDto: matchDto);
             #endregion
 
             #region -- Assert --
@@ -180,7 +180,7 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act --
-            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Create(matchDto);
+            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Execute(matchDto);
             #endregion
 
             #region -- Assert --
@@ -207,7 +207,7 @@ namespace NewRoundTests
             #endregion
 
             #region -- Act --
-            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Create(matchDto);
+            Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Execute(matchDto);
             #endregion
 
             #region -- Assert --
@@ -244,7 +244,7 @@ namespace NewRoundTests
             List<Operation<RoundWithCategoriesDto>> actualResults = new List<Operation<RoundWithCategoriesDto>>();
             for (int i = 0; i < MaxRounds + 1; i++)
             {
-                actualResults.Add(_useCase.Create(matchDto: matchDto));
+                actualResults.Add(_useCase.Execute(matchDto: matchDto));
             }
             #endregion
 

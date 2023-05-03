@@ -8,25 +8,25 @@ using TopicTwister.Shared.Interfaces;
 
 namespace TopicTwister.NewRound.Presenters
 {
-    public class CreateRoundPresenter : ICreateRoundPresenter
+    public class ResumeMatchPresenter : IResumeMatchPresenter
     {
         private ICreateRoundView _view;
-        private ICommand<ICreateRoundPresenter> _createRoundCommand;
+        private ICommand<IResumeMatchPresenter> _createRoundCommand;
 
-        public CreateRoundPresenter(ICreateRoundView view)
+        public ResumeMatchPresenter(ICreateRoundView view)
         {
             _view = view;
-            _createRoundCommand = new CommandProvider<CreateRoundCommand, ICreateRoundPresenter>().Provide();
+            _createRoundCommand = new CommandProvider<ResumeMatchCommand, IResumeMatchPresenter>().Provide();
             _createRoundCommand.Presenter = this;
-            _view.OnLoad += CreateRound;
+            _view.OnLoad += ResumeMatch;
         }
 
-        public void CreateRound(object sender, EventArgs e)
+        public void ResumeMatch(object sender, EventArgs e)
         {
             throw new System.NotImplementedException();
         }
 
-        public void UpdateRound(RoundWithCategoriesDto roundWithCategoriesDto)
+        public void UpdateView(RoundWithCategoriesDto roundWithCategoriesDto)
         {
             _view.UpdateNewRoundData(roundWithCategoriesDto: roundWithCategoriesDto);
         }

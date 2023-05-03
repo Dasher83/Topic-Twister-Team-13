@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace TopicTwister.NewRound.Views
 {
-    public class CreateRoundView : MonoBehaviour, ICreateRoundView
+    public class ResumeMatchView : MonoBehaviour, ICreateRoundView
     {
         public event EventHandler OnLoad;
 
@@ -32,11 +32,11 @@ namespace TopicTwister.NewRound.Views
 
         private Button _initialLetterButton;
         private TextMeshProUGUI __initialLetterText;
-        private ICreateRoundPresenter _presenter;
+        private IResumeMatchPresenter _presenter;
 
         private void Start()
         {
-            _presenter = new CreateRoundPresenter(this);
+            _presenter = new ResumeMatchPresenter(this);
             OnLoad?.Invoke(this, EventArgs.Empty);
             _initialLetterButton = _initialLetterButtonContainer.GetComponentInChildren<Button>();
             __initialLetterText = _initialLetterButtonContainer.GetComponentInChildren<TextMeshProUGUI>();
