@@ -11,6 +11,8 @@ namespace TopicTwister.Shared
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
 
+    
+
         void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
@@ -20,6 +22,7 @@ namespace TopicTwister.Shared
         {
             _eventContainer.LoadSceneWithoutDelay += ChangeScene;
             _eventContainer.LoadSceneWithDelay += ChangeScene;
+
         }
 
         public void ChangeScene(string sceneName)
