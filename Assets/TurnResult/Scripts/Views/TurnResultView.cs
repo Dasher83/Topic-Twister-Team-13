@@ -49,7 +49,7 @@ namespace TopicTwister.TurnResult.Views
             _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
                 .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
             _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>()
-                .text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber}";
+                .text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
             LoadCategoryResultList();
             _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
             OnLoad?.Invoke();

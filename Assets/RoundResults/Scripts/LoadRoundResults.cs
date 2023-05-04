@@ -36,7 +36,7 @@ namespace TopicTwister.RoundResults
                 .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
 
             _header.Find("Title").GetComponentInChildren<TextMeshProUGUI>()
-                .text = $"Final de ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber}";
+                .text = $"Final de ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
         }
 
         private void LoadPlayersAnswersComparison()
