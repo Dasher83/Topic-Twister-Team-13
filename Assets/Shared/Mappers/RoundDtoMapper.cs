@@ -24,7 +24,8 @@ namespace TopicTwister.Shared.Mappers
                 id: round.Id,
                 roundNumber: round.RoundNumber,
                 initialLetter: round.InitialLetter,
-                isActive: round.IsActive);
+                isActive: round.IsActive,
+                matchId: round.Match.Id);
         }
 
         public List<RoundDto> ToDTOs(List<Round> models)

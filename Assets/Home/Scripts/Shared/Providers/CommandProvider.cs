@@ -101,7 +101,8 @@ namespace TopicTwister.Home.Shared.Providers
 
             _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper(
                 categoryDtoMapper: _categoryDtoMapper,
-                roundDtoMapper: _roundDtoMapper);
+                roundDtoMapper: _roundDtoMapper,
+                roundReadOnlyRepository: _roundsReadOnlyRepository);
 
             _createRoundSubUseCase = new CreateRoundSubUseCase(
                 roundsRepository: _roundsRepository,

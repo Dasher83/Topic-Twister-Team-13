@@ -39,9 +39,7 @@ namespace NewRoundTests
             _idGenerator = Substitute.For<IUniqueIdGenerator>();
 
             _matchDtoMapper = new MatchDtoMapper();
-            _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper(
-                categoryDtoMapper: new CategoryDtoMapper(),
-                roundDtoMapper: new RoundDtoMapper());
+            
             _letterRepository = new LetterReadOnlyRepositoryInMemory();
 
             _categoriesReadOnlyRepository = new CategoriesReadOnlyRepositoryJson(
@@ -51,6 +49,14 @@ namespace NewRoundTests
             _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
                 resourceName: "TestData/Matches",
                 matchDaoMapper: _matchDaoMapper);
+
+            _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper(
+                categoryDtoMapper: new CategoryDtoMapper(),
+                roundDtoMapper: new RoundDtoMapper(),
+                roundReadOnlyRepository: new RoundsReadOnlyRepositoryJson(
+                    resourceName: "TestData/Rounds",
+                    matchesReadOnlyRepository: _matchesReadOnlyRepository,
+                    categoriesReadOnlyRepository: _categoriesReadOnlyRepository));
 
             _matchesRepository = new MatchesRepositoryJson(
                 resourceName: "TestData/Matches",
@@ -103,7 +109,18 @@ namespace NewRoundTests
             List<Operation<RoundWithCategoriesDto>> actualResults = new List<Operation<RoundWithCategoriesDto>>();
             for (int i = 0; i < MaxRounds; i++)
             {
-                actualResults.Add(_useCase.Execute(matchDto: matchDto));
+                Operation<RoundWithCategoriesDto> actualResult = _useCase.Execute(matchDto: matchDto);
+                actualResults.Add(actualResult);
+
+                Round round = _roundWithCategoriesDtoMapper.FromDTO(actualResult.Outcome);
+                round = new Round(
+                    round.Id,
+                    round.InitialLetter,
+                    isActive: false,
+                    match: round.Match,
+                    categories: round.Categories);
+
+                _roundsRepository.Save(round);
             }
             #endregion
 
@@ -118,7 +135,8 @@ namespace NewRoundTests
                             id: ids[i],
                             roundNumber: i,
                             initialLetter: actualResults[i].Outcome.RoundDto.InitialLetter,
-                            isActive: true),
+                            isActive: false,
+                            matchId: match.Id),
                         categoryDtos: actualResults[i].Outcome.CategoryDtos);
 
                 expectedDtos.Add(expectedDto);

@@ -8,20 +8,23 @@ namespace TopicTwister.Shared.Mappers
 {
     public class RoundWithCategoriesDtoMapper : IdtoMapper<Round, RoundWithCategoriesDto>
     {
-        IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
-        IdtoMapper<Round, RoundDto> _roundDtoMapper;
+        private IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
+        private IdtoMapper<Round, RoundDto> _roundDtoMapper;
+        private IRoundsReadOnlyRepository _roundReadOnlyRepository;
 
         public RoundWithCategoriesDtoMapper(
             IdtoMapper<Category, CategoryDto> categoryDtoMapper,
-            IdtoMapper<Round, RoundDto> roundDtoMapper)
+            IdtoMapper<Round, RoundDto> roundDtoMapper,
+            IRoundsReadOnlyRepository roundReadOnlyRepository)
         {
             _categoryDtoMapper = categoryDtoMapper;
             _roundDtoMapper = roundDtoMapper;
+            _roundReadOnlyRepository = roundReadOnlyRepository;
         }
 
         public Round FromDTO(RoundWithCategoriesDto dto)
         {
-            throw new System.NotImplementedException();
+            return _roundReadOnlyRepository.Get(dto.RoundDto.Id).Outcome;
         }
 
         public List<Round> FromDTOs(List<RoundWithCategoriesDto> dtos)

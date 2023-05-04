@@ -65,7 +65,8 @@ namespace NewRoundTests
                             id: roundWithCategoriesDto.RoundDto.Id,
                             roundNumber: roundWithCategoriesDto.RoundDto.RoundNumber,
                             initialLetter: roundWithCategoriesDto.RoundDto.InitialLetter,
-                            isActive: false);
+                            isActive: false,
+                            matchId: match.Id);
 
                         RoundWithCategoriesDto newRoundWithCategoriesDto = new RoundWithCategoriesDto(
                             roundDto: roundDto,
@@ -165,7 +166,8 @@ namespace NewRoundTests
                             id: round.Id,
                             roundNumber: round.RoundNumber,
                             initialLetter: round.InitialLetter,
-                            isActive: round.IsActive),
+                            isActive: round.IsActive,
+                            matchId: match.Id),
                         categoryDtos: categoryDtos);
                 });
 
@@ -222,7 +224,8 @@ namespace NewRoundTests
                             id: i,
                             roundNumber: i,
                             initialLetter: letters[i],
-                            isActive: true),
+                            isActive: true,
+                            matchId: match.Id),
                         categoryDtos: categoryDtoMapper.ToDTOs(randomCategories[i]));
 
                 expectedDtos.Add(expectedDto);
@@ -463,7 +466,8 @@ namespace NewRoundTests
                             id: roundWithCategoriesDto.RoundDto.Id,
                             roundNumber: roundWithCategoriesDto.RoundDto.RoundNumber,
                             initialLetter: roundWithCategoriesDto.RoundDto.InitialLetter,
-                            isActive: false);
+                            isActive: false,
+                            matchId: match.Id);
 
                         RoundWithCategoriesDto newRoundWithCategoriesDto = new RoundWithCategoriesDto(
                             roundDto: roundDto,
@@ -564,7 +568,8 @@ namespace NewRoundTests
                             id: round.Id,
                             roundNumber: round.RoundNumber,
                             initialLetter: round.InitialLetter,
-                            isActive: round.IsActive),
+                            isActive: round.IsActive,
+                            matchId: match.Id),
                         categoryDtos: categoryDtos);
                 });
 
