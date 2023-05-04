@@ -10,12 +10,12 @@ namespace TopicTwister.Shared.Mappers
     public class UserMatchJsonDaoMapper : IdaoMapper<UserMatch, UserMatchDaoJson>
     {
         private IMatchesRepository _matchesRepository;
-        private IUserRepository _userRepository;
+        private IUserReadOnlyRepository _userReadOnlyRepository;
 
-        public UserMatchJsonDaoMapper(IMatchesRepository matchesRepository, IUserRepository userRepository)
+        public UserMatchJsonDaoMapper(IMatchesRepository matchesRepository, IUserReadOnlyRepository userReadOnlyRepository)
         {
             _matchesRepository = matchesRepository;
-            _userRepository = userRepository;
+            _userReadOnlyRepository = userReadOnlyRepository;
         }
 
         public UserMatch FromDAO(UserMatchDaoJson userMatchDAO)
@@ -24,8 +24,8 @@ namespace TopicTwister.Shared.Mappers
                 score: userMatchDAO.Score,
                 isWinner: userMatchDAO.IsWinner,
                 hasInitiative: userMatchDAO.HasInitiative,
-                user: _userRepository.Get(userMatchDAO.UserId),
-                match: _matchesRepository.Get(id: userMatchDAO.MatchId)
+                user: _userReadOnlyRepository.Get(userMatchDAO.UserId).Outcome,
+                match: _matchesRepository.Get(id: userMatchDAO.MatchId).Outcome
                 );
         }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class UserDTO
+    public class UserDto
     {
         [SerializeField]
         private int _id;

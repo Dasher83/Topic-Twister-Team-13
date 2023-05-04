@@ -7,20 +7,20 @@ using TopicTwister.Shared.Models;
 
 namespace TopicTwister.Shared.Mappers
 {
-    public class UserMatchDtoMapper: IdtoMapper<UserMatch, UserMatchDTO>
+    public class UserMatchDtoMapper: IdtoMapper<UserMatch, UserMatchDto>
     {
         private IMatchesRepository _matchesRepository;
-        private IUserRepository _userRepository;
+        private IUserReadOnlyRepository _userRepository;
 
-        public UserMatchDtoMapper(IMatchesRepository matchesRepository, IUserRepository userRepository)
+        public UserMatchDtoMapper(IMatchesRepository matchesRepository, IUserReadOnlyRepository userRepository)
         {
             _matchesRepository = matchesRepository;
             _userRepository = userRepository;
         }
 
-        public UserMatchDTO ToDTO(UserMatch userMatch )
+        public UserMatchDto ToDTO(UserMatch userMatch )
         {
-            return new UserMatchDTO(
+            return new UserMatchDto(
                 score: userMatch.Score,
                 isWinner: userMatch.IsWinner,
                 hasInitiative: userMatch.HasInitiative,
@@ -29,23 +29,23 @@ namespace TopicTwister.Shared.Mappers
                 );
         }
 
-        public UserMatch FromDTO(UserMatchDTO userMatchDTO)
+        public UserMatch FromDTO(UserMatchDto userMatchDTO)
         {
             return new UserMatch(
                 score: userMatchDTO.Score,
                 isWinner: userMatchDTO.IsWinner,
                 hasInitiative: userMatchDTO.HasInitiative,
-                user: _userRepository.Get(userMatchDTO.UserId),
-                match: _matchesRepository.Get(id: userMatchDTO.MatchId)
+                user: _userRepository.Get(userMatchDTO.UserId).Outcome,
+                match: _matchesRepository.Get(id: userMatchDTO.MatchId).Outcome
                 );
         }
 
-        public List<UserMatchDTO> ToDTOs(List<UserMatch> userMatches)
+        public List<UserMatchDto> ToDTOs(List<UserMatch> userMatches)
         {
             return userMatches.Select(ToDTO).ToList();
         }
 
-        public List<UserMatch> FromDTOs(List<UserMatchDTO> userMatchesDTOs)
+        public List<UserMatch> FromDTOs(List<UserMatchDto> userMatchesDTOs)
         {
             return userMatchesDTOs.Select(FromDTO).ToList();
         }

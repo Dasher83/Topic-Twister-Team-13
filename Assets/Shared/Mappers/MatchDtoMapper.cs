@@ -7,17 +7,17 @@ using TopicTwister.Shared.Models;
 
 namespace TopicTwister.Shared.Mappers
 {
-    public class MatchDtoMapper: IdtoMapper<Match, MatchDTO>
+    public class MatchDtoMapper: IdtoMapper<Match, MatchDto>
     {
-        public MatchDTO ToDTO(Match match)
+        public MatchDto ToDTO(Match match)
         {
-            return new MatchDTO(
+            return new MatchDto(
                 id: match.Id,
                 startDateTime: match.StartDateTime,
                 endDateTime: match.EndDateTime);
         }
 
-        public Match FromDTO(MatchDTO matchDTO)
+        public Match FromDTO(MatchDto matchDTO)
         {
             return new Match(
                 id: matchDTO.Id,
@@ -25,12 +25,12 @@ namespace TopicTwister.Shared.Mappers
                 endDateTime: matchDTO.EndDateTime);
         }
 
-        public List<MatchDTO> ToDTOs(List<Match> matches)
+        public List<MatchDto> ToDTOs(List<Match> matches)
         {
             return matches.Select(ToDTO).ToList();
         }
 
-        public List<Match> FromDTOs(List<MatchDTO> matchesDTOs)
+        public List<Match> FromDTOs(List<MatchDto> matchesDTOs)
         {
             return matchesDTOs.Select(FromDTO).ToList();
         }

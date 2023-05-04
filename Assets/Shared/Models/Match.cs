@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace TopicTwister.Shared.Models
@@ -8,11 +10,12 @@ namespace TopicTwister.Shared.Models
         private int _id;
         private string _startDateTime;
         private string _endDateTime;
+        private List<Round> _rounds = new List<Round>();
 
         public int Id => _id;
-
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
+        public List<Round> Rounds => _rounds.ToList();
 
         public Match()
         {
@@ -21,11 +24,44 @@ namespace TopicTwister.Shared.Models
             _endDateTime = "";
         }
 
-        public Match(int id, DateTime startDateTime, DateTime? endDateTime)
+        public Match(DateTime startDateTime, DateTime? endDateTime = null)
+        {
+            _id = -1;
+            _startDateTime = startDateTime.ToString("s"); //ISO 8601
+            _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
+            _rounds = null;
+        }
+
+        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null, List<Round> rounds = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
+            _rounds = rounds;
+        }
+
+        public bool IsActive => string.IsNullOrEmpty(_endDateTime);
+
+        public bool IsValid
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_startDateTime)) return false;
+                if (string.IsNullOrEmpty(_endDateTime) == false && StartDateTime > EndDateTime) return false;
+                if (_rounds.Count > 3) return false;
+                return true;
+            }
+        }
+        public bool AreAllRoundsCreated => _rounds.Count == 3;
+
+        public Round? ActiveRound
+        {
+            get
+            {
+                if (_rounds.Count == 0) return null;
+
+                return _rounds.SingleOrDefault(round => round.IsActive);
+            }
         }
 
         public override bool Equals(object obj)

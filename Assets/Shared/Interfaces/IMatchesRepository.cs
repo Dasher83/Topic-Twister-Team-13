@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using TopicTwister.Shared.Models;
+﻿using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Shared.Interfaces
 {
     public interface IMatchesRepository: IMatchesReadOnlyRepository
     {
-        Match Persist(Match match);
-        void Delete(int id);
+        Operation<Match> Save(Match match);
+        Operation<bool> Delete(int id);
     }
 }

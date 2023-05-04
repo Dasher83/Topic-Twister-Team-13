@@ -5,19 +5,19 @@ using UnityEngine;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class EvaluatedAnswerDTO
+    public class EvaluatedAnswerDto
     {
-        [SerializeField] private CategoryDTO _category;
+        [SerializeField] private CategoryDto _category;
         [SerializeField] private string _answer;
         [SerializeField] private bool _isCorrect;
         [SerializeField] private int _order;
 
-        public CategoryDTO Category => _category;
+        public CategoryDto Category => _category;
         public string Answer => _answer;
         public bool IsCorrect => _isCorrect;
         public int Order => _order;
 
-        public EvaluatedAnswerDTO(CategoryDTO category, string answer, bool isCorrect, int order)
+        public EvaluatedAnswerDto(CategoryDto category, string answer, bool isCorrect, int order)
         {
             _category = category;
             _answer = answer;
@@ -30,7 +30,7 @@ namespace TopicTwister.Shared.DTOs
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            EvaluatedAnswerDTO other = (EvaluatedAnswerDTO)obj;
+            EvaluatedAnswerDto other = (EvaluatedAnswerDto)obj;
             return this._category == other._category &&
                 this._answer == other._answer &&
                 this._isCorrect == other._isCorrect &&

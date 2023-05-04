@@ -31,7 +31,7 @@ namespace TopicTwister.TurnResult.Views
         private AnswerImageResultScriptable _answerImageResultReferences;
 
         [SerializeField]
-        private NewRoundScriptable _newRoundData;
+        private MatchCacheScriptable _matchCacheData;
 
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
@@ -39,21 +39,23 @@ namespace TopicTwister.TurnResult.Views
         [SerializeField]
         private FakeMatchScriptable _fakeMatchData;
 
-        private List<TurnAnswerDTO> _turnResultViewList;
+        private List<TurnAnswerDto> _turnResultViewList;
         private TurnResultPresenter _turnResultPresenter;
         private Sprite _answerResultImage;
-        private EvaluatedAnswerDTO _evaluatedAnswer;
+        private EvaluatedAnswerDto _evaluatedAnswer;
 
         void Start()
         {
-            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>().text = _newRoundData.InitialLetter.ToString();
-            _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>().text = $"Ronda {_newRoundData.RoundNumber}";
+            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
+                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
+            _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>()
+                .text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
             LoadCategoryResultList();
             _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
             OnLoad?.Invoke();
         }
 
-        public void EvaluateAnswers(List<EvaluatedAnswerDTO> evaluatedAnswers)
+        public void EvaluateAnswers(List<EvaluatedAnswerDto> evaluatedAnswers)
         {
             for (int i = 0; i < _categoryResultList.childCount; i++)
             {
@@ -76,13 +78,14 @@ namespace TopicTwister.TurnResult.Views
             }
             _fakeMatchData.AddRound(
                 userAnswers: evaluatedAnswers,
-                roundNumber: _newRoundData.RoundNumber,
-                initialLetter: _newRoundData.InitialLetter.ToString());
+                initialLetter: _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString());
         }
 
         public AnswersToEvaluateDTO GetAnswersToEvaluate()
         {
-            return new AnswersToEvaluateDTO(_newRoundData.InitialLetter, _turnResultViewList);
+            return new AnswersToEvaluateDTO(
+                _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter,
+                _turnResultViewList);
         }
 
         public void LoadCategoryResultList()

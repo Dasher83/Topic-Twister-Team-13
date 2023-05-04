@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -12,7 +14,6 @@ namespace TopicTwister.Shared.DAOs
         [SerializeField] private string _endDateTime;
 
         public int Id => _id;
-
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
 
@@ -35,9 +36,15 @@ namespace TopicTwister.Shared.DAOs
 
             TimeSpan startDifference = other.StartDateTime - this.StartDateTime;
 
-            return this._id == other._id &&
-                startDifference.TotalSeconds < 1 &&
-                (this._endDateTime == null || ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1);
+            bool idEquals = this._id == other._id;
+            bool isStartDateTimeDifferenceAlmostNone = startDifference.TotalSeconds < 1;
+
+            bool isEndDateTimeDifferenceAlmostNone = (this._endDateTime == null ||
+                ((DateTime)other.EndDateTime - (DateTime)this.EndDateTime).TotalSeconds < 1);
+
+            return idEquals &&
+                isStartDateTimeDifferenceAlmostNone &&
+                isEndDateTimeDifferenceAlmostNone;
         }
 
         public override int GetHashCode()

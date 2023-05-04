@@ -9,7 +9,7 @@ namespace TopicTwister.TurnResult.Shared.Interfaces
     public interface ITurnResultView
     {
         event Action OnLoad;
-        public void EvaluateAnswers(List<EvaluatedAnswerDTO> evaluatedAnswers);
+        public void EvaluateAnswers(List<EvaluatedAnswerDto> evaluatedAnswers);
         public AnswersToEvaluateDTO GetAnswersToEvaluate();
     }
 }

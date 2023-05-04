@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class UserMatchDTO
+    public class UserMatchDto
     {
         [SerializeField]
         private int _score;
@@ -25,7 +25,7 @@ namespace TopicTwister.Shared.DTOs
         public int UserId => _userId;
         public int MatchId => _matchId;
 
-        public UserMatchDTO(int score, bool isWinner, bool hasInitiative, int userId, int matchId)
+        public UserMatchDto(int score, bool isWinner, bool hasInitiative, int userId, int matchId)
         {
             _score = score;
             _isWinner = isWinner;
@@ -39,7 +39,7 @@ namespace TopicTwister.Shared.DTOs
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            UserMatchDTO other = (UserMatchDTO)obj;
+            UserMatchDto other = (UserMatchDto)obj;
 
             return _userId == other._userId &&
                 _matchId == other._matchId &&

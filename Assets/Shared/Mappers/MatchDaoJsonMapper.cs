@@ -9,12 +9,12 @@ namespace TopicTwister.Shared.Mappers
 {
     public class MatchDaoJsonMapper : IdaoMapper<Match, MatchDaoJson>
     {
-        public Match FromDAO(MatchDaoJson matchDAO)
+        public Match FromDAO(MatchDaoJson matchDao)
         {
             return new Match(
-                id: matchDAO.Id,
-                startDateTime: matchDAO.StartDateTime,
-                endDateTime: matchDAO.EndDateTime);
+                id: matchDao.Id,
+                startDateTime: matchDao.StartDateTime,
+                endDateTime: matchDao.EndDateTime);
         }
 
         public List<Match> FromDAOs(List<MatchDaoJson> matchesDAOs)

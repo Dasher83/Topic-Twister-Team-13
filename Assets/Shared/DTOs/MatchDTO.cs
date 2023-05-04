@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class MatchDTO
+    public class MatchDto
     {
         [SerializeField] private int _id;
         [SerializeField] private string _startDateTime;
@@ -16,7 +16,7 @@ namespace TopicTwister.Shared.DTOs
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
 
-        public MatchDTO(int id, DateTime startDateTime, DateTime? endDateTime = null)
+        public MatchDto(int id, DateTime startDateTime, DateTime? endDateTime = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
@@ -28,7 +28,7 @@ namespace TopicTwister.Shared.DTOs
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            MatchDTO other = (MatchDTO)obj;
+            MatchDto other = (MatchDto)obj;
 
             if (string.IsNullOrEmpty(other._endDateTime) && !string.IsNullOrEmpty(this._endDateTime)) return false;
             if (!string.IsNullOrEmpty(other._endDateTime) && string.IsNullOrEmpty(this._endDateTime)) return false;

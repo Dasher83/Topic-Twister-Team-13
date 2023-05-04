@@ -7,9 +7,9 @@ namespace TopicTwister.TurnResult.Shared.DTOs
     public struct AnswersToEvaluateDTO
     {
         public readonly char initialLetter;
-        public readonly List<TurnAnswerDTO> turnAnswers;
+        public readonly List<TurnAnswerDto> turnAnswers;
 
-        public AnswersToEvaluateDTO(char initialLetter, List<TurnAnswerDTO> turnAnswers)
+        public AnswersToEvaluateDTO(char initialLetter, List<TurnAnswerDto> turnAnswers)
         {
             this.initialLetter = initialLetter;
             this.turnAnswers = turnAnswers;

@@ -9,7 +9,7 @@ using TopicTwister.TurnResult.Repositories;
 
 namespace TopicTwister.TurnResult.Shared.Providers
 {
-    public class ActionProvider<T> where T : IAction
+    public class ActionProvider<Command, Presenter> where Command : ICommand<Presenter>
     {
         private readonly Dictionary<Type, object> _actions = new()
         {
@@ -22,10 +22,10 @@ namespace TopicTwister.TurnResult.Shared.Providers
             }
         };
 
-        public T Provide()
+        public Command Provide()
         {
-            _actions.TryGetValue(typeof(T), out object action);
-            return (T)action;
+            _actions.TryGetValue(typeof(Command), out object action);
+            return (Command)action;
         }
     }
 }

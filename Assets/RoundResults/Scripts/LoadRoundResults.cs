@@ -13,7 +13,7 @@ namespace TopicTwister.RoundResults
         private FakeMatchScriptable _fakeMatchData;
 
         [SerializeField]
-        private NewRoundScriptable _newRoundData;
+        private MatchCacheScriptable _matchCacheData;
 
         [SerializeField]
         private AnswerImageResultScriptable _answerImageResultReferences;
@@ -32,8 +32,11 @@ namespace TopicTwister.RoundResults
 
         private void LoadHeader()
         {
-            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>().text = _newRoundData.InitialLetter.ToString();
-            _header.Find("Title").GetComponentInChildren<TextMeshProUGUI>().text = $"Final de ronda {_newRoundData.RoundNumber}";
+            _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
+                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
+
+            _header.Find("Title").GetComponentInChildren<TextMeshProUGUI>()
+                .text = $"Final de ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
         }
 
         private void LoadPlayersAnswersComparison()
@@ -41,12 +44,17 @@ namespace TopicTwister.RoundResults
             int index = 0;
             foreach (Transform child in _cateoryResultList)
             {
+                FakeMatchScriptable.FakeRound fakeRound = _fakeMatchData.Rounds[
+                    _matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber];
 
-                child.Find("Category").GetComponent<TextMeshProUGUI>().text = _newRoundData.Categories[index].Name;
-                child.Find("AnswerPlayerOne").GetComponent<TextMeshProUGUI>().text = _fakeMatchData.Rounds[_newRoundData.RoundNumber - 1].UserAnswer[index].Answer;
-                child.Find("AnswerPlayerTwo").GetComponent<TextMeshProUGUI>().text = _fakeMatchData.Rounds[_newRoundData.RoundNumber - 1].BotAnswer[index].Answer;
+                child.Find("Category").GetComponent<TextMeshProUGUI>().text = _matchCacheData.RoundWithCategoriesDto
+                    .CategoryDtos[index].Name;
 
-                if (_fakeMatchData.Rounds[_newRoundData.RoundNumber - 1].UserAnswer[index].IsCorrect)
+                child.Find("AnswerPlayerOne").GetComponent<TextMeshProUGUI>().text = fakeRound.UserAnswer[index].Answer;
+
+                child.Find("AnswerPlayerTwo").GetComponent<TextMeshProUGUI>().text = fakeRound.BotAnswer[index].Answer;
+
+                if (fakeRound.UserAnswer[index].IsCorrect)
                 {
                     child.Find("ResultPlayerOne").GetComponent<Image>().sprite = _answerImageResultReferences.correctAnswer;
                 }
@@ -55,7 +63,7 @@ namespace TopicTwister.RoundResults
                     child.Find("ResultPlayerOne").GetComponent<Image>().sprite = _answerImageResultReferences.incorrectAnswer;
                 }
 
-                if (_fakeMatchData.Rounds[_newRoundData.RoundNumber - 1].BotAnswer[index].IsCorrect)
+                if (fakeRound.BotAnswer[index].IsCorrect)
                 {
                     child.Find("ResultPlayerTwo").GetComponent<Image>().sprite = _answerImageResultReferences.correctAnswer;
                 }

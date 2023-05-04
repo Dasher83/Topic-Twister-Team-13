@@ -14,7 +14,6 @@ namespace TopicTwister.Shared.Models
             _id = id;
         }
 
-
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

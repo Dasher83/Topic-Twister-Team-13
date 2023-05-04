@@ -10,12 +10,12 @@ namespace TopicTwister.Shared.Repositories.IdGenerators
     public class MatchesIdGenerator: IUniqueIdGenerator
     {
         private int _currentId;
-        private IMatchesReadOnlyRepository _matchesRepository;
+        private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
         private List<Match> _matches;
 
-        public MatchesIdGenerator(IMatchesReadOnlyRepository matchesRepository)
+        public MatchesIdGenerator(IMatchesReadOnlyRepository matchesReadOnlyRepository)
         {
-            _matchesRepository = matchesRepository;
+            _matchesReadOnlyRepository = matchesReadOnlyRepository;
         }
 
         public int GetNextId()
@@ -26,7 +26,7 @@ namespace TopicTwister.Shared.Repositories.IdGenerators
 
         private void UpdateCurrentId()
         {
-            _matches = _matchesRepository.GetAll();
+            _matches = _matchesReadOnlyRepository.GetAll().Outcome;
             if (_matches != null && _matches.Any())
             {
                 _currentId = _matches.OrderByDescending(match => match.Id).First().Id + 1;

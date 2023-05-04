@@ -8,11 +8,11 @@ namespace TopicTwister.Shared.ScriptableObjects
     [CreateAssetMenu(fileName = "TurnAnswersData", menuName = "ScriptableObjects/TurnAnswers")]
     public class TurnAnswersScriptable : ScriptableObject
     {
-        [SerializeField] private List<TurnAnswerDTO> _turnAnswers = new List<TurnAnswerDTO>();
+        [SerializeField] private List<TurnAnswerDto> _turnAnswers = new List<TurnAnswerDto>();
 
-        public void AddAnswers(TurnAnswerDTO[] turnAnswers)
+        public void AddAnswers(TurnAnswerDto[] turnAnswers)
         {
-            foreach (TurnAnswerDTO turnAnswer in turnAnswers)
+            foreach (TurnAnswerDto turnAnswer in turnAnswers)
             {
                 _turnAnswers.Add(turnAnswer);
             }
@@ -24,9 +24,9 @@ namespace TopicTwister.Shared.ScriptableObjects
         }
 
 
-        public List<TurnAnswerDTO> GetTurnAnswers()
+        public List<TurnAnswerDto> GetTurnAnswers()
         {
-            return new List<TurnAnswerDTO>(_turnAnswers);
+            return new List<TurnAnswerDto>(_turnAnswers);
         } 
     }
 }

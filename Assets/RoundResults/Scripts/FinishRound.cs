@@ -13,7 +13,7 @@ public class FinishRound : MonoBehaviour
     private LoadSceneEventScriptable _loadSceneEventContainer;
 
     [SerializeField]
-    private NewRoundScriptable _newRoundData;
+    private MatchCacheScriptable _matchCacheData;
 
     public void Start()
     {
@@ -22,7 +22,7 @@ public class FinishRound : MonoBehaviour
 
     public void OnClickEventHandler()
     {
-        if(_newRoundData.RoundNumber < 3)
+        if(_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber < 2)
         {
             Debug.Log("Aumenté la ronda");
             _roundEndedEventContainer.RoundEnded?.Invoke();

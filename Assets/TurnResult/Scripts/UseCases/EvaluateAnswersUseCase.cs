@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
-using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.TurnResult.UseCases
@@ -18,13 +18,13 @@ namespace TopicTwister.TurnResult.UseCases
             _wordRepository = wordsRepository;
         }
 
-        public List<EvaluatedAnswerDTO> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
+        public Operation<List<EvaluatedAnswerDto>> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            List<EvaluatedAnswerDTO> result = new List<EvaluatedAnswerDTO>();
-            EvaluatedAnswerDTO evaluatedAnswer;
+            List<EvaluatedAnswerDto> result = new List<EvaluatedAnswerDto>();
+            EvaluatedAnswerDto evaluatedAnswer;
             bool isCorrect;
 
-            foreach(TurnAnswerDTO turnAnswer in answerToEvaluate.turnAnswers)
+            foreach(TurnAnswerDto turnAnswer in answerToEvaluate.turnAnswers)
             {
                 if (string.IsNullOrEmpty(turnAnswer.UserInput))
                 {
@@ -35,10 +35,10 @@ namespace TopicTwister.TurnResult.UseCases
                     isCorrect = _wordRepository.Exists(
                         text: turnAnswer.UserInput,
                         categoryId: turnAnswer.Category.Id,
-                        initialLetter: answerToEvaluate.initialLetter);
+                        initialLetter: answerToEvaluate.initialLetter).Outcome;
                 }
 
-                evaluatedAnswer = new EvaluatedAnswerDTO(
+                evaluatedAnswer = new EvaluatedAnswerDto(
                     category: turnAnswer.Category,
                     answer: turnAnswer.UserInput,
                     isCorrect: isCorrect,
@@ -47,7 +47,8 @@ namespace TopicTwister.TurnResult.UseCases
                 result.Add(evaluatedAnswer);
             }
 
-            return result;
+            Operation<List<EvaluatedAnswerDto>> useCaseResult = Operation<List<EvaluatedAnswerDto>>.Success(outcome: result);
+            return useCaseResult;
         }
     }
 }

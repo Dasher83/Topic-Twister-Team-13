@@ -11,7 +11,7 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
     public class FakeMatchScriptable : ScriptableObject
     {
         [SerializeField]
-        private List<FakeRound> _rounds = new List<FakeRound>();
+        private List<FakeRound> _rounds;
         private BotTurnAnswersGenerator _botTurnAnswerGenerator;
         private int _userPoints;
         private int _botPoints;
@@ -27,13 +27,13 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
             _botPoints = 0;
         }
 
-        public void AddRound(List<EvaluatedAnswerDTO> userAnswers, int roundNumber, string initialLetter)
+        public void AddRound(List<EvaluatedAnswerDto> userAnswers, string initialLetter)
         {
             _botTurnAnswerGenerator = new BotTurnAnswersGenerator(
                 userAnswers: userAnswers,
                 initialLetter: initialLetter);
 
-            List<EvaluatedAnswerDTO> botAnswers = _botTurnAnswerGenerator.GenerateAnswers();
+            List<EvaluatedAnswerDto> botAnswers = _botTurnAnswerGenerator.GenerateAnswers();
 
             _rounds.Add(new FakeRound(
                 userAnswers: userAnswers,
@@ -60,46 +60,46 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
         [Serializable]
         public class FakeRound
         {
-            [SerializeField] private List<EvaluatedAnswerDTO> _userAnswers;
-            [SerializeField] private List<EvaluatedAnswerDTO> _botAnswers;
+            [SerializeField] private List<EvaluatedAnswerDto> _userAnswers;
+            [SerializeField] private List<EvaluatedAnswerDto> _botAnswers;
 
-            public FakeRound(List<EvaluatedAnswerDTO> userAnswers, List<EvaluatedAnswerDTO> botAnswers)
+            public FakeRound(List<EvaluatedAnswerDto> userAnswers, List<EvaluatedAnswerDto> botAnswers)
             {
                 _userAnswers = userAnswers;
                 _botAnswers = botAnswers;
             }
 
-            public List<EvaluatedAnswerDTO> UserAnswer => _userAnswers.ToList();
-            public List<EvaluatedAnswerDTO> BotAnswer => _botAnswers.ToList();
+            public List<EvaluatedAnswerDto> UserAnswer => _userAnswers.ToList();
+            public List<EvaluatedAnswerDto> BotAnswer => _botAnswers.ToList();
         }
 
         private class BotTurnAnswersGenerator
         {
-            private List<EvaluatedAnswerDTO> _userAnswers;
+            private List<EvaluatedAnswerDto> _userAnswers;
             private string _initialLetter;
 
 
             public BotTurnAnswersGenerator(
-                List<EvaluatedAnswerDTO> userAnswers,
+                List<EvaluatedAnswerDto> userAnswers,
                 string initialLetter)
             {
                 _userAnswers = userAnswers;
                 _initialLetter = initialLetter;
             }
 
-            public List<EvaluatedAnswerDTO> GenerateAnswers()
+            public List<EvaluatedAnswerDto> GenerateAnswers()
             {
-                List<EvaluatedAnswerDTO> generatedAnswers = new List<EvaluatedAnswerDTO>();
+                List<EvaluatedAnswerDto> generatedAnswers = new List<EvaluatedAnswerDto>();
                 bool willAnswerCorrectly;
-                EvaluatedAnswerDTO botAnswer;
+                EvaluatedAnswerDto botAnswer;
 
 
-                foreach (EvaluatedAnswerDTO evaluatedAnswer in _userAnswers)
+                foreach (EvaluatedAnswerDto evaluatedAnswer in _userAnswers)
                 {
                     willAnswerCorrectly = UnityEngine.Random.value > 0.5f;
                     if (willAnswerCorrectly)
                     {
-                        botAnswer = new EvaluatedAnswerDTO(
+                        botAnswer = new EvaluatedAnswerDto(
                             category: evaluatedAnswer.Category,
                             answer: $"{_initialLetter} test".ToUpper(),
                             isCorrect: true,
@@ -107,7 +107,7 @@ namespace TopicTwister.Shared.ScriptableObjects.FakeMatch
                     }
                     else
                     {
-                        botAnswer = new EvaluatedAnswerDTO(
+                        botAnswer = new EvaluatedAnswerDto(
                             category: evaluatedAnswer.Category,
                             answer: $"No se".ToUpper(),
                             isCorrect: false,

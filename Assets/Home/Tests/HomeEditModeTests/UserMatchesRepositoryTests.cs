@@ -1,34 +1,43 @@
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using NUnit.Framework;
-using TopicTwister.Home.Tests.Utils;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Repositories;
-using UnityEngine;
-using UnityEngine.TestTools;
-using NSubstitute;
 using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.TestUtils;
+using TopicTwister.Shared.DAOs;
+using TopicTwister.Shared.Mappers;
+
 
 public class UserMatchesRepositoryTests
 {
-
     private IUserMatchesRepository _userMatchesRepository;
-    private IMatchesRepository _matchRepository;
-    private IUniqueIdGenerator _idGenerator;
-    private IUserRepository _userRepository;
+    private IMatchesRepository _matchesRepository;
+    private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+    private IUniqueIdGenerator _matchIdGenerator;
+    private IUserReadOnlyRepository _userReadOnlyRepository;
+    private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
 
     [SetUp]
     public void SetUp()
     {
-        _userRepository = new UserRepositoryInMemory();
-        _idGenerator = new MatchesIdGenerator(new MatchesReadOnlyRepositoryJson(matchesResourceName: "TestData/MatchesTest"));
-        _matchRepository = new MatchesRepositoryJson(matchesResourceName: "TestData/MatchesTest",idGenerator: _idGenerator);
+        _matchDaoMapper = new MatchDaoJsonMapper();
+
+        _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
+            resourceName: "TestData/Matches", matchDaoMapper: _matchDaoMapper);
+
+        _userReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+        _matchIdGenerator = new MatchesIdGenerator(matchesReadOnlyRepository: _matchesReadOnlyRepository);
+
+        _matchesRepository = new MatchesRepositoryJson(
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: _matchIdGenerator,
+            matchDaoMapper: _matchDaoMapper);
+
         _userMatchesRepository = new UserMatchesRepositoryJson(
-            userMatchesResourceName: "TestData/UserMatchesTest",
-            matchesRepository: _matchRepository,
-            userRepository: _userRepository);
+            resourceName: "TestData/UserMatches",
+            matchesRepository: _matchesRepository,
+            userReadOnlyRepository: _userReadOnlyRepository);
     }
 
     [TearDown]
@@ -42,7 +51,7 @@ public class UserMatchesRepositoryTests
     public void Test_ok_all_operations()
     {
         Match match = new Match();
-        match = _matchRepository.Persist(match);
+        match = _matchesRepository.Save(match).Outcome;
 
         List<UserMatch> userMatches = new List<UserMatch>() {
             new UserMatch(
@@ -62,7 +71,7 @@ public class UserMatchesRepositoryTests
 
         for (int i = 0; i < userMatches.Count; i++)
         {
-            userMatches[i] = _userMatchesRepository.Persist(userMatches[i]);
+            userMatches[i] = _userMatchesRepository.Save(userMatches[i]).Outcome;
 
             UserMatch expectedUserMatch = new UserMatch(
                 score: userMatches[i].Score,
@@ -76,12 +85,14 @@ public class UserMatchesRepositoryTests
 
         for (int i = 0; i < userMatches.Count; i++)
         {
-            UserMatch actualUserMatch = _userMatchesRepository.Get(userId: userMatches[i].User.Id, matchId: userMatches[i].Match.Id);
+            UserMatch actualUserMatch = _userMatchesRepository.Get(
+                userId: userMatches[i].User.Id,
+                matchId: userMatches[i].Match.Id).Outcome;
             UserMatch expectedUserMatch = userMatches[i];
             Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         }
 
-        List<UserMatch> expectedUserMatches = _userMatchesRepository.GetAll();
+        List<UserMatch> expectedUserMatches = _userMatchesRepository.GetAll().Outcome;
         Assert.AreEqual(expected: expectedUserMatches, actual: userMatches);
     }
 }

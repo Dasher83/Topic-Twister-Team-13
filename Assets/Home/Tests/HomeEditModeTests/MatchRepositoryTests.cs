@@ -2,16 +2,26 @@ using System;
 using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
-using TopicTwister.Home.Tests.Utils;
+using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
-using TopicTwister.Shared.Repositories.Exceptions;
+using TopicTwister.Shared.TestUtils;
+using TopicTwister.Shared.Utils;
+
 
 public class MatchRepositoryTests
 {
     private IUniqueIdGenerator idGenerator;
     private IMatchesRepository _matchesRepository;
+    private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _matchDaoMapper = new MatchDaoJsonMapper();
+    }
 
     [TearDown]
     public void TearDown()
@@ -34,36 +44,34 @@ public class MatchRepositoryTests
             });
 
         _matchesRepository = new MatchesRepositoryJson(
-            matchesResourceName: "TestData/MatchesTest",
-            idGenerator: idGenerator);
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: idGenerator,
+            matchDaoMapper: _matchDaoMapper);
 
         List<Match> matches = new List<Match>() { new Match(), new Match()};
 
         for(int i = 0; i < matches.Count; i++)
         {
-            matches[i] = _matchesRepository.Persist(matches[i]);
+            matches[i] = _matchesRepository.Save(matches[i]).Outcome;
             Match expectedMatch = new Match(id: ids[i], startDateTime: DateTime.UtcNow, endDateTime: null);
             Assert.AreEqual(expected: expectedMatch, actual: matches[i]);
         }
 
         for (int i = 0; i < ids.Length; i++)
         {
-            Match actualMatch = _matchesRepository.Get(ids[i]);
+            Match actualMatch = _matchesRepository.Get(ids[i]).Outcome;
             Match expectedMatch = matches[i];
             Assert.AreEqual(expected: expectedMatch, actual: actualMatch);
         }
 
-        List<Match> expectedMatches = _matchesRepository.GetAll();
-        Assert.AreEqual(expected: expectedMatches, actual: matches);
+        List<Match> actualMatches = _matchesRepository.GetAll().Outcome;
+        Assert.AreEqual(expected: matches, actual: actualMatches);
 
         for(int i = 0; i < ids.Length; i++)
         {
-            try
-            {
-                _matchesRepository.Delete(ids[i]);
-                Assert.Throws<MatchNotFoundByRespositoryException>(() => _matchesRepository.Get(id: ids[i]));
-            }
-            catch (MatchNotFoundByRespositoryException) { }
+            Operation<bool> deleteOperation = _matchesRepository.Delete(ids[i]);
+            Assert.IsTrue(deleteOperation.WasOk);
+            Assert.IsTrue(deleteOperation.Outcome);
         }
 
         idGenerator = Substitute.For<IUniqueIdGenerator>();
@@ -73,17 +81,14 @@ public class MatchRepositoryTests
                 return -1;
             });
         _matchesRepository = new MatchesRepositoryJson(
-            matchesResourceName: "TestData/MatchesTest",
-            idGenerator: idGenerator);
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: idGenerator,
+            matchDaoMapper: _matchDaoMapper);
 
-        try
-        {
-            Assert.Throws<MatchNotPersistedByRepositoryException>(
-            () =>
-            {
-                _matchesRepository.Persist(match: new Match(id: -1, startDateTime: DateTime.UtcNow, endDateTime: null));
-            });
-        }
-        catch (MatchNotPersistedByRepositoryException) { }
+        Operation<Match> saveOperation = _matchesRepository.Save(
+                match: new Match(
+                    id: -1,
+                    startDateTime: DateTime.UtcNow));
+        Assert.IsFalse(saveOperation.WasOk);
     }
 }
