@@ -29,7 +29,7 @@ namespace TopicTwister.Shared.Repositories
             _roundsIdGenerator = roundsIdGenerator;
         }
 
-        public Operation<Round> Save(Round round)
+        public Operation<Round> Insert(Round round)
         {
             Operation<List<Round>> GetAllOperationResult = GetAll();
             if (GetAllOperationResult.WasOk == false)
@@ -54,7 +54,37 @@ namespace TopicTwister.Shared.Repositories
             string data = new RoundDaosCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
             Operation<Round> getOperation = Get(roundDao.Id);
-            return getOperation.WasOk ? getOperation : Operation<Round>.Failure(errorMessage: "failure to save Round");
+            return getOperation.WasOk ? getOperation : Operation<Round>.Failure(errorMessage: "failure to insert Round");
+        }
+
+        public Operation<Round> Update(Round round)
+        {
+            Operation<List<Round>> GetAllOperationResult = GetAll();
+            if (GetAllOperationResult.WasOk == false)
+            {
+                return Operation<Round>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
+            }
+
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _writeCache = _readCache.ToList();
+            RoundDaoJson roundDao = _mapper.ToDAO(round);
+            int indexOfObjectToUpdate = _writeCache.FindIndex(dao => dao.Id == round.Id);
+            _writeCache.RemoveAt(indexOfObjectToUpdate);
+
+            roundDao = new RoundDaoJson(
+                id: roundDao.Id,
+                roundNumber: roundDao.RoundNumber,
+                initialLetter: roundDao.InitialLetter,
+                isActive: roundDao.IsActive,
+                matchId: roundDao.MatchId,
+                categoryIds: roundDao.CategoryIds);
+
+            _writeCache.Add(roundDao);
+            RoundDaosCollection collection = new RoundDaosCollection(_writeCache.ToArray());
+            string data = new RoundDaosCollectionSerializer().Serialize(collection);
+            File.WriteAllText(this._path, data);
+            Operation<Round> getOperation = Get(roundDao.Id);
+            return getOperation.WasOk ? getOperation : Operation<Round>.Failure(errorMessage: "failure to update Round");
         }
     }
 }

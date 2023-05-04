@@ -93,7 +93,7 @@ namespace TopicTwister.Shared.UseCases
                 match: match,
                 categories: getRandomCategoriesOperationResult.Outcome);
 
-            Operation<Round> saveRoundOperationResult = _roundsRepository.Save(round);
+            Operation<Round> saveRoundOperationResult = _roundsRepository.Insert(round);
 
             if(saveRoundOperationResult.WasOk == false)
             {

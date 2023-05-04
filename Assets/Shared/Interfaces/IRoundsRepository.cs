@@ -7,6 +7,7 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface IRoundsRepository: IRoundsReadOnlyRepository
     {
-        Operation<Round> Save(Round round);
+        Operation<Round> Insert(Round round);
+        Operation<Round> Update(Round round);
     }
 }

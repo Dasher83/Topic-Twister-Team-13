@@ -86,7 +86,7 @@ namespace NewRoundTests
         }
 
         [Test]
-        public void Test_ok_creation_of_all_rounds()
+        public void Test_ok_insertion_of_all_rounds()
         {
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
@@ -110,17 +110,20 @@ namespace NewRoundTests
             for (int i = 0; i < MaxRounds; i++)
             {
                 Operation<RoundWithCategoriesDto> actualResult = _useCase.Execute(matchDto: matchDto);
-                actualResults.Add(actualResult);
 
                 Round round = _roundWithCategoriesDtoMapper.FromDTO(actualResult.Outcome);
+
                 round = new Round(
-                    round.Id,
-                    round.InitialLetter,
+                    id: round.Id,
+                    roundNumber: round.RoundNumber,
+                    initialLetter: round.InitialLetter,
                     isActive: false,
                     match: round.Match,
                     categories: round.Categories);
 
-                _roundsRepository.Save(round);
+                _roundsRepository.Update(round);
+                actualResults.Add(Operation<RoundWithCategoriesDto>.Success(
+                    outcome: _roundWithCategoriesDtoMapper.ToDTO(round)));
             }
             #endregion
 

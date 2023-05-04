@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
@@ -8,14 +9,14 @@ namespace TopicTwister.Shared.Mappers
 {
     public class CategoryDtoMapper : IdtoMapper<Category, CategoryDto>
     {
-        public Category FromDTO(CategoryDto DTO)
+        public Category FromDTO(CategoryDto categoryDto)
         {
-            throw new System.NotImplementedException();
+            return new Category(id: categoryDto.Id, name: categoryDto.Name);
         }
 
-        public List<Category> FromDTOs(List<CategoryDto> DTOs)
+        public List<Category> FromDTOs(List<CategoryDto> categoryDtos)
         {
-            throw new System.NotImplementedException();
+            return categoryDtos.Select(FromDTO).ToList();
         }
 
         public CategoryDto ToDTO(Category category)

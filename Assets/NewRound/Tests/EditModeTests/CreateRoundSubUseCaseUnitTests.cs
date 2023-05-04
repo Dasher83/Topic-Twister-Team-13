@@ -34,7 +34,7 @@ namespace NewRoundTests
 
             _roundRepository = Substitute.For<IRoundsRepository>();
             int nextFakeId = 0;
-            _roundRepository.Save(Arg.Any<Round>()).Returns(
+            _roundRepository.Insert(Arg.Any<Round>()).Returns(
                 (args) =>
                 {
                     Round round = (Round)args[0];
@@ -435,7 +435,7 @@ namespace NewRoundTests
             _roundRepository = Substitute.For<IRoundsRepository>();
             int nextFakeId = 0;
 
-            _roundRepository.Save(Arg.Any<Round>()).Returns(
+            _roundRepository.Insert(Arg.Any<Round>()).Returns(
                 (args) =>
                 {
                     Round round = (Round)args[0];

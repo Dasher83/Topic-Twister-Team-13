@@ -2,6 +2,7 @@
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Shared.Mappers
@@ -24,7 +25,8 @@ namespace TopicTwister.Shared.Mappers
 
         public Round FromDTO(RoundWithCategoriesDto dto)
         {
-            return _roundReadOnlyRepository.Get(dto.RoundDto.Id).Outcome;
+            Operation<Round> getRoundOperation = _roundReadOnlyRepository.Get(dto.RoundDto.Id);
+            return getRoundOperation.Outcome;
         }
 
         public List<Round> FromDTOs(List<RoundWithCategoriesDto> dtos)
