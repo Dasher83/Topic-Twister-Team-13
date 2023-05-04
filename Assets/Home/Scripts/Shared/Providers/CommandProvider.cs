@@ -78,7 +78,7 @@ namespace TopicTwister.Home.Shared.Providers
             _categoryDaoMapper = new CategoryDaoJsonMapper();
 
             _categoriesReadOnlyRepository = new CategoriesReadOnlyRepositoryJson(
-                resourceName: "DevelopmentData/Category",
+                resourceName: "DevelopmentData/Categories",
                 categoryDaoJsonMapper: _categoryDaoMapper);
 
             _roundsReadOnlyRepository = new RoundsReadOnlyRepositoryJson(

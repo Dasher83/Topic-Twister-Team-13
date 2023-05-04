@@ -1,6 +1,7 @@
 using TopicTwister.Home.Commands;
 using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Home.Shared.Providers;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
 namespace TopicTwister.Home.Presenters
@@ -21,6 +22,11 @@ namespace TopicTwister.Home.Presenters
         public void StartMatchVersusBot()
         {
             _createMatchCommand.Execute();
+        }
+
+        public void UpdateView(MatchDto matchDto)
+        {
+            _view.ReceiveUpdate(matchDto);
         }
     }
 }

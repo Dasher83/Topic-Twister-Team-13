@@ -79,7 +79,10 @@ namespace TopicTwister.NewRound.Shared.Providers
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
 
             _resumeMatchUseCase = new ResumeMatchUseCase(
-                createRoundSubUseCase: _createRoundSubUseCase);
+                createRoundSubUseCase: _createRoundSubUseCase,
+                matchesReadOnlyRepository: _matchesReadOnlyRepository,
+                roundsReadOnlyRepository: _roundsReadOnlyRepository,
+                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
 
             _actions = new()
             {

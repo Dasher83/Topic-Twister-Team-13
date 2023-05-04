@@ -10,10 +10,10 @@ namespace TopicTwister.NewRound.Presenters
 {
     public class ResumeMatchPresenter : IResumeMatchPresenter
     {
-        private ICreateRoundView _view;
+        private IResumeMatchView _view;
         private ICommand<IResumeMatchPresenter> _createRoundCommand;
 
-        public ResumeMatchPresenter(ICreateRoundView view)
+        public ResumeMatchPresenter(IResumeMatchView view)
         {
             _view = view;
             _createRoundCommand = new CommandProvider<ResumeMatchCommand, IResumeMatchPresenter>().Provide();
@@ -21,14 +21,15 @@ namespace TopicTwister.NewRound.Presenters
             _view.OnLoad += ResumeMatch;
         }
 
-        public void ResumeMatch(object sender, EventArgs e)
+        public void ResumeMatch(MatchDto matchDto)
         {
-            throw new System.NotImplementedException();
+            ((ResumeMatchCommand)_createRoundCommand).MatchDto = matchDto;
+            _createRoundCommand.Execute();
         }
 
         public void UpdateView(RoundWithCategoriesDto roundWithCategoriesDto)
         {
-            _view.UpdateNewRoundData(roundWithCategoriesDto: roundWithCategoriesDto);
+            _view.UpdateMatchData(roundWithCategoriesDto: roundWithCategoriesDto);
         }
     }
 }

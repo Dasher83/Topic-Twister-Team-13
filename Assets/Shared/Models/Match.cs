@@ -53,7 +53,15 @@ namespace TopicTwister.Shared.Models
         }
         public bool AreAllRoundsCreated => _rounds.Count == 3;
 
-        public Round? ActiveRound => _rounds.SingleOrDefault(round => round.IsActive);
+        public Round? ActiveRound
+        {
+            get
+            {
+                if (_rounds.Count == 0) return null;
+
+                return _rounds.SingleOrDefault(round => round.IsActive);
+            }
+        }
 
         public override bool Equals(object obj)
         {

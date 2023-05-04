@@ -6,6 +6,6 @@ namespace TopicTwister.Home.Shared.Interfaces
 {
     public interface IStartBotMatchUseCase
     {
-        Operation<MatchDto> Start(int userId);
+        Operation<MatchDto> Execute(int userId);
     }
 }

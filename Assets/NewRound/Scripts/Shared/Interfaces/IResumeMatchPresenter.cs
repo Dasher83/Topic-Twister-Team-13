@@ -6,7 +6,7 @@ namespace TopicTwister.NewRound.Shared.Interfaces
 {
     public interface IResumeMatchPresenter
     {
-        void ResumeMatch(object sender, EventArgs e);
+        void ResumeMatch(MatchDto matchDto);
         void UpdateView(RoundWithCategoriesDto roundWithCategoriesDto);
     }
 }

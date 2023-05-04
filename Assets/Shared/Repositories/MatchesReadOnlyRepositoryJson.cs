@@ -47,7 +47,6 @@ namespace TopicTwister.Shared.Repositories
             if(matchDAO == null)
             {
                 return Operation<Match>.Failure(errorMessage: $"Match not found with id: {id}");
-
             }
             Match match = _matchDaoMapper.FromDAO(matchDAO);
 

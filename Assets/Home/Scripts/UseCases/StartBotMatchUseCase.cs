@@ -20,7 +20,7 @@ namespace TopicTwister.Home.UseCases
             _createRoundSubUseCase = createRoundSubUseCase;
         }
 
-        public Operation<MatchDto> Start(int userId)
+        public Operation<MatchDto> Execute(int userId)
         {
             Operation<MatchDto> createMatchSubUseCaseOperation = _createMatchSubUseCase.Create(
                 userIdPlayerOne: userId, userIdPlayerTwo: BotId);

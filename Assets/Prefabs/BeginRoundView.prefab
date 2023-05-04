@@ -146,7 +146,6 @@ GameObject:
   - component: {fileID: 1108956264}
   - component: {fileID: 1108956266}
   - component: {fileID: 1108956265}
-  - component: {fileID: 4017281125375178182}
   m_Layer: 5
   m_Name: ShuffleButtonContainer
   m_TagString: Untagged
@@ -213,19 +212,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4017281125375178182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108956263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1edcd133f5900040aaf92427d74161a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _eventContainer: {fileID: 11400000, guid: 2592076e7609bbd4eb64a77779492440, type: 2}
 --- !u!1 &1144444881
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,10 +334,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4017281125375178182}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TopicTwister.NewRound.Views.ShuffleLetterView,
           TopicTwister
-        m_MethodName: GetRandomLetter
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -481,12 +467,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5defb3eb6c78f3a418f24e290978a33a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
-  _InitialLetterRevealedEventContainer: {fileID: 11400000, guid: 2592076e7609bbd4eb64a77779492440, type: 2}
-  _roundNumber: {fileID: 6749571803109359043}
+  _roundNumberDisplay: {fileID: 6749571803109359043}
   _categoryListRoot: {fileID: 7971557317311405425}
-  _initialLetter: {fileID: 240032588}
+  _initialLetterButtonContainer: {fileID: 1108956263}
   _loadSceneEventContainer: {fileID: 11400000, guid: f4944deb4da26de4f8eec96b54bbb278, type: 2}
+  _matchCacheData: {fileID: 11400000, guid: 7dd6362091babca41b6ffb0cda03e6c0, type: 2}
 --- !u!1 &3450023297061710014
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,7 +818,6 @@ GameObject:
   - component: {fileID: 7971557317311405427}
   - component: {fileID: 7971557317311405426}
   - component: {fileID: 7028650233558278006}
-  - component: {fileID: 4743106564019198250}
   m_Layer: 5
   m_Name: CategoryList
   m_TagString: Untagged
@@ -930,19 +914,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &4743106564019198250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7971557317311405424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa9c675320ddd4e469e8b6b70ba4ad7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _newRoundData: {fileID: 11400000, guid: efa3d34330ca39549ac43a1c8dc21ae4, type: 2}
 --- !u!1 &8862155505892269844
 GameObject:
   m_ObjectHideFlags: 0

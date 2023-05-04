@@ -1,4 +1,5 @@
 ﻿using TopicTwister.Home.Shared.Interfaces;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
 
@@ -19,7 +20,8 @@ namespace TopicTwister.Home.Commands
 
         public void Execute()
         {
-            _service.Start();
+            MatchDto matchDto = _service.StartMatch();
+            _presenter.UpdateView(matchDto);
         }
     }
 }

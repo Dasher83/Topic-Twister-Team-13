@@ -5,6 +5,6 @@ namespace TopicTwister.Home.Shared.Interfaces
 {
     public interface IStartBotMatchService
     {
-        MatchDto Start();
+        MatchDto StartMatch();
     }
 }

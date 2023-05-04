@@ -11,12 +11,9 @@ using UnityEngine.UI;
 
 namespace TopicTwister.NewRound.Views
 {
-    public class ResumeMatchView : MonoBehaviour, ICreateRoundView
+    public class ResumeMatchView : MonoBehaviour, IResumeMatchView
     {
-        public event EventHandler OnLoad;
-
-        [SerializeField]
-        private RoundCacheScriptable _newRoundData;
+        public event Action<MatchDto> OnLoad;
 
         [SerializeField]
         private TextMeshProUGUI _roundNumberDisplay;
@@ -30,6 +27,9 @@ namespace TopicTwister.NewRound.Views
         [SerializeField]
         private LoadSceneEventScriptable _loadSceneEventContainer;
 
+        [SerializeField]
+        private MatchCacheScriptable _matchCacheData;
+
         private Button _initialLetterButton;
         private TextMeshProUGUI __initialLetterText;
         private IResumeMatchPresenter _presenter;
@@ -37,25 +37,29 @@ namespace TopicTwister.NewRound.Views
         private void Start()
         {
             _presenter = new ResumeMatchPresenter(this);
-            OnLoad?.Invoke(this, EventArgs.Empty);
+            OnLoad?.Invoke(_matchCacheData.MatchDto);
             _initialLetterButton = _initialLetterButtonContainer.GetComponentInChildren<Button>();
             __initialLetterText = _initialLetterButtonContainer.GetComponentInChildren<TextMeshProUGUI>();
             _initialLetterButton.onClick.AddListener(() => InitialLetterRevealed());
-            _roundNumberDisplay.text = $"Ronda {_newRoundData.RoundDto.RoundNumber}";
         }
 
         private void InitialLetterRevealed()
         {
-            __initialLetterText.text = _newRoundData.RoundDto.InitialLetter.ToString();
+            __initialLetterText.text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
             _loadSceneEventContainer.LoadSceneWithDelay?.Invoke(Scenes.PlayTurn, 2f);
             _initialLetterButton.enabled = false;
         }
 
-        public void UpdateNewRoundData(RoundWithCategoriesDto roundWithCategoriesDto)
+        public void UpdateMatchData(RoundWithCategoriesDto roundWithCategoriesDto)
         {
-            _newRoundData.Initialize(
-                roundDto: roundWithCategoriesDto.RoundDto,
-                categoryDtos: roundWithCategoriesDto.CategoryDtos);
+            _matchCacheData.RoundWithCategoriesDto = roundWithCategoriesDto;
+            _roundNumberDisplay.text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
+            for(int i = 0; i < _categoryListRoot.childCount; i++)
+            {
+                _categoryListRoot.GetChild(i)
+                    .GetComponentInChildren<TextMeshProUGUI>()
+                    .text = _matchCacheData.RoundWithCategoriesDto.CategoryDtos[i].Name;
+            }
         }
     }
 }
