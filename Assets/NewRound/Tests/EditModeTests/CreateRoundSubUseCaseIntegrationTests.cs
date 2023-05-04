@@ -263,10 +263,26 @@ namespace NewRoundTests
 
             #region -- Act --
             List<Operation<RoundWithCategoriesDto>> actualResults = new List<Operation<RoundWithCategoriesDto>>();
-            for (int i = 0; i < MaxRounds + 1; i++)
+            for (int i = 0; i < MaxRounds; i++)
             {
-                actualResults.Add(_useCase.Execute(matchDto: matchDto));
+                Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Execute(matchDto: matchDto);
+
+                Round round = _roundWithCategoriesDtoMapper.FromDTO(useCaseOperation.Outcome);
+
+                round = new Round(
+                    id: round.Id,
+                    roundNumber: round.RoundNumber,
+                    initialLetter: round.InitialLetter,
+                    isActive: false,
+                    match: round.Match,
+                    categories: round.Categories);
+
+                _roundsRepository.Update(round);
+                actualResults.Add(Operation<RoundWithCategoriesDto>.Success(
+                    outcome: _roundWithCategoriesDtoMapper.ToDTO(round)));
             }
+
+            actualResults.Add(_useCase.Execute(matchDto: matchDto));
             #endregion
 
             #region -- Assert --
