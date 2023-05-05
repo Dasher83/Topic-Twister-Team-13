@@ -1,7 +1,10 @@
 using System;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
+using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Utils;
 using UnityEngine;
@@ -11,15 +14,24 @@ using UnityEngine.TestTools;
 public class StartTurnUseCaseIntegrationTests
 {
     IStartTurnUseCase _useCase;
-    IUsersReadOnlyRepository _userReadOnlyRepository;
+    IUsersReadOnlyRepository _usersReadOnlyRepository;
+    IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+    IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
 
     [SetUp]
     public void SetUp()
     {
-        _userReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+        _matchDaoJsonMapper = new MatchDaoJsonMapper();
+
+        _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
+            resourceName: "TestData/Matches",
+            matchDaoMapper: _matchDaoJsonMapper);
+
+        _usersReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+
         _useCase = new StartTurnUseCase(
-            usersReadOnlyRepository: _userReadOnlyRepository,
-            matchesReadOnlyRepository: null);
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository);
     }
 
     [Test]
@@ -51,7 +63,21 @@ public class StartTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_unknown_match()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = 0;
+        int matchId = -1;
+        #endregion
+
+        #region -- Act --
+        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Match not found with id: {matchId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]

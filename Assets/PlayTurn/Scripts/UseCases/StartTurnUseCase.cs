@@ -19,7 +19,7 @@ public class StartTurnUseCase : IStartTurnUseCase
 
     public Operation<bool> Execute(int userId, int matchId)
     {
-        Operation<User> getUserOperation = _usersReadOnlyRepository.Get(userId: userId);
+        Operation<User> getUserOperation = _usersReadOnlyRepository.Get(id: userId);
 
         if(getUserOperation.WasOk == false)
         {

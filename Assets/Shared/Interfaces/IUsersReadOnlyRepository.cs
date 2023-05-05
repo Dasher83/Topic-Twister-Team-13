@@ -6,6 +6,6 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface IUsersReadOnlyRepository
     {
-        Operation<User> Get(int userId);
+        Operation<User> Get(int id);
     }
 }

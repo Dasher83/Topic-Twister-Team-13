@@ -15,6 +15,7 @@ namespace TopicTwister.Shared.Repositories
         {
             _readCache = new List<User>()
             {
+                new User(id: 0),
                 new User(id: 1),
                 new User(id: 2)
             };
