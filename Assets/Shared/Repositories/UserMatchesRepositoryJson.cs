@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Serialization.Deserializers;
 using TopicTwister.Shared.Serialization.Serializers;
 using TopicTwister.Shared.Serialization.Shared;
-using TopicTwister.Shared.Mappers;
-using UnityEngine;
-using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Utils;
+using UnityEngine;
 
 namespace TopicTwister.Shared.Repositories
 {
@@ -24,9 +24,9 @@ namespace TopicTwister.Shared.Repositories
         public UserMatchesRepositoryJson(
             string resourceName,
             IMatchesRepository matchesRepository,
-            IUserReadOnlyRepository userReadOnlyRepository)
+            IUsersReadOnlyRepository usersReadOnlyRepository)
         {
-            _mapper = new UserMatchJsonDaoMapper(matchesRepository: matchesRepository, userReadOnlyRepository: userReadOnlyRepository);
+            _mapper = new UserMatchJsonDaoMapper(matchesRepository: matchesRepository, userReadOnlyRepository: usersReadOnlyRepository);
             _path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
             _userMatchesReadCache = _mapper.ToDAOs(GetAll().Outcome);
         }

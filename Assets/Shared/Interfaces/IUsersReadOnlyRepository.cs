@@ -4,7 +4,7 @@ using TopicTwister.Shared.Utils;
 
 namespace TopicTwister.Shared.Interfaces
 {
-    public interface IUserReadOnlyRepository
+    public interface IUsersReadOnlyRepository
     {
         Operation<User> Get(int userId);
     }

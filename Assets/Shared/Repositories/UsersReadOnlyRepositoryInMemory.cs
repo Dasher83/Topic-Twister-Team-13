@@ -7,7 +7,7 @@ using TopicTwister.Shared.Utils;
 
 namespace TopicTwister.Shared.Repositories
 {
-    public class UsersReadOnlyRepositoryInMemory : IUserReadOnlyRepository
+    public class UsersReadOnlyRepositoryInMemory : IUsersReadOnlyRepository
     {
         private List<User> _readCache;
 

@@ -11,18 +11,18 @@ namespace TopicTwister.Home.UseCases
     {
         private IMatchesRepository _matchesRepository;
         private IUserMatchesRepository _userMatchesRepository;
-        private IUserReadOnlyRepository _userRepository;
+        private IUsersReadOnlyRepository _usersReadOnlyRepository;
         private IdtoMapper<Match, MatchDto> _matchDtoMapper;
 
         public CreateMatchSubUseCase(
             IMatchesRepository matchesRepository,
             IUserMatchesRepository userMatchesRepository,
-            IUserReadOnlyRepository userRespository,
+            IUsersReadOnlyRepository usersReadOnlyRespository,
             IdtoMapper<Match, MatchDto> matchDtoMapper)
         {
             _matchesRepository = matchesRepository;
             _userMatchesRepository = userMatchesRepository;
-            _userRepository = userRespository;
+            _usersReadOnlyRepository = usersReadOnlyRespository;
             _matchDtoMapper = matchDtoMapper;
         }
 
@@ -64,7 +64,7 @@ namespace TopicTwister.Home.UseCases
 
         private Operation<UserMatch> CreateUserMatch(int userId, Match match)
         {
-            Operation<User> getUserOperation = _userRepository.Get(userId);
+            Operation<User> getUserOperation = _usersReadOnlyRepository.Get(userId);
 
             if (getUserOperation.WasOk == false)
             {

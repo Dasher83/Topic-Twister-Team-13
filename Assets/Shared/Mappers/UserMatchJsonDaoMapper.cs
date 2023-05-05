@@ -10,9 +10,9 @@ namespace TopicTwister.Shared.Mappers
     public class UserMatchJsonDaoMapper : IdaoMapper<UserMatch, UserMatchDaoJson>
     {
         private IMatchesRepository _matchesRepository;
-        private IUserReadOnlyRepository _userReadOnlyRepository;
+        private IUsersReadOnlyRepository _userReadOnlyRepository;
 
-        public UserMatchJsonDaoMapper(IMatchesRepository matchesRepository, IUserReadOnlyRepository userReadOnlyRepository)
+        public UserMatchJsonDaoMapper(IMatchesRepository matchesRepository, IUsersReadOnlyRepository userReadOnlyRepository)
         {
             _matchesRepository = matchesRepository;
             _userReadOnlyRepository = userReadOnlyRepository;

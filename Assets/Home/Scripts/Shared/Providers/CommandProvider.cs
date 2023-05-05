@@ -24,7 +24,7 @@ namespace TopicTwister.Home.Shared.Providers
         private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
         private IUniqueIdGenerator _matchesIdGenerator;
         private IMatchesRepository _matchRepository;
-        private IUserReadOnlyRepository _userReadOnlyRepository;
+        private IUsersReadOnlyRepository _usersReadOnlyRepository;
         private IUserMatchesRepository _userMatchesRepository;
         private ICreateMatchSubUseCase _createMatchSubUseCase;
 
@@ -62,17 +62,17 @@ namespace TopicTwister.Home.Shared.Providers
                 matchesIdGenerator: _matchesIdGenerator,
                 matchDaoMapper: _matchDaoMapper);
 
-            _userReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+            _usersReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
 
             _userMatchesRepository = new UserMatchesRepositoryJson(
                 resourceName: "DevelopmentData/UserMatches",
                 matchesRepository: _matchRepository,
-                userReadOnlyRepository: _userReadOnlyRepository);
+                usersReadOnlyRepository: _usersReadOnlyRepository);
 
             _createMatchSubUseCase = new CreateMatchSubUseCase(
                 matchesRepository: _matchRepository,
                 userMatchesRepository: _userMatchesRepository,
-                userRespository: _userReadOnlyRepository,
+                usersReadOnlyRespository: _usersReadOnlyRepository,
                 matchDtoMapper: _matchDtoMapper);
 
             _categoryDaoMapper = new CategoryDaoJsonMapper();
