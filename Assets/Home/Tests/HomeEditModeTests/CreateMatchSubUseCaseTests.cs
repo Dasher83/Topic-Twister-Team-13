@@ -15,7 +15,7 @@ public class CreateMatchSubUseCaseTests
 {
     private ICreateMatchSubUseCase _useCase;
     private IUserMatchesRepository _userMatchesRepository;
-    private IdtoMapper<Match, MatchDto> _mapper;
+    private IdtoMapper<Match, MatchDto> _matchDtomapper;
     private IMatchesRepository _matchesRepository;
     private IUserReadOnlyRepository _userRepository;
 
@@ -34,8 +34,8 @@ public class CreateMatchSubUseCaseTests
         int testUserId = 1;
         int botId = 2;
 
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
-        _mapper.ToDTO(Arg.Any<Match>()).Returns(
+        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtomapper.ToDTO(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 Match match = (Match)args[0];
@@ -44,7 +44,7 @@ public class CreateMatchSubUseCaseTests
                     startDateTime: match.StartDateTime,
                     endDateTime: match.EndDateTime);
             });
-        _mapper.FromDTO(Arg.Any<MatchDto>()).Returns(
+        _matchDtomapper.FromDTO(Arg.Any<MatchDto>()).Returns(
             (args) =>
             {
                 MatchDto match = (MatchDto)args[0];
@@ -109,7 +109,7 @@ public class CreateMatchSubUseCaseTests
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             userRespository: _userRepository,
-            matchDtoMapper: _mapper);
+            matchDtoMapper: _matchDtomapper);
         #endregion
 
         #region -- Act --
@@ -121,12 +121,12 @@ public class CreateMatchSubUseCaseTests
         Assert.AreEqual(expectedMatch, actualResult.Outcome);
 
         UserMatch expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: true, user: _userRepository.Get(testUserId).Outcome, match: _mapper.FromDTO(expectedMatch));
+            score: 0, isWinner: false, hasInitiative: true, user: _userRepository.Get(testUserId).Outcome, match: _matchDtomapper.FromDTO(expectedMatch));
         UserMatch actualUserMatch = _userMatchesRepository.Get(userId: testUserId, matchId: expectedMatch.Id).Outcome;
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
 
         expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: false, user: _userRepository.Get(botId).Outcome, match: _mapper.FromDTO(expectedMatch));
+            score: 0, isWinner: false, hasInitiative: false, user: _userRepository.Get(botId).Outcome, match: _matchDtomapper.FromDTO(expectedMatch));
         actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id).Outcome;
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         #endregion
@@ -136,7 +136,8 @@ public class CreateMatchSubUseCaseTests
     public void Test_fail_due_to_unknown_user()
     {
         #region -- Arrange --
-        int userId = -1;
+        int firstUserId = -1;
+        int secondUserId = -2;
 
         _matchesRepository = Substitute.For<IMatchesRepository>();
         _matchesRepository.Save(Arg.Any<Match>()).Returns(
@@ -145,7 +146,7 @@ public class CreateMatchSubUseCaseTests
                 return Operation<Match>.Success(outcome: (Match)(args[0]));
             });
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
 
         _userRepository = Substitute.For<IUserReadOnlyRepository>();
         _userRepository.Get(Arg.Any<int>()).Returns(
@@ -163,7 +164,50 @@ public class CreateMatchSubUseCaseTests
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             userRespository: _userRepository,
-            matchDtoMapper: _mapper);
+            matchDtoMapper: _matchDtomapper);
+        #endregion
+
+        #region -- Act --
+        Operation<MatchDto> useCaseOperation = _useCase.Create(firstUserId, secondUserId);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(expected: $"User not found with id: {firstUserId}", actual: useCaseOperation.ErrorMessage);
+        #endregion
+    }
+
+    [Test]
+    public void Test_fail_due_to_opponents_being_the_same_user()
+    {
+        #region -- Arrange --
+        int userId = 0;
+
+        _matchesRepository = Substitute.For<IMatchesRepository>();
+
+        _matchesRepository.Save(Arg.Any<Match>()).Returns(
+            (args) =>
+            {
+                return Operation<Match>.Success(outcome: (Match)(args[0]));
+            });
+
+        _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
+        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+
+        _userRepository = Substitute.For<IUserReadOnlyRepository>();
+
+        _userRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                return Operation<User>.Success(new User(id: userId));
+            });
+
+        _useCase = new CreateMatchSubUseCase(
+            matchesRepository: _matchesRepository,
+            userMatchesRepository: _userMatchesRepository,
+            userRespository: _userRepository,
+            matchDtoMapper: _matchDtomapper);
         #endregion
 
         #region -- Act --
@@ -172,14 +216,10 @@ public class CreateMatchSubUseCaseTests
 
         #region -- Assert --
         Assert.IsFalse(useCaseOperation.WasOk);
-        Assert.AreEqual(expected: $"User not found with id: {userId}", actual: useCaseOperation.ErrorMessage);
+        Assert.AreEqual(
+            expected: $"A user cannot have a match with itself. User id: {userId}",
+            actual: useCaseOperation.ErrorMessage);
         #endregion
-    }
-
-    [Test]
-    public void Test_fail_due_to_opponents_being_the_same_user()
-    {
-        throw new NotImplementedException();
     }
 
     [Test]
@@ -202,13 +242,13 @@ public class CreateMatchSubUseCaseTests
                 return Operation<User>.Success(new User(id: userId));
             });
 
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
 
         _useCase = new CreateMatchSubUseCase(
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             userRespository: _userRepository,
-            matchDtoMapper: _mapper);
+            matchDtoMapper: _matchDtomapper);
         #endregion
 
         #region -- Act --
@@ -243,7 +283,7 @@ public class CreateMatchSubUseCaseTests
             });
 
 
-        _mapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _userMatchesRepository.Save(Arg.Any<UserMatch>()).Returns(
             (args) =>
@@ -255,7 +295,7 @@ public class CreateMatchSubUseCaseTests
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             userRespository: _userRepository,
-            matchDtoMapper: _mapper);
+            matchDtoMapper: _matchDtomapper);
         #endregion
 
         #region -- Act --

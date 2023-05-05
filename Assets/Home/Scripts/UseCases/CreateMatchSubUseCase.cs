@@ -28,6 +28,12 @@ namespace TopicTwister.Home.UseCases
 
         public Operation<MatchDto> Create(int userIdPlayerOne, int userIdPlayerTwo)
         {
+            if(userIdPlayerOne == userIdPlayerTwo)
+            {
+                return Operation<MatchDto>.Failure(
+                    errorMessage: $"A user cannot have a match with itself. User id: {userIdPlayerOne}");
+            }
+
             Match match = new Match();
             Operation<Match> saveMatchOperation = _matchesRepository.Save(match);
 
