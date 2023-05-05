@@ -104,7 +104,7 @@ public class StartTurnUseCaseUnitTests
     }
 
     [Test]
-    public void Test_fail_due_to_already_started_turn()
+    public void Test_fail_due_to_already_created_turn()
     {
         throw new NotImplementedException();
     }
