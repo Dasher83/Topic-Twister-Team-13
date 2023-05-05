@@ -17,7 +17,9 @@ public class StartTurnUseCaseIntegrationTests
     public void SetUp()
     {
         _userReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
-        _useCase = new StartTurnUseCase(userReadOnlyRepository: _userReadOnlyRepository);
+        _useCase = new StartTurnUseCase(
+            usersReadOnlyRepository: _userReadOnlyRepository,
+            matchesReadOnlyRepository: null);
     }
 
     [Test]
@@ -31,10 +33,11 @@ public class StartTurnUseCaseIntegrationTests
     {
         #region -- Arrange --
         int userId = -1;
+        int matchId = -1;
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchDto: null);
+        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
         #endregion
 
         #region -- Assert --
