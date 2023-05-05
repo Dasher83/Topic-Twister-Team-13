@@ -5,8 +5,6 @@ using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Utils;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 
 public class StartTurnUseCaseUnitTests
@@ -14,12 +12,14 @@ public class StartTurnUseCaseUnitTests
     IStartTurnUseCase _useCase;
     IUsersReadOnlyRepository _usersReadOnlyRepository;
     IMatchesReadOnlyRepository _matchReadOnlyRepository;
+    IUserMatchesRepository _userMatchesRepository;
 
     [SetUp]
     public void SetUp()
     {
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
         _matchReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
+        _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
     }
 
     [Test]
@@ -44,7 +44,8 @@ public class StartTurnUseCaseUnitTests
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchReadOnlyRepository);
+            matchesReadOnlyRepository: _matchReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository);
         #endregion
 
         #region -- Act --
@@ -82,7 +83,8 @@ public class StartTurnUseCaseUnitTests
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchReadOnlyRepository);
+            matchesReadOnlyRepository: _matchReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository);
         #endregion
 
         #region -- Act --
@@ -100,7 +102,48 @@ public class StartTurnUseCaseUnitTests
     [Test]
     public void Test_fail_due_to_user_not_in_match()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = 0;
+        int matchId = -1;
+
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                return Operation<User>.Success(outcome: new User(id: userId));
+            });
+
+        _matchReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int matchId = (int)args[0];
+                return Operation<Match>.Success(outcome: new Match(id: matchId, startDateTime: DateTime.UtcNow));
+            });
+
+        _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                int matchId = (int)args[1];
+                return Operation<UserMatch>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
+            });
+
+        _useCase = new StartTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository);
+        #endregion
+
+        #region -- Act --
+        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"User with id {userId} is not involved in match with id {matchId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]

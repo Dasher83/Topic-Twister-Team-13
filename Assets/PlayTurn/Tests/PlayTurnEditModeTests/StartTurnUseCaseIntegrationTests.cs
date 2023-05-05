@@ -14,6 +14,7 @@ using UnityEngine.TestTools;
 public class StartTurnUseCaseIntegrationTests
 {
     IStartTurnUseCase _useCase;
+    IUserMatchesRepository _userMatchesRepository;
     IUsersReadOnlyRepository _usersReadOnlyRepository;
     IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
@@ -31,7 +32,8 @@ public class StartTurnUseCaseIntegrationTests
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository);
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository);
     }
 
     [Test]

@@ -8,13 +8,16 @@ public class StartTurnUseCase : IStartTurnUseCase
 {
     public IUsersReadOnlyRepository _usersReadOnlyRepository;
     public IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+    public IUserMatchesRepository _userMatchesRepository;
 
     public StartTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
-        IMatchesReadOnlyRepository matchesReadOnlyRepository)
+        IMatchesReadOnlyRepository matchesReadOnlyRepository,
+        IUserMatchesRepository userMatchesRepository)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
+        _userMatchesRepository = userMatchesRepository;
     }
 
     public Operation<bool> Execute(int userId, int matchId)
@@ -31,6 +34,13 @@ public class StartTurnUseCase : IStartTurnUseCase
         if (getMatchOperation.WasOk == false)
         {
             return Operation<bool>.Failure(errorMessage: getMatchOperation.ErrorMessage);
+        }
+
+        Operation<UserMatch> getUserMatchOperation = _userMatchesRepository.Get(userId: userId, matchId: matchId);
+
+        if(getUserMatchOperation.WasOk == false)
+        {
+            return Operation<bool>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
         }
 
         throw new System.NotImplementedException();
