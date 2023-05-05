@@ -177,6 +177,12 @@ public class CreateMatchSubUseCaseTests
     }
 
     [Test]
+    public void Test_fail_due_to_opponents_being_the_same_user()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
     public void Test_fail_due_to_match_not_saved()
     {
         #region -- Arrange --
