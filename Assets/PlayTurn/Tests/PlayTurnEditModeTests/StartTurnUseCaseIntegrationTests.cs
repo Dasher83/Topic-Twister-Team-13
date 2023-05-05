@@ -6,9 +6,9 @@ using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.Repositories.IdGenerators;
+using TopicTwister.Shared.TestUtils;
 using TopicTwister.Shared.Utils;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 
 public class StartTurnUseCaseIntegrationTests
@@ -18,6 +18,9 @@ public class StartTurnUseCaseIntegrationTests
     IUsersReadOnlyRepository _usersReadOnlyRepository;
     IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
+
+    IMatchesRepository _matchesRepository;
+    IUniqueIdGenerator _matchIdGenerator;
 
     [SetUp]
     public void SetUp()
@@ -30,10 +33,30 @@ public class StartTurnUseCaseIntegrationTests
 
         _usersReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
 
+        _userMatchesRepository = new UserMatchesRepositoryJson(
+            resourceName: "TestData/Matches",
+            matchesRepository: _matchesRepository,
+            usersReadOnlyRepository: _usersReadOnlyRepository);
+
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository);
+
+        _matchIdGenerator = new MatchesIdGenerator(_matchesReadOnlyRepository);
+
+        _matchesRepository = new MatchesRepositoryJson(
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: _matchIdGenerator,
+            matchDaoMapper: _matchDaoJsonMapper);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        new MatchesDeleteJson().Delete();
+        new UserMatchesDeleteJson().Delete();
+        new RoundsDeleteJson().Delete();
     }
 
     [Test]
@@ -85,7 +108,23 @@ public class StartTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_user_not_in_match()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = 0;
+        Match match = new Match();
+        Operation<Match> saveMatchOperation = _matchesRepository.Save(match);
+        match = saveMatchOperation.Outcome;
+        #endregion
+
+        #region -- Act --
+        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: match.Id);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"User with id {userId} is not involved in match with id {match.Id}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]

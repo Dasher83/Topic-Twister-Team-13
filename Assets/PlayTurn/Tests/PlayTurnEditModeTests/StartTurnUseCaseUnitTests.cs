@@ -11,14 +11,14 @@ public class StartTurnUseCaseUnitTests
 {
     IStartTurnUseCase _useCase;
     IUsersReadOnlyRepository _usersReadOnlyRepository;
-    IMatchesReadOnlyRepository _matchReadOnlyRepository;
+    IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     IUserMatchesRepository _userMatchesRepository;
 
     [SetUp]
     public void SetUp()
     {
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
-        _matchReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
+        _matchesReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
     }
 
@@ -44,7 +44,7 @@ public class StartTurnUseCaseUnitTests
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository);
         #endregion
 
@@ -74,7 +74,7 @@ public class StartTurnUseCaseUnitTests
                 return Operation<User>.Success(outcome: new User(id: userId));
             });
 
-        _matchReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+        _matchesReadOnlyRepository.Get(Arg.Any<int>()).Returns(
             (args) =>
             {
                 int matchId = (int)args[0];
@@ -83,7 +83,7 @@ public class StartTurnUseCaseUnitTests
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository);
         #endregion
 
@@ -113,7 +113,7 @@ public class StartTurnUseCaseUnitTests
                 return Operation<User>.Success(outcome: new User(id: userId));
             });
 
-        _matchReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+        _matchesReadOnlyRepository.Get(Arg.Any<int>()).Returns(
             (args) =>
             {
                 int matchId = (int)args[0];
@@ -130,7 +130,7 @@ public class StartTurnUseCaseUnitTests
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository);
         #endregion
 
