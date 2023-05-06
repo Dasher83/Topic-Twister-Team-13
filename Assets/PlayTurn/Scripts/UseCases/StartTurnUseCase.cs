@@ -51,6 +51,7 @@ public class StartTurnUseCase : IStartTurnUseCase
             startDateTime: match.StartDateTime,
             endDateTime: match.EndDateTime,
             rounds: rounds);
+
         int activeRoundId = match.ActiveRound.Id;
 
         Operation<UserMatch> getUserMatchOperation = _userMatchesRepository.Get(userId: userId, matchId: matchId);

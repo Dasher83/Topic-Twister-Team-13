@@ -129,6 +129,23 @@ public class StartTurnUseCaseUnitTests
                 int matchId = (int)args[1];
                 return Operation<UserMatch>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
             });
+
+        _roundsReadOnlyRepository.GetMany(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                Match match = _matchesReadOnlyRepository.Get(matchId).Outcome;
+                List<Round> rounds = new List<Round>()
+                {
+                    new Round(
+                        id: 0,
+                        roundNumber: 0,
+                        initialLetter: 'A',
+                        isActive: true,
+                        match: match,
+                        categories: new List<Category>())
+                };
+                return Operation<List<Round>>.Success(outcome: rounds);
+            });
         #endregion
 
         #region -- Act --
