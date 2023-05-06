@@ -21,8 +21,8 @@ namespace TopicTwister.Shared.DAOs
 
         public Turn FromDAO(TurnDaoJson turnDao)
         {
-            User user = _usersReadOnlyRepository.Get(id: turnDao.UserId).Outcome;
-            Round round = _roundsReadOnlyRepository.Get(id: turnDao.RoundId).Outcome;
+            User user = _usersReadOnlyRepository.Get(id: turnDao.UserId).Result;
+            Round round = _roundsReadOnlyRepository.Get(id: turnDao.RoundId).Result;
             Turn turn = new Turn(user: user, round: round, startDateTime: turnDao.StartDateTime);
             return turn;
         }

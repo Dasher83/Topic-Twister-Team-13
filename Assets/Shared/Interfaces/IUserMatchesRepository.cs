@@ -9,6 +9,7 @@ namespace TopicTwister.Shared.Interfaces
     {
         Operation<UserMatch> Insert(UserMatch userMatch);
         Operation<UserMatch> Get(int userId, int matchId);
+        Operation<UserMatch[]> GetMany(int matchId);
         Operation<List<UserMatch>> GetAll();
     }
 }

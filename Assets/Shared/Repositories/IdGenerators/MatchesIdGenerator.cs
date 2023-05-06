@@ -26,7 +26,7 @@ namespace TopicTwister.Shared.Repositories.IdGenerators
 
         private void UpdateCurrentId()
         {
-            _matches = _matchesReadOnlyRepository.GetAll().Outcome;
+            _matches = _matchesReadOnlyRepository.GetAll().Result;
             if (_matches != null && _matches.Any())
             {
                 _currentId = _matches.OrderByDescending(match => match.Id).First().Id + 1;

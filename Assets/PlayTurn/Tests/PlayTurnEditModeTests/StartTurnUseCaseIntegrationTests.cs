@@ -158,7 +158,7 @@ public class StartTurnUseCaseIntegrationTests
         int userId = 0;
         Match match = new Match();
         Operation<Match> saveMatchOperation = _matchesRepository.Insert(match);
-        match = saveMatchOperation.Outcome;
+        match = saveMatchOperation.Result;
 
         Round round = new Round(
             roundNumber: 0,
@@ -167,7 +167,7 @@ public class StartTurnUseCaseIntegrationTests
             match: match,
             categories: new List<Category>());
 
-        round = _roundsRepository.Insert(round).Outcome;
+        round = _roundsRepository.Insert(round).Result;
         #endregion
 
         #region -- Act --
@@ -189,7 +189,7 @@ public class StartTurnUseCaseIntegrationTests
         int userId = 0;
         Match match = new Match();
         Operation<Match> saveMatchOperation = _matchesRepository.Insert(match);
-        match = saveMatchOperation.Outcome;
+        match = saveMatchOperation.Result;
 
         Round round = new Round(
             roundNumber: 0,
@@ -198,7 +198,7 @@ public class StartTurnUseCaseIntegrationTests
             match: match,
             categories: new List<Category>());
 
-        round = _roundsRepository.Insert(round).Outcome;
+        round = _roundsRepository.Insert(round).Result;
 
         match = new Match(
             id: match.Id,
@@ -210,18 +210,18 @@ public class StartTurnUseCaseIntegrationTests
             score: 0,
             isWinner: false,
             hasInitiative: true,
-            user: _usersReadOnlyRepository.Get(id: userId).Outcome,
+            user: _usersReadOnlyRepository.Get(id: userId).Result,
             match: match);
 
-        userMatch = _userMatchesRepository.Insert(userMatch).Outcome;
+        userMatch = _userMatchesRepository.Insert(userMatch).Result;
 
         Turn turn = new Turn(
-            user: _usersReadOnlyRepository.Get(id: userId).Outcome,
+            user: _usersReadOnlyRepository.Get(id: userId).Result,
             round: round,
             startDateTime: DateTime.UtcNow);
 
         Operation<Turn> insertTurnOperation = _turnsRepository.Insert(turn);
-        turn = insertTurnOperation.Outcome;
+        turn = insertTurnOperation.Result;
         #endregion
 
         #region -- Act --

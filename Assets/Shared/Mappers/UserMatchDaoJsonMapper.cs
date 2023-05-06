@@ -23,9 +23,9 @@ namespace TopicTwister.Shared.Mappers
 
         public UserMatch FromDAO(UserMatchDaoJson userMatchDAO)
         {
-            User user = _userReadOnlyRepository.Get(id: userMatchDAO.UserId).Outcome;
+            User user = _userReadOnlyRepository.Get(id: userMatchDAO.UserId).Result;
             Operation<Match> getMatchOperation = _matchesReadOnlyRepository.Get(id: userMatchDAO.MatchId);
-            Match match = getMatchOperation.Outcome;
+            Match match = getMatchOperation.Result;
 
             return new UserMatch(
                 score: userMatchDAO.Score,

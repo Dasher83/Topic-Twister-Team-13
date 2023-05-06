@@ -31,7 +31,7 @@ namespace TopicTwister.Shared.Repositories
         public Operation<char> GetRandomLetter()
         {
             char randomLetter = _readCache.ToList().OrderBy(_ => _random.Next()).First();
-            return Operation<char>.Success(outcome: randomLetter);
+            return Operation<char>.Success(result: randomLetter);
         }
     }
 }

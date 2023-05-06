@@ -43,8 +43,8 @@ public class StartTurnUseCase : IStartTurnUseCase
             return Operation<bool>.Failure(errorMessage: getMatchOperation.ErrorMessage);
         }
 
-        Match match = getMatchOperation.Outcome;
-        List<Round> rounds = _roundsReadOnlyRepository.GetMany(match.Id).Outcome;
+        Match match = getMatchOperation.Result;
+        List<Round> rounds = _roundsReadOnlyRepository.GetMany(match.Id).Result;
 
         match = new Match(
             id: match.Id,
@@ -68,6 +68,40 @@ public class StartTurnUseCase : IStartTurnUseCase
             return Operation<bool>.Failure(
                 errorMessage: $"Turn already exists for user with id {userId} " +
                 $"in round with id {activeRoundId} in match with id {matchId}");
+        }
+
+        Operation<UserMatch[]> getUserMatchesOperation = _userMatchesRepository.GetMany(matchId: matchId);
+
+        if (getUserMatchesOperation.WasOk == false)
+        {
+            return Operation<bool>.Failure(errorMessage: getUserMatchesOperation.ErrorMessage);
+        }
+
+        UserMatch[] userMatches = getUserMatchesOperation.Result;
+        UserMatch opponentUserMatch;
+
+        if (userMatches[0].User.Id != userId)
+        {
+            opponentUserMatch = userMatches[0];
+        }
+        else
+        {
+            opponentUserMatch = userMatches[1];
+        }
+
+        if (opponentUserMatch.HasInitiative)
+        {
+            Operation<Turn> getOpponentTurnOperation = _turnsReadOnlyRepository
+                .Get(userId: opponentUserMatch.User.Id, roundId: activeRoundId);
+
+            if(getOpponentTurnOperation.WasOk == false)
+            {
+                string message = $"Turn can not be created for user with id {userId} " +
+                $"in round with id {activeRoundId} in match with id {matchId} " +
+                $"since user with id {opponentUserMatch.User.Id} has not finished his turn yet";
+
+                return Operation<bool>.Failure(errorMessage: message);
+            }
         }
 
         throw new System.NotImplementedException();

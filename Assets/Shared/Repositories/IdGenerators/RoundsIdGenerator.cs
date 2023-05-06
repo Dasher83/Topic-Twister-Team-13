@@ -26,7 +26,7 @@ namespace TopicTwister.Repositories.IdGenerators
 
         private void UpdateCurrentId()
         {
-            _rounds = _roundsReadOnlyRepository.GetAll().Outcome;
+            _rounds = _roundsReadOnlyRepository.GetAll().Result;
             if (_rounds != null && _rounds.Any())
             {
                 _currentId = _rounds.OrderByDescending(round => round.Id).First().Id + 1;

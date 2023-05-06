@@ -42,7 +42,7 @@ namespace TopicTwister.Home.UseCases
                 return Operation<MatchDto>.Failure(errorMessage: saveMatchOperation.ErrorMessage);
             }
 
-            match = saveMatchOperation.Outcome;
+            match = saveMatchOperation.Result;
 
             Operation<UserMatch> createUserMatchOperation = CreateUserMatch(userId: userIdPlayerOne, match: match);
             
@@ -58,7 +58,7 @@ namespace TopicTwister.Home.UseCases
                 return Operation<MatchDto>.Failure(errorMessage: createUserMatchOperation.ErrorMessage);
             }
 
-            Operation<MatchDto> useCaseResult = Operation<MatchDto>.Success(outcome: _matchDtoMapper.ToDTO(match));
+            Operation<MatchDto> useCaseResult = Operation<MatchDto>.Success(result: _matchDtoMapper.ToDTO(match));
             return useCaseResult;
         }
 
@@ -71,7 +71,7 @@ namespace TopicTwister.Home.UseCases
                 return Operation<UserMatch>.Failure(errorMessage: getUserOperation.ErrorMessage);
             }
 
-            User user = getUserOperation.Outcome;
+            User user = getUserOperation.Result;
 
             UserMatch userMatch = new UserMatch(
                 score: 0,
@@ -88,7 +88,7 @@ namespace TopicTwister.Home.UseCases
                 return Operation<UserMatch>.Failure(errorMessage: saveUserMatchOperation.ErrorMessage);
             }
 
-            return Operation<UserMatch>.Success(outcome: userMatch);
+            return Operation<UserMatch>.Success(result: userMatch);
         }
     }
 }

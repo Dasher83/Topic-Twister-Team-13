@@ -18,7 +18,7 @@ namespace TopicTwister.Home.Services
         public MatchDto StartMatch()
         {
             Operation<MatchDto> useCaseOperation = _useCase.Execute(userId: UserTestId);
-            return useCaseOperation.WasOk ? useCaseOperation.Outcome : null;
+            return useCaseOperation.WasOk ? useCaseOperation.Result : null;
         }
     }
 }

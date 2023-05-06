@@ -30,7 +30,7 @@ namespace TopicTwister.Home.UseCases
                 return Operation<MatchDto>.Failure(errorMessage: createMatchSubUseCaseOperation.ErrorMessage);
             }
 
-            MatchDto matchDto = createMatchSubUseCaseOperation.Outcome;
+            MatchDto matchDto = createMatchSubUseCaseOperation.Result;
 
             Operation<RoundWithCategoriesDto> createRoundSubUseCaseOperation = _createRoundSubUseCase.Execute(matchDto);
 

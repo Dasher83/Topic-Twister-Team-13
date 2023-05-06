@@ -17,7 +17,7 @@ namespace TopicTwister.NewRound.Services
         public RoundWithCategoriesDto Create(MatchDto matchDto)
         {
             Operation<RoundWithCategoriesDto> useCaseResult = _useCase.Execute(matchDto);
-            return useCaseResult.WasOk ? useCaseResult.Outcome : null;
+            return useCaseResult.WasOk ? useCaseResult.Result : null;
         }
     }
 }

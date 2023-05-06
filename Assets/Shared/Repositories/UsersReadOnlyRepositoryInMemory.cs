@@ -28,7 +28,7 @@ namespace TopicTwister.Shared.Repositories
             {
                 return Operation<User>.Failure(errorMessage: $"User not found with id: {id}");
             }
-            return Operation<User>.Success(outcome: user);
+            return Operation<User>.Success(result: user);
         }
     }
 }

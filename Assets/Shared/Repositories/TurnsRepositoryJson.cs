@@ -26,7 +26,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Turn>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            readCache = turnDaoMapper.ToDAOs(GetAllOperationResult.Outcome);
+            readCache = turnDaoMapper.ToDAOs(GetAllOperationResult.Result);
             _writeCache = readCache.ToList();
             TurnDaoJson turnDao = turnDaoMapper.ToDAO(turn);
             _writeCache.Add(turnDao);

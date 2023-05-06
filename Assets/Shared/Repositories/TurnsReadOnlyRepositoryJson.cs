@@ -24,7 +24,7 @@ namespace TopicTwister.Shared.Repositories
         {
             path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
             this.turnDaoMapper = turnDaoMapper;
-            readCache = this.turnDaoMapper.ToDAOs(GetAll().Outcome);
+            readCache = this.turnDaoMapper.ToDAOs(GetAll().Result);
         }
 
         public Operation<Turn> Get(int userId, int roundId)
@@ -35,7 +35,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Turn>.Failure(errorMessage: GetAllOperation.ErrorMessage);
             }
 
-            readCache = turnDaoMapper.ToDAOs(GetAllOperation.Outcome);
+            readCache = turnDaoMapper.ToDAOs(GetAllOperation.Result);
 
             TurnDaoJson turnDao = readCache.SingleOrDefault(
                 turn => turn.UserId == userId && turn.RoundId == roundId);
@@ -46,7 +46,7 @@ namespace TopicTwister.Shared.Repositories
             }
             Turn turn = turnDaoMapper.FromDAO(turnDao);
 
-            return Operation<Turn>.Success(outcome: turn);
+            return Operation<Turn>.Success(result: turn);
         }
 
         public Operation<List<Turn>> GetAll()
@@ -54,7 +54,7 @@ namespace TopicTwister.Shared.Repositories
             string data = File.ReadAllText(path);
             readCache = new TurnDaosCollectionDeserializer().Deserialize(data).Turns;
             List<Turn> turns = turnDaoMapper.FromDAOs(readCache.ToList());
-            return Operation<List<Turn>>.Success(outcome: turns);
+            return Operation<List<Turn>>.Success(result: turns);
         }
     }
 }

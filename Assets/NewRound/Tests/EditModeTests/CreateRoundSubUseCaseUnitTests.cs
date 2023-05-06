@@ -40,7 +40,7 @@ namespace NewRoundTests
                     Round round = (Round)args[0];
                     Operation<Round> saveRoundOperation = Operation<Round>
                     .Success(
-                        outcome: new Round(
+                        result: new Round(
                             id: nextFakeId,
                             roundNumber: round.RoundNumber,
                             initialLetter: round.InitialLetter,
@@ -59,7 +59,7 @@ namespace NewRoundTests
 
                     foreach (
                         RoundWithCategoriesDto roundWithCategoriesDto
-                        in actualResults.Select(actualResult => actualResult.Outcome))
+                        in actualResults.Select(actualResult => actualResult.Result))
                     {
                         RoundDto roundDto = new RoundDto(
                             id: roundWithCategoriesDto.RoundDto.Id,
@@ -79,7 +79,7 @@ namespace NewRoundTests
                     .Select(roundWithCategoriesDto => _roundWithCategoriesDtoMapper.FromDTO(roundWithCategoriesDto))
                     .ToList();
 
-                    return Operation<List<Round>>.Success(outcome: rounds);
+                    return Operation<List<Round>>.Success(result: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();
@@ -94,14 +94,14 @@ namespace NewRoundTests
                     List<Round> rounds = new List<Round>();
                     foreach (Operation<RoundWithCategoriesDto> result in actualResults)
                     {
-                        rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Outcome));
+                        rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Result));
                     }
                     Match lambdaMatch = new Match(
                         id,
                         startDateTime,
                         endDateTime: null,
                         rounds: rounds);
-                    return Operation<Match>.Success(outcome: lambdaMatch);
+                    return Operation<Match>.Success(result: lambdaMatch);
                 });
 
             List<Category> categories = new List<Category>()
@@ -134,7 +134,7 @@ namespace NewRoundTests
                 (args) =>
                 {
                     Operation<List<Category>> getRandomCategoriesOperation = Operation<List<Category>>.Success(
-                        outcome: randomCategories[randomCategoriesListIndex]);
+                        result: randomCategories[randomCategoriesListIndex]);
                     randomCategoriesListIndex++;
                     return getRandomCategoriesOperation;
                 });
@@ -146,7 +146,7 @@ namespace NewRoundTests
             _letterRepository.GetRandomLetter().Returns(
                 (args) =>
                 {
-                    Operation<char> getRandomLetterOperation = Operation<char>.Success(outcome: letters[lettersIndex]);
+                    Operation<char> getRandomLetterOperation = Operation<char>.Success(result: letters[lettersIndex]);
                     lettersIndex++;
                     return getRandomLetterOperation;
                 });
@@ -235,13 +235,13 @@ namespace NewRoundTests
             {
                 if (i < MaxRounds - 1)
                 {
-                    Assert.AreNotEqual(actualResults[i].Outcome, actualResults[i+1].Outcome);
+                    Assert.AreNotEqual(actualResults[i].Result, actualResults[i+1].Result);
                 }
                 Assert.IsTrue(actualResults[i].WasOk);
-                Assert.AreEqual(expected: expectedDtos[i], actual: actualResults[i].Outcome);
-                Assert.AreEqual(expected: MaxCategories, actual: actualResults[i].Outcome.CategoryDtos.Count);
-                Assert.IsFalse(actualResults[i].Outcome.CategoryDtos.Any(category => category == null));
-                List<CategoryDto> duplicates = actualResults[i].Outcome.CategoryDtos
+                Assert.AreEqual(expected: expectedDtos[i], actual: actualResults[i].Result);
+                Assert.AreEqual(expected: MaxCategories, actual: actualResults[i].Result.CategoryDtos.Count);
+                Assert.IsFalse(actualResults[i].Result.CategoryDtos.Any(category => category == null));
+                List<CategoryDto> duplicates = actualResults[i].Result.CategoryDtos
                     .GroupBy(category => category.Id)
                     .Where(category => category.Count() > 1)
                     .SelectMany(category => category)
@@ -270,7 +270,7 @@ namespace NewRoundTests
                     {
                         return Operation<Match>.Failure(errorMessage: $"Match not found with id: {id}");
                     }
-                    return Operation<Match>.Success(outcome: new Match(id, startDateTime: startDateTime));
+                    return Operation<Match>.Success(result: new Match(id, startDateTime: startDateTime));
                 });
 
             _categoriesReadOnlyRepository = Substitute.For<ICategoriesReadOnlyRepository>();
@@ -314,11 +314,11 @@ namespace NewRoundTests
                 (args) =>
                 {
                     List<Round> rounds = useCaseOperations
-                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Result))
                     .ToList();
 
                     return Operation<List<Round>>.Success(
-                        outcome: rounds);
+                        result: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();
@@ -328,7 +328,7 @@ namespace NewRoundTests
                 {
                     int id = (int)args[0];
                     return Operation<Match>.Success(
-                        outcome: new Match(
+                        result: new Match(
                             id: id,
                             startDateTime: startDateTime,
                             endDateTime: endDateTime));
@@ -378,11 +378,11 @@ namespace NewRoundTests
                 (args) =>
                 {
                     List<Round> rounds = useCaseOperations
-                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Outcome))
+                    .Select(useCaseResult => _roundWithCategoriesDtoMapper.FromDTO(useCaseResult.Result))
                     .ToList();
 
                     return Operation<List<Round>>.Success(
-                        outcome: rounds);
+                        result: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();
@@ -392,7 +392,7 @@ namespace NewRoundTests
                 {
                     int id = (int)args[0];
                     return Operation<Match>.Success(
-                        outcome: new Match(
+                        result: new Match(
                             id: id,
                             startDateTime: startDateTime,
                             endDateTime: endDateTime));
@@ -441,7 +441,7 @@ namespace NewRoundTests
                     Round round = (Round)args[0];
                     Operation<Round> saveRoundOperationResult = Operation<Round>
                     .Success(
-                        outcome: new Round(
+                        result: new Round(
                             id: nextFakeId,
                             roundNumber: round.RoundNumber,
                             initialLetter: round.InitialLetter,
@@ -460,7 +460,7 @@ namespace NewRoundTests
 
                     foreach(
                         RoundWithCategoriesDto roundWithCategoriesDto
-                        in actualResults.Select(actualResult => actualResult.Outcome))
+                        in actualResults.Select(actualResult => actualResult.Result))
                     {
                         RoundDto roundDto = new RoundDto(
                             id: roundWithCategoriesDto.RoundDto.Id,
@@ -481,7 +481,7 @@ namespace NewRoundTests
                     .ToList();
 
                     return Operation<List<Round>>.Success(
-                        outcome: rounds);
+                        result: rounds);
                 });
 
             _matchesRepository = Substitute.For<IMatchesRepository>();
@@ -496,14 +496,14 @@ namespace NewRoundTests
                     List<Round> rounds = new List<Round>();
                     foreach(Operation<RoundWithCategoriesDto> result in actualResults)
                     {
-                        rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Outcome));
+                        rounds.Add(_roundWithCategoriesDtoMapper.FromDTO(result.Result));
                     }
                     Match lambdaMatch = new Match(
                         id,
                         startDateTime,
                         endDateTime: null,
                         rounds: rounds);
-                    return Operation<Match>.Success(outcome: lambdaMatch);
+                    return Operation<Match>.Success(result: lambdaMatch);
                 });
 
             List<Category> categories = new List<Category>()
@@ -536,7 +536,7 @@ namespace NewRoundTests
                 (args) =>
                 {
                     Operation<List<Category>> getRandomCategoriesOperationResult = Operation<List<Category>>.Success(
-                        outcome: randomCategories[randomCategoriesListIndex]);
+                        result: randomCategories[randomCategoriesListIndex]);
                     randomCategoriesListIndex++;
                     return getRandomCategoriesOperationResult;
                 });
@@ -548,7 +548,7 @@ namespace NewRoundTests
             _letterRepository.GetRandomLetter().Returns(
                 (args) =>
                 {
-                    Operation<char> getRandomLetterOperationResult = Operation<char>.Success(outcome: letters[lettersIndex]);
+                    Operation<char> getRandomLetterOperationResult = Operation<char>.Success(result: letters[lettersIndex]);
                     lettersIndex++;
                     return getRandomLetterOperationResult;
                 });

@@ -51,7 +51,7 @@ public class EvaluateAnswersUseCaseTest
                 order: answer.Order));
         }
 
-        Assert.AreEqual(expectedOperation, actualOperation.Outcome);
+        Assert.AreEqual(expectedOperation, actualOperation.Result);
         #endregion
     }
 
@@ -86,7 +86,7 @@ public class EvaluateAnswersUseCaseTest
                 order: answer.Order));
         }
 
-        Assert.AreEqual(expectedOperation, actualOperation.Outcome);
+        Assert.AreEqual(expectedOperation, actualOperation.Result);
         #endregion
     }
 
@@ -140,7 +140,7 @@ public class EvaluateAnswersUseCaseTest
                         order: answer.Order));
                 }
 
-                Assert.AreEqual(expectedOperation, actualOperation.Outcome);
+                Assert.AreEqual(expectedOperation, actualOperation.Result);
                 #endregion
             }
         }
@@ -215,7 +215,7 @@ public class EvaluateAnswersUseCaseTest
                     order: turnAnswers[4].Order)
             };
 
-            Assert.AreEqual(expectedOperation, actualOperation.Outcome);
+            Assert.AreEqual(expectedOperation, actualOperation.Result);
             #endregion
         }
     }

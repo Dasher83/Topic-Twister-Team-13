@@ -37,7 +37,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Round>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Result);
             _writeCache = _readCache.ToList();
             RoundDaoJson roundDao = _mapper.ToDAO(round);
 
@@ -65,7 +65,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Round>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Result);
             _writeCache = _readCache.ToList();
             RoundDaoJson roundDao = _mapper.ToDAO(round);
             int indexOfObjectToUpdate = _writeCache.FindIndex(dao => dao.Id == round.Id);

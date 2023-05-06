@@ -59,7 +59,7 @@ public class CreateMatchSubUseCaseTests
             (args) =>
             {
                 int userId = (int)args[0];
-                return Operation<User>.Success(outcome: new User(id: userId));
+                return Operation<User>.Success(result: new User(id: userId));
             });
 
         _matchesRepository = Substitute.For<IMatchesRepository>();
@@ -68,7 +68,7 @@ public class CreateMatchSubUseCaseTests
             {
                 Match match = (Match)args[0];
                 return Operation<Match>.Success(
-                    outcome: new Match(
+                    result: new Match(
                         id: 1,
                         startDateTime: match.StartDateTime,
                         endDateTime: match.EndDateTime));
@@ -80,7 +80,7 @@ public class CreateMatchSubUseCaseTests
             {
                 UserMatch userMatch = (UserMatch)args[0];
                 return Operation<UserMatch>.Success(
-                    outcome: new UserMatch(
+                    result: new UserMatch(
                         score: userMatch.Score,
                         isWinner: userMatch.IsWinner,
                         hasInitiative: userMatch.HasInitiative,
@@ -94,7 +94,7 @@ public class CreateMatchSubUseCaseTests
                 int matchId = (int)args[1];
 
                 return Operation<UserMatch>.Success(
-                    outcome: new UserMatch(
+                    result: new UserMatch(
                         score: 0,
                         isWinner: false,
                         hasInitiative: userId == testUserId,
@@ -117,17 +117,17 @@ public class CreateMatchSubUseCaseTests
         #endregion
 
         #region -- Assert --
-        MatchDto expectedMatch = new MatchDto(id: actualResult.Outcome.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
-        Assert.AreEqual(expectedMatch, actualResult.Outcome);
+        MatchDto expectedMatch = new MatchDto(id: actualResult.Result.Id, startDateTime: DateTime.UtcNow, endDateTime: null);
+        Assert.AreEqual(expectedMatch, actualResult.Result);
 
         UserMatch expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: true, user: _usersReadOnlyRepository.Get(testUserId).Outcome, match: _matchDtomapper.FromDTO(expectedMatch));
-        UserMatch actualUserMatch = _userMatchesRepository.Get(userId: testUserId, matchId: expectedMatch.Id).Outcome;
+            score: 0, isWinner: false, hasInitiative: true, user: _usersReadOnlyRepository.Get(testUserId).Result, match: _matchDtomapper.FromDTO(expectedMatch));
+        UserMatch actualUserMatch = _userMatchesRepository.Get(userId: testUserId, matchId: expectedMatch.Id).Result;
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
 
         expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: false, user: _usersReadOnlyRepository.Get(botId).Outcome, match: _matchDtomapper.FromDTO(expectedMatch));
-        actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id).Outcome;
+            score: 0, isWinner: false, hasInitiative: false, user: _usersReadOnlyRepository.Get(botId).Result, match: _matchDtomapper.FromDTO(expectedMatch));
+        actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id).Result;
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         #endregion
     }
@@ -143,7 +143,7 @@ public class CreateMatchSubUseCaseTests
         _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
             {
-                return Operation<Match>.Success(outcome: (Match)(args[0]));
+                return Operation<Match>.Success(result: (Match)(args[0]));
             });
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
@@ -188,7 +188,7 @@ public class CreateMatchSubUseCaseTests
         _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
             {
-                return Operation<Match>.Success(outcome: (Match)(args[0]));
+                return Operation<Match>.Success(result: (Match)(args[0]));
             });
 
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
@@ -269,7 +269,7 @@ public class CreateMatchSubUseCaseTests
         _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
                 Operation<Match>.Success(
-                    outcome: new Match(
+                    result: new Match(
                         id: 1,
                         startDateTime: DateTime.UtcNow,
                         endDateTime: null )));
@@ -279,7 +279,7 @@ public class CreateMatchSubUseCaseTests
             (args) =>
             {
                 int userId = (int)args[0];
-                return Operation<User>.Success(outcome: new User(userId));
+                return Operation<User>.Success(result: new User(userId));
             });
 
 

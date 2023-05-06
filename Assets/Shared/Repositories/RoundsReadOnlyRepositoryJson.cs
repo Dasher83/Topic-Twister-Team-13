@@ -28,7 +28,7 @@ namespace TopicTwister.Shared.Repositories
             _mapper = new RoundDaoJsonMapper(
                 matchesRepository: matchesReadOnlyRepository,
                 categoriesRepository: categoriesReadOnlyRepository);
-            _readCache = _mapper.ToDAOs(GetAll().Outcome);
+            _readCache = _mapper.ToDAOs(GetAll().Result);
         }
 
         public Operation<List<Round>> GetAll()
@@ -36,7 +36,7 @@ namespace TopicTwister.Shared.Repositories
             string data = File.ReadAllText(_path);
             _readCache = new RoundDaosCollectionDeserializer().Deserialize(data).RoundDaos;
             List<Round> rounds = _mapper.FromDAOs(_readCache.ToList());
-            return Operation<List<Round>>.Success(outcome: rounds);
+            return Operation<List<Round>>.Success(result: rounds);
         }
 
         public Operation<Round> Get(int id)
@@ -48,7 +48,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Round>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Result);
             RoundDaoJson roundDao = _readCache.SingleOrDefault(round => round.Id == id && round.Id >= 0);
 
             if (roundDao == null)
@@ -58,7 +58,7 @@ namespace TopicTwister.Shared.Repositories
             }
             Round round = _mapper.FromDAO(roundDao);
 
-            return Operation<Round>.Success(outcome: round);
+            return Operation<Round>.Success(result: round);
         }
 
         public Operation<List<Round>> GetMany(List<int> roundIds)
@@ -70,7 +70,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<List<Round>>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Result);
 
             List<Round> filteredRounds = _readCache
                 .Where(roundDao => roundIds.Contains(roundDao.Id))
@@ -86,7 +86,7 @@ namespace TopicTwister.Shared.Repositories
                 Operation<List<Round>>.Failure(errorMessage: $"Rounds not found with ids: [{string.Join(", ", notFoundIds)}]");
             }
 
-            return Operation<List<Round>>.Success(outcome: filteredRounds);
+            return Operation<List<Round>>.Success(result: filteredRounds);
         }
 
         public Operation<List<Round>> GetMany(int matchId)
@@ -98,7 +98,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<List<Round>>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _mapper.ToDAOs(GetAllOperationResult.Result);
 
             List<Round> filteredRounds = _readCache
                 .Where(roundDao => matchId == roundDao.MatchId)
@@ -111,7 +111,7 @@ namespace TopicTwister.Shared.Repositories
                 Operation<List<Round>>.Failure(errorMessage: $"Too many rounds found for match with id: {matchId}");
             }
 
-            return Operation<List<Round>>.Success(outcome: filteredRounds);
+            return Operation<List<Round>>.Success(result: filteredRounds);
         }
     }
 }

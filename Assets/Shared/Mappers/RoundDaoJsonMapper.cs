@@ -22,8 +22,8 @@ namespace TopicTwister.Shared.Mappers
 
         public Round FromDAO(RoundDaoJson roundDao)
         {
-            Match match = _matchesRepository.Get(roundDao.MatchId).Outcome;
-            List<Category> categories = _categoriesRepository.GetMany(roundDao.CategoryIds).Outcome;
+            Match match = _matchesRepository.Get(roundDao.MatchId).Result;
+            List<Category> categories = _categoriesRepository.GetMany(roundDao.CategoryIds).Result;
 
             return new Round(
                 id: roundDao.Id,
