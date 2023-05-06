@@ -2,7 +2,7 @@ using TMPro;
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using UnityEngine;
 using System;
-
+using TopicTwister.Shared.Configuration.Constants;
 
 namespace TopicTwister.PlayTurn.Timer
 {
@@ -13,7 +13,6 @@ namespace TopicTwister.PlayTurn.Timer
         private bool _invokedTimedOut;
         private DateTime _initialDateTime;
         private TimeSpan _elapsedTime;
-        private const float TurnMaxDuration = 60f;
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
 
@@ -51,7 +50,7 @@ namespace TopicTwister.PlayTurn.Timer
         {
             _elapsedTime = DateTime.UtcNow.Subtract(_initialDateTime);
 
-            if (_elapsedTime.TotalSeconds > TurnMaxDuration && !_invokedTimedOut) 
+            if (_elapsedTime.TotalSeconds > Configuration.TimeGameDuration && !_invokedTimedOut) 
             {
                 NumericTime = 0f;
                 _timeOutEventContainer.TimeOut?.Invoke();
@@ -59,7 +58,7 @@ namespace TopicTwister.PlayTurn.Timer
             }
             else if (!_invokedTimedOut)
             {
-                NumericTime = TurnMaxDuration - (float)_elapsedTime.TotalSeconds;
+                NumericTime = Configuration.TimeGameDuration - (float)_elapsedTime.TotalSeconds;
             }
         }
 
