@@ -6,18 +6,24 @@ using TopicTwister.Shared.Utils;
 
 public class StartTurnUseCase : IStartTurnUseCase
 {
-    public IUsersReadOnlyRepository _usersReadOnlyRepository;
-    public IMatchesReadOnlyRepository _matchesReadOnlyRepository;
-    public IUserMatchesRepository _userMatchesRepository;
+    private IUsersReadOnlyRepository _usersReadOnlyRepository;
+    private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+    private IUserMatchesRepository _userMatchesRepository;
+    private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
+    private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
 
     public StartTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
         IMatchesReadOnlyRepository matchesReadOnlyRepository,
-        IUserMatchesRepository userMatchesRepository)
+        IUserMatchesRepository userMatchesRepository,
+        ITurnsReadOnlyRepository turnsReadOnlyRepository,
+        IRoundsReadOnlyRepository roundsReadOnlyRepository)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
         _userMatchesRepository = userMatchesRepository;
+        _turnsReadOnlyRepository = turnsReadOnlyRepository;
+        _roundsReadOnlyRepository = roundsReadOnlyRepository;
     }
 
     public Operation<bool> Execute(int userId, int matchId)
@@ -36,11 +42,27 @@ public class StartTurnUseCase : IStartTurnUseCase
             return Operation<bool>.Failure(errorMessage: getMatchOperation.ErrorMessage);
         }
 
+        Match match = getMatchOperation.Outcome;
+        match = new Match(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime,
+            rounds: _roundsReadOnlyRepository.GetMany(match.Id).Outcome);
+        int activeRoundId = match.ActiveRound.Id;
+
         Operation<UserMatch> getUserMatchOperation = _userMatchesRepository.Get(userId: userId, matchId: matchId);
 
         if(getUserMatchOperation.WasOk == false)
         {
             return Operation<bool>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
+        }
+
+        Operation<Turn> getTurnOperation = _turnsReadOnlyRepository.Get(userId: userId, roundId: activeRoundId);
+        
+        if(getTurnOperation.WasOk == false)
+        {
+            return Operation<bool>.Failure(
+                errorMessage: $"Turn already exists for user with id {userId} in round with id {activeRoundId} in match with id {matchId}");
         }
 
         throw new System.NotImplementedException();

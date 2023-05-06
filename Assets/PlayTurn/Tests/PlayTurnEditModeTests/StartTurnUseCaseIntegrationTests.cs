@@ -17,7 +17,9 @@ public class StartTurnUseCaseIntegrationTests
     IUserMatchesRepository _userMatchesRepository;
     IUsersReadOnlyRepository _usersReadOnlyRepository;
     IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+    private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
     IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
+    IRoundsReadOnlyRepository _roundsReadOnlyRepository;
 
     IMatchesRepository _matchesRepository;
     IUniqueIdGenerator _matchIdGenerator;
@@ -41,7 +43,10 @@ public class StartTurnUseCaseIntegrationTests
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository);
+            userMatchesRepository: _userMatchesRepository,
+            turnsReadOnlyRepository: _turnsReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository
+            );
 
         _matchIdGenerator = new MatchesIdGenerator(_matchesReadOnlyRepository);
 

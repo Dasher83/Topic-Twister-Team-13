@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
@@ -13,6 +14,8 @@ public class StartTurnUseCaseUnitTests
     IUsersReadOnlyRepository _usersReadOnlyRepository;
     IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     IUserMatchesRepository _userMatchesRepository;
+    ITurnsReadOnlyRepository _turnsReadOnlyRepository;
+    IRoundsReadOnlyRepository _roundsReadOnlyRepository;
 
     [SetUp]
     public void SetUp()
@@ -20,6 +23,8 @@ public class StartTurnUseCaseUnitTests
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
         _matchesReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
+        _turnsReadOnlyRepository = Substitute.For<ITurnsReadOnlyRepository>();
+        _roundsReadOnlyRepository = Substitute.For<IRoundsReadOnlyRepository>();
     }
 
     [Test]
@@ -45,7 +50,9 @@ public class StartTurnUseCaseUnitTests
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository);
+            userMatchesRepository: _userMatchesRepository,
+            turnsReadOnlyRepository: _turnsReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
         #endregion
 
         #region -- Act --
@@ -84,7 +91,9 @@ public class StartTurnUseCaseUnitTests
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository);
+            userMatchesRepository: _userMatchesRepository,
+            turnsReadOnlyRepository: _turnsReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
         #endregion
 
         #region -- Act --
@@ -104,7 +113,7 @@ public class StartTurnUseCaseUnitTests
     {
         #region -- Arrange --
         int userId = 0;
-        int matchId = -1;
+        int matchId = 0;
 
         _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
             (args) =>
@@ -131,7 +140,9 @@ public class StartTurnUseCaseUnitTests
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository);
+            userMatchesRepository: _userMatchesRepository,
+            turnsReadOnlyRepository: _turnsReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
         #endregion
 
         #region -- Act --
@@ -149,7 +160,84 @@ public class StartTurnUseCaseUnitTests
     [Test]
     public void Test_fail_due_to_already_created_turn()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+
+        int userId = 0;
+        int matchId = 0;
+        int roundId = 1;
+
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                return Operation<User>.Success(outcome: new User(id: userId));
+            });
+
+        _matchesReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int matchId = (int)args[0];
+                return Operation<Match>.Success(outcome: new Match(id: matchId, startDateTime: DateTime.UtcNow));
+            });
+
+        _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                int matchId = (int)args[1];
+                return Operation<UserMatch>.Success(outcome: new UserMatch(
+                    score: 2, 
+                    isWinner: true, 
+                    hasInitiative: true, 
+                    new User(userId), 
+                    new Match(id: matchId, startDateTime: DateTime.UtcNow))
+                );
+            });
+        
+        _roundsReadOnlyRepository.GetMany(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int matchId = (int)args[0];
+                List<Round> rounds = new List<Round>();
+                Round activeRound = new Round(
+                    id: roundId, 
+                    roundNumber: 0, 
+                    initialLetter: 'f', 
+                    isActive: true,
+                    match: new Match(id: matchId, startDateTime: DateTime.UtcNow), 
+                    categories: new List<Category>());
+                rounds.Add(activeRound);
+                return Operation<List<Round>>.Success(outcome: rounds);
+            });
+
+        _turnsReadOnlyRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                int roundId = (int)args[1];
+                return Operation<Turn>.Failure(
+                    errorMessage: $"Turn already exists for user with id {userId} in round with id {roundId} in match with id {matchId}");
+            });
+
+        _useCase = new StartTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository,
+            turnsReadOnlyRepository: _turnsReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+
+        #endregion
+
+        #region -- Act --
+        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Turn already exists for user with id {userId} in round with id {roundId} in match with id {matchId}", 
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]
