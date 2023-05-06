@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TopicTwister.Shared
+﻿
+namespace TopicTwister.Shared.Configuration.Constants
 {
     public static class Configuration
     {
-        public const int TimeGameDuration = 60; 
+        public const float TimeGameDuration = 60f;
+
+        public const int CategoriesPerRound = 5;
 
         public const float DurationFromBeginRoundToPlayTurn = 2f;
 
