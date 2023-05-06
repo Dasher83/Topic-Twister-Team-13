@@ -159,10 +159,19 @@ public class StartTurnUseCaseIntegrationTests
         Match match = new Match();
         Operation<Match> saveMatchOperation = _matchesRepository.Insert(match);
         match = saveMatchOperation.Outcome;
+
+        Round round = new Round(
+            roundNumber: 0,
+            initialLetter: 'A',
+            isActive: true,
+            match: match,
+            categories: new List<Category>());
+
+        round = _roundsRepository.Insert(round).Outcome;
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: match.Id);
+        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: round.Match.Id);
         #endregion
 
         #region -- Assert --
