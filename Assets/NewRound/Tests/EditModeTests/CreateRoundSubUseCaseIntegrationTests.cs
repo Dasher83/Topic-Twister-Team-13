@@ -91,7 +91,7 @@ namespace NewRoundTests
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
             Match match = new Match(startDateTime: startDateTime);
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Outcome;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
 
             int idsIndex = 0;
@@ -196,7 +196,7 @@ namespace NewRoundTests
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
 
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Outcome;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
@@ -223,7 +223,7 @@ namespace NewRoundTests
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
 
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Outcome;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
@@ -247,7 +247,7 @@ namespace NewRoundTests
             Match match = new Match(
                 startDateTime: startDateTime);
 
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Outcome;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
 
             int idsIndex = 0;

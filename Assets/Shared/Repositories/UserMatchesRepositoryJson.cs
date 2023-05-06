@@ -18,20 +18,19 @@ namespace TopicTwister.Shared.Repositories
         private string _path;
         private List<UserMatchDaoJson> _userMatchesWriteCache;
         private List<UserMatchDaoJson> _userMatchesReadCache;
-        private IdaoMapper<UserMatch, UserMatchDaoJson> _mapper;
+        private IdaoMapper<UserMatch, UserMatchDaoJson> _userMatchDaoMapper;
         
 
         public UserMatchesRepositoryJson(
             string resourceName,
-            IMatchesRepository matchesRepository,
-            IUsersReadOnlyRepository usersReadOnlyRepository)
+            IdaoMapper<UserMatch, UserMatchDaoJson> userMatchDaoMapper)
         {
-            _mapper = new UserMatchJsonDaoMapper(matchesRepository: matchesRepository, userReadOnlyRepository: usersReadOnlyRepository);
             _path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
-            _userMatchesReadCache = _mapper.ToDAOs(GetAll().Outcome);
+            _userMatchDaoMapper = userMatchDaoMapper;
+            _userMatchesReadCache = _userMatchDaoMapper.ToDAOs(GetAll().Outcome);
         }
 
-        public Operation<UserMatch> Save(UserMatch userMatch)
+        public Operation<UserMatch> Insert(UserMatch userMatch)
         {
             Operation<List<UserMatch>> GetAllOperationResult = GetAll();
             if (GetAllOperationResult.WasOk == false)
@@ -39,9 +38,9 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<UserMatch>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _userMatchesReadCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _userMatchesReadCache = _userMatchDaoMapper.ToDAOs(GetAllOperationResult.Outcome);
             _userMatchesWriteCache = _userMatchesReadCache.ToList();
-            UserMatchDaoJson userMatchDaoJson = _mapper.ToDAO(userMatch);
+            UserMatchDaoJson userMatchDaoJson = _userMatchDaoMapper.ToDAO(userMatch);
             _userMatchesWriteCache.Add(userMatchDaoJson);
             UserMatchDaosCollection collection = new UserMatchDaosCollection(_userMatchesWriteCache.ToArray());
             string data = new UserMatchDaosCollectionSerializer().Serialize(collection);
@@ -61,7 +60,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<UserMatch>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _userMatchesReadCache = _mapper.ToDAOs(GetAllOperationResult.Outcome);
+            _userMatchesReadCache = _userMatchDaoMapper.ToDAOs(GetAllOperationResult.Outcome);
             UserMatchDaoJson userMatchObtained = _userMatchesReadCache.SingleOrDefault(
                 userMatch => userMatch.UserId == userId && userMatch.MatchId == matchId);
             if (userMatchObtained == null)
@@ -69,7 +68,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<UserMatch>.Failure(
                     errorMessage: $"UserMatch not found with userId: {userId} & matchId: {matchId}");
             }
-            UserMatch userMatch = _mapper.FromDAO(userMatchObtained);
+            UserMatch userMatch = _userMatchDaoMapper.FromDAO(userMatchObtained);
             return Operation<UserMatch>.Success(outcome: userMatch);
         }
 
@@ -77,7 +76,7 @@ namespace TopicTwister.Shared.Repositories
         {
             string data = File.ReadAllText(_path);
             _userMatchesReadCache = new UserMatchDaosCollectionDeserializer().Deserialize(data).UserMatches;
-            List<UserMatch> userMatches = _mapper.FromDAOs(_userMatchesReadCache.ToList());
+            List<UserMatch> userMatches = _userMatchDaoMapper.FromDAOs(_userMatchesReadCache.ToList());
             return Operation<List<UserMatch>>.Success(outcome: userMatches);
         }
     }

@@ -10,22 +10,22 @@ namespace TopicTwister.Shared.Serialization.Shared
     [Serializable]
     public class RoundDaosCollection
     {
-        [SerializeField] private RoundDaoJson[] _roundDaos;
+        [SerializeField] private RoundDaoJson[] _rounds;
 
         public RoundDaosCollection(RoundDaoJson[] roundDaos)
         {
-            _roundDaos = roundDaos;
+            _rounds = roundDaos;
         }
 
         public List<RoundDaoJson> RoundDaos
         {
             get
             {
-                if(_roundDaos == null )
+                if(_rounds == null )
                 {
                     return new List<RoundDaoJson>();
                 }
-                return _roundDaos.ToList();
+                return _rounds.ToList();
             }
         }
     }

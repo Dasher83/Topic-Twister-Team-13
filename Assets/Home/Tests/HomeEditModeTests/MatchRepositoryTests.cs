@@ -52,7 +52,7 @@ public class MatchRepositoryTests
 
         for(int i = 0; i < matches.Count; i++)
         {
-            matches[i] = _matchesRepository.Save(matches[i]).Outcome;
+            matches[i] = _matchesRepository.Insert(matches[i]).Outcome;
             Match expectedMatch = new Match(id: ids[i], startDateTime: DateTime.UtcNow, endDateTime: null);
             Assert.AreEqual(expected: expectedMatch, actual: matches[i]);
         }
@@ -85,7 +85,7 @@ public class MatchRepositoryTests
             matchesIdGenerator: idGenerator,
             matchDaoMapper: _matchDaoMapper);
 
-        Operation<Match> saveOperation = _matchesRepository.Save(
+        Operation<Match> saveOperation = _matchesRepository.Insert(
                 match: new Match(
                     id: -1,
                     startDateTime: DateTime.UtcNow));

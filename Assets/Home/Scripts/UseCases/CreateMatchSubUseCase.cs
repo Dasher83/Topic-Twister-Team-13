@@ -35,7 +35,7 @@ namespace TopicTwister.Home.UseCases
             }
 
             Match match = new Match();
-            Operation<Match> saveMatchOperation = _matchesRepository.Save(match);
+            Operation<Match> saveMatchOperation = _matchesRepository.Insert(match);
 
             if (saveMatchOperation.WasOk == false)
             {
@@ -80,7 +80,7 @@ namespace TopicTwister.Home.UseCases
                 user: user,
                 match: match);
 
-            Operation<UserMatch> saveUserMatchOperation = _userMatchesRepository.Save(userMatch);
+            Operation<UserMatch> saveUserMatchOperation = _userMatchesRepository.Insert(userMatch);
 
             if (saveUserMatchOperation.WasOk == false)
             {

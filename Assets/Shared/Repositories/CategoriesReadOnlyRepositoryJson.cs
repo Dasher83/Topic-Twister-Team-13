@@ -23,7 +23,7 @@ namespace TopicTwister.Shared.Repositories
         {
             _resourceName = resourceName;
             string data = Resources.Load<TextAsset>($"JSON/{_resourceName}").text;
-            _readCache = JsonUtility.FromJson<CategoryDaoCollection>(data).Categories;
+            _readCache = JsonUtility.FromJson<CategoryDaosCollection>(data).Categories;
             _categoryDaoMapper = categoryDaoJsonMapper;
         }
 

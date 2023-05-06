@@ -3,30 +3,36 @@ using System.Linq;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Shared.Mappers
 {
-    public class UserMatchJsonDaoMapper : IdaoMapper<UserMatch, UserMatchDaoJson>
+    public class UserMatchDaoJsonMapper : IdaoMapper<UserMatch, UserMatchDaoJson>
     {
-        private IMatchesRepository _matchesRepository;
+        private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
         private IUsersReadOnlyRepository _userReadOnlyRepository;
 
-        public UserMatchJsonDaoMapper(IMatchesRepository matchesRepository, IUsersReadOnlyRepository userReadOnlyRepository)
+        public UserMatchDaoJsonMapper(
+            IMatchesReadOnlyRepository matchesReadOnlyRepository,
+            IUsersReadOnlyRepository userReadOnlyRepository)
         {
-            _matchesRepository = matchesRepository;
+            _matchesReadOnlyRepository = matchesReadOnlyRepository;
             _userReadOnlyRepository = userReadOnlyRepository;
         }
 
         public UserMatch FromDAO(UserMatchDaoJson userMatchDAO)
         {
+            User user = _userReadOnlyRepository.Get(id: userMatchDAO.UserId).Outcome;
+            Operation<Match> getMatchOperation = _matchesReadOnlyRepository.Get(id: userMatchDAO.MatchId);
+            Match match = getMatchOperation.Outcome;
+
             return new UserMatch(
                 score: userMatchDAO.Score,
                 isWinner: userMatchDAO.IsWinner,
                 hasInitiative: userMatchDAO.HasInitiative,
-                user: _userReadOnlyRepository.Get(userMatchDAO.UserId).Outcome,
-                match: _matchesRepository.Get(id: userMatchDAO.MatchId).Outcome
-                );
+                user: user,
+                match: match);
         }
 
         public List<UserMatch> FromDAOs(List<UserMatchDaoJson> userMatchesDAOs)
@@ -41,8 +47,7 @@ namespace TopicTwister.Shared.Mappers
                 isWinner: userMatch.IsWinner,
                 hasInitiative: userMatch.HasInitiative,
                 userId: userMatch.User.Id,
-                matchId: userMatch.Match.Id
-                );
+                matchId: userMatch.Match.Id);
         }
 
         public List<UserMatchDaoJson> ToDAOs(List<UserMatch> userMatches)

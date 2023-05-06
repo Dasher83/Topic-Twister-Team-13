@@ -25,7 +25,7 @@ namespace TopicTwister.Shared.Repositories
             _matchesIdGenerator = matchesIdGenerator;
         }
 
-        public Operation<Match> Save(Match match)
+        public Operation<Match> Insert(Match match)
         {
             Operation<List<Match>> GetAllOperationResult = GetAll();
             if (GetAllOperationResult.WasOk == false)

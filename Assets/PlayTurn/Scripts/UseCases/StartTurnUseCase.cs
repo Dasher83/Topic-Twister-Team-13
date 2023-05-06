@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
@@ -43,11 +44,13 @@ public class StartTurnUseCase : IStartTurnUseCase
         }
 
         Match match = getMatchOperation.Outcome;
+        List<Round> rounds = _roundsReadOnlyRepository.GetMany(match.Id).Outcome;
+
         match = new Match(
             id: match.Id,
             startDateTime: match.StartDateTime,
             endDateTime: match.EndDateTime,
-            rounds: _roundsReadOnlyRepository.GetMany(match.Id).Outcome);
+            rounds: rounds);
         int activeRoundId = match.ActiveRound.Id;
 
         Operation<UserMatch> getUserMatchOperation = _userMatchesRepository.Get(userId: userId, matchId: matchId);
@@ -59,10 +62,11 @@ public class StartTurnUseCase : IStartTurnUseCase
 
         Operation<Turn> getTurnOperation = _turnsReadOnlyRepository.Get(userId: userId, roundId: activeRoundId);
         
-        if(getTurnOperation.WasOk == false)
+        if(getTurnOperation.WasOk == true)
         {
             return Operation<bool>.Failure(
-                errorMessage: $"Turn already exists for user with id {userId} in round with id {activeRoundId} in match with id {matchId}");
+                errorMessage: $"Turn already exists for user with id {userId} " +
+                $"in round with id {activeRoundId} in match with id {matchId}");
         }
 
         throw new System.NotImplementedException();

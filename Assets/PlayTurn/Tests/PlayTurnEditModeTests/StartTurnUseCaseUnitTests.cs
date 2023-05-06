@@ -25,6 +25,13 @@ public class StartTurnUseCaseUnitTests
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _turnsReadOnlyRepository = Substitute.For<ITurnsReadOnlyRepository>();
         _roundsReadOnlyRepository = Substitute.For<IRoundsReadOnlyRepository>();
+
+        _useCase = new StartTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository,
+            turnsReadOnlyRepository: _turnsReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
     }
 
     [Test]
@@ -46,13 +53,6 @@ public class StartTurnUseCaseUnitTests
                 int userId = (int)args[0];
                 return Operation<User>.Failure(errorMessage: $"User not found with id: {userId}");
             });
-
-        _useCase = new StartTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository,
-            turnsReadOnlyRepository: _turnsReadOnlyRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
         #endregion
 
         #region -- Act --
@@ -87,13 +87,6 @@ public class StartTurnUseCaseUnitTests
                 int matchId = (int)args[0];
                 return Operation<Match>.Failure(errorMessage: $"Match not found with id: {matchId}");
             });
-
-        _useCase = new StartTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository,
-            turnsReadOnlyRepository: _turnsReadOnlyRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
         #endregion
 
         #region -- Act --
@@ -136,13 +129,6 @@ public class StartTurnUseCaseUnitTests
                 int matchId = (int)args[1];
                 return Operation<UserMatch>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
             });
-
-        _useCase = new StartTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository,
-            turnsReadOnlyRepository: _turnsReadOnlyRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
         #endregion
 
         #region -- Act --
@@ -193,7 +179,21 @@ public class StartTurnUseCaseUnitTests
                     new Match(id: matchId, startDateTime: DateTime.UtcNow))
                 );
             });
-        
+
+        _roundsReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int roundId = (int)args[0];
+                Round round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'f',
+                    isActive: true,
+                    match: new Match(id: matchId, startDateTime: DateTime.UtcNow),
+                    categories: new List<Category>());
+                return Operation<Round>.Success(outcome: round);
+            });
+
         _roundsReadOnlyRepository.GetMany(Arg.Any<int>()).Returns(
             (args) =>
             {
@@ -215,17 +215,14 @@ public class StartTurnUseCaseUnitTests
             {
                 int userId = (int)args[0];
                 int roundId = (int)args[1];
-                return Operation<Turn>.Failure(
-                    errorMessage: $"Turn already exists for user with id {userId} in round with id {roundId} in match with id {matchId}");
+
+                Turn turn = new Turn(
+                    user: _usersReadOnlyRepository.Get(userId).Outcome,
+                    round: _roundsReadOnlyRepository.Get(roundId).Outcome,
+                    startDateTime: DateTime.UtcNow);
+
+                return Operation<Turn>.Success(outcome: turn);
             });
-
-        _useCase = new StartTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository,
-            turnsReadOnlyRepository: _turnsReadOnlyRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
-
         #endregion
 
         #region -- Act --

@@ -63,7 +63,7 @@ public class CreateMatchSubUseCaseTests
             });
 
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Save(Arg.Any<Match>()).Returns(
+        _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 Match match = (Match)args[0];
@@ -75,7 +75,7 @@ public class CreateMatchSubUseCaseTests
             });
 
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _userMatchesRepository.Save(Arg.Any<UserMatch>()).Returns(
+        _userMatchesRepository.Insert(Arg.Any<UserMatch>()).Returns(
             (args) =>
             {
                 UserMatch userMatch = (UserMatch)args[0];
@@ -140,7 +140,7 @@ public class CreateMatchSubUseCaseTests
         int secondUserId = -2;
 
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Save(Arg.Any<Match>()).Returns(
+        _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 return Operation<Match>.Success(outcome: (Match)(args[0]));
@@ -185,7 +185,7 @@ public class CreateMatchSubUseCaseTests
 
         _matchesRepository = Substitute.For<IMatchesRepository>();
 
-        _matchesRepository.Save(Arg.Any<Match>()).Returns(
+        _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 return Operation<Match>.Success(outcome: (Match)(args[0]));
@@ -227,7 +227,7 @@ public class CreateMatchSubUseCaseTests
     {
         #region -- Arrange --
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Save(Arg.Any<Match>()).Returns(
+        _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 return Operation<Match>.Failure(errorMessage: "failure to save Match");
@@ -266,7 +266,7 @@ public class CreateMatchSubUseCaseTests
     {
         #region -- Arrange --
         _matchesRepository = Substitute.For<IMatchesRepository>();
-        _matchesRepository.Save(Arg.Any<Match>()).Returns(
+        _matchesRepository.Insert(Arg.Any<Match>()).Returns(
             (args) =>
                 Operation<Match>.Success(
                     outcome: new Match(
@@ -285,7 +285,7 @@ public class CreateMatchSubUseCaseTests
 
         _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _userMatchesRepository.Save(Arg.Any<UserMatch>()).Returns(
+        _userMatchesRepository.Insert(Arg.Any<UserMatch>()).Returns(
             (args) =>
             {
                 return Operation<UserMatch>.Failure(errorMessage: "failure to save UserMatch");

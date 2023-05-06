@@ -7,7 +7,7 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface IUserMatchesRepository
     {
-        Operation<UserMatch> Save(UserMatch userMatch);
+        Operation<UserMatch> Insert(UserMatch userMatch);
         Operation<UserMatch> Get(int userId, int matchId);
         Operation<List<UserMatch>> GetAll();
     }
