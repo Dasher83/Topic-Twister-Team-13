@@ -105,9 +105,60 @@ public class StartTurnUseCaseIntegrationTests
     }
 
     [Test]
-    public void Test_ok_scenario()
+    public void Test_ok()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userWithIniciativeId = 0;
+        int userWithoutIniciativeId = 1;
+
+        User userWithIniciative = _usersReadOnlyRepository.Get(id: userWithIniciativeId).Result;
+        User userWithoutIniciative = _usersReadOnlyRepository.Get(id: userWithoutIniciativeId).Result;
+
+        Match match = new Match();
+        match = _matchesRepository.Insert(match).Result;
+
+        UserMatch userWithIniciativeMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: userWithIniciative,
+            match: match);
+
+        _userMatchesRepository.Insert(userWithIniciativeMatch);
+
+        UserMatch userWithoutIniciativeMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: false,
+            user: userWithoutIniciative,
+            match: match);
+
+        _userMatchesRepository.Insert(userWithoutIniciativeMatch);
+
+        Round activeRound = new Round(
+            roundNumber: 0,
+            initialLetter: 'f',
+            isActive: true,
+            match: match,
+            categories: new List<Category>());
+
+        activeRound = _roundsRepository.Insert(activeRound).Result;
+        #endregion
+
+        #region -- Act --
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userWithIniciativeId, matchId: match.Id);
+        #endregion
+
+        #region -- Assert --
+        TurnDto expectedTurnDto = new TurnDto(
+            userId: userWithIniciative.Id,
+            roundId: activeRound.Id,
+            startDateTime: DateTime.UtcNow,
+            endDateTime: null);
+
+        Assert.IsTrue(useCaseOperation.WasOk);
+        Assert.AreEqual(expected: expectedTurnDto, actual: useCaseOperation.Result);
+        #endregion
     }
 
     [Test]
