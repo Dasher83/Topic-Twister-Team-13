@@ -15,7 +15,7 @@ namespace TopicTwister.Shared.Utils
             {
                 if (_wasOk == false)
                 {
-                    string message = "Cannot access Outcome property when the operation was not successful.";
+                    string message = "Cannot access Result property when the operation was not successful.";
                     throw new InvalidOperationException(message);
                 }
 

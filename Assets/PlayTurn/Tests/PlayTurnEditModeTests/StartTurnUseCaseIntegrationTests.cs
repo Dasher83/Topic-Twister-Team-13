@@ -247,6 +247,53 @@ public class StartTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_user_turn_order()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userWithIniciativeId = 1;
+        int userWithoutIniciativeId = 2;
+        Match match = new Match();
+        match = _matchesRepository.Insert(match).Result;
+
+        Round round = new Round(
+            roundNumber: 0,
+            initialLetter: 'G',
+            isActive: true,
+            match: match,
+            categories: new List<Category>());
+
+        round = _roundsRepository.Insert(round).Result;
+        User userWithoutIniciative = _usersReadOnlyRepository.Get(userWithoutIniciativeId).Result;
+
+        UserMatch userWithoutIniciativeMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: false,
+            user: userWithoutIniciative,
+            match: match);
+        userWithoutIniciativeMatch = _userMatchesRepository.Insert(userWithoutIniciativeMatch).Result;
+
+        User userWithIniciative = _usersReadOnlyRepository.Get(userWithIniciativeId).Result;
+
+        UserMatch userWithIniciativeMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: userWithIniciative,
+            match: match);
+        userWithIniciativeMatch = _userMatchesRepository.Insert(userWithIniciativeMatch).Result;
+        #endregion
+
+        #region -- Act --
+        Operation<bool> useCaseOperation = _useCase.Execute(
+            userId: userWithoutIniciative.Id, matchId: match.Id);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Turn can not be created for user with id {userWithoutIniciativeMatch.User.Id} " +
+                $"in round with id {round.Id} in match with id {match.Id} " +
+                $"since user with id {userWithIniciativeMatch.User.Id} has not finished his turn yet",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 }
