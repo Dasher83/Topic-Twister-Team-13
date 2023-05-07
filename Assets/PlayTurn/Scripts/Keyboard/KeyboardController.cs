@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
+using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 
 
@@ -9,7 +10,7 @@ namespace TopicTwister.PlayTurn.Keyboard
     {
         [SerializeField] private TimeOutEventScriptable _timeOutEventContainer;
         [SerializeField] private InterruptTurnEventScriptable _interruptTurnEventContainer;
-        [SerializeField] private TurnAnswersDraftScriptable _turnAnswersDraftData;
+        [SerializeField] private MatchCacheScriptable _matchCacheData;
         [SerializeField] private UserInputPressedEventScriptable _userInputPressedEventContainer;
 
         private int _currentIndex;
@@ -33,19 +34,19 @@ namespace TopicTwister.PlayTurn.Keyboard
         public void AddLetter(string letter)
         {
             if (_blockKeyboard) return;
-            _turnAnswersDraftData.AddUserInput(userInput: letter, index: _currentIndex);
+            _matchCacheData.AddUserInput(userInput: letter, index: _currentIndex);
         }
 
         public void EreaseLetter()
         {
             if (_blockKeyboard) return;
-            _turnAnswersDraftData.RemoveUserInput(_currentIndex);
+            _matchCacheData.RemoveUserInput(_currentIndex);
         }
 
         public void AddSpace()
         {
             if (_blockKeyboard) return;
-            _turnAnswersDraftData.AddUserInput(userInput: " ", index: _currentIndex);
+            _matchCacheData.AddUserInput(userInput: " ", index: _currentIndex);
         }
 
         private void InputEndEventHandler()

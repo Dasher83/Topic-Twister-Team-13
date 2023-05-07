@@ -1,20 +1,19 @@
 using System;
-using TopicTwister.Shared.DTOs;
 using UnityEngine;
 
 
-namespace TopicTwister.PlayTurn.Shared.DTOs
+namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class TurnAnswerDraftDTO
+    public class TurnAnswerDraftDto
     {
         [SerializeField] private CategoryDto _category;
         [SerializeField] private string _userInput;
         [SerializeField] private int _order;
 
-        private TurnAnswerDraftDTO() { }
+        private TurnAnswerDraftDto() { }
 
-        public TurnAnswerDraftDTO(CategoryDto category, int order)
+        public TurnAnswerDraftDto(CategoryDto category, int order)
         {
             _category = category;
             _userInput = "";

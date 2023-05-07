@@ -24,19 +24,18 @@ namespace TopicTwister.Home.Views
         [SerializeField]
         private MatchCacheScriptable _matchCacheData;
 
-        private IStartBotMatchPresenter _presenter;
-
         private void Start()
         {
+            _matchCacheData.Initialize();
+            new StartBotMatchPresenter(view: this);
             GetComponent<Button>().onClick.AddListener(StartMatchWithBot);
-            _presenter = new StartBotMatchPresenter(view: this);
         }
 
         public void StartMatchWithBot()
         {
             _fakeMatchData.Initialize();
             StartMatchVersusBot?.Invoke();
-            _loadSceneEventContainer.LoadSceneWithoutDelay(Scenes.BeginRoundScene);
+            _loadSceneEventContainer.LoadSceneWithoutDelay(Configuration.Scenes.BeginRoundScene);
             GetComponent<Button>().onClick.RemoveListener(StartMatchWithBot);
         }
 

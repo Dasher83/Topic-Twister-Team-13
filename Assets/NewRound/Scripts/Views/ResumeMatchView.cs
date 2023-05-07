@@ -32,11 +32,10 @@ namespace TopicTwister.NewRound.Views
 
         private Button _initialLetterButton;
         private TextMeshProUGUI __initialLetterText;
-        private IResumeMatchPresenter _presenter;
 
         private void Start()
         {
-            _presenter = new ResumeMatchPresenter(this);
+            new ResumeMatchPresenter(this);
             OnLoad?.Invoke(_matchCacheData.MatchDto);
             _initialLetterButton = _initialLetterButtonContainer.GetComponentInChildren<Button>();
             __initialLetterText = _initialLetterButtonContainer.GetComponentInChildren<TextMeshProUGUI>();
@@ -46,7 +45,11 @@ namespace TopicTwister.NewRound.Views
         private void InitialLetterRevealed()
         {
             __initialLetterText.text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
-            _loadSceneEventContainer.LoadSceneWithDelay?.Invoke(Scenes.PlayTurn, 2f);
+
+            _loadSceneEventContainer.LoadSceneWithDelay?.Invoke(
+                Configuration.Scenes.PlayTurn,
+                Configuration.TransitionsDuration.FromBeginRoundToPlayTurn);
+
             _initialLetterButton.enabled = false;
         }
 

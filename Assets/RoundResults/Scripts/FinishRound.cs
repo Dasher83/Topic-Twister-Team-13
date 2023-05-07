@@ -26,11 +26,11 @@ public class FinishRound : MonoBehaviour
         {
             Debug.Log("Aumenté la ronda");
             _roundEndedEventContainer.RoundEnded?.Invoke();
-            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.BeginRoundScene);
+            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Configuration.Scenes.BeginRoundScene);
         }
         else
         {
-            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.MatchResult);
+            _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Configuration.Scenes.MatchResult);
         }
         GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
     }

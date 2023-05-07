@@ -103,7 +103,7 @@ namespace TopicTwister.TurnResult.Views
 
         public void FinishTurnReview()
         {
-            _eventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.RoundResults);
+            _eventContainer.LoadSceneWithoutDelay?.Invoke(Configuration.Scenes.RoundResults);
         }
     }
 }

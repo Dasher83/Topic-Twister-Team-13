@@ -1,4 +1,4 @@
-namespace TopicTwister.Shared.Utils
+namespace TopicTwister.Shared.Constants
 {
     public static class EventDelegates
     {

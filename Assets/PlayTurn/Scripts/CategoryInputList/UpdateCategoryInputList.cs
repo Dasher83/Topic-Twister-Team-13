@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TMPro;
-using TopicTwister.PlayTurn.Shared.ScriptableObjects;
+using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 
 
@@ -9,13 +9,13 @@ namespace TopicTwister.PlayTurn.CategoryInputList
     public class UpdateCategoryInputList : MonoBehaviour
     {
         [SerializeField]
-        private TurnAnswersDraftScriptable _turnAnswerDraftData;
+        private MatchCacheScriptable _matchCacheData;
 
         private List<TextMeshProUGUI> _texts;
 
         private void UpdateText(int index)
         {
-            _texts[index].text = _turnAnswerDraftData.TurnAnswerDrafts[index].UserInput;
+            _texts[index].text = _matchCacheData.TurnAnswerDrafts[index].UserInput;
         }
 
         void Start()
@@ -26,7 +26,7 @@ namespace TopicTwister.PlayTurn.CategoryInputList
             {
                 _texts.Add(child.Find("UserInput").GetComponent<TextMeshProUGUI>());
             }
-            _turnAnswerDraftData.UserInputChanged += UpdateText;
+            _matchCacheData.UserInputChanged += UpdateText;
         }
     }
 }
