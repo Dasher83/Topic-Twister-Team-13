@@ -2,9 +2,9 @@
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 
 
-namespace TopicTwister.PlayTurn.Commands
+namespace TopicTwister.PlayTurn.UI
 {
-    public class FocusInputCommand : MonoBehaviour
+    public class FocusInput : MonoBehaviour
     {
         [SerializeField] private UserInputPressedEventScriptable _eventContainer;
 

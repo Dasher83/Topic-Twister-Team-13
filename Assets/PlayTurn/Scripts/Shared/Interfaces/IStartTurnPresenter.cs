@@ -2,6 +2,6 @@ namespace TopicTwister.PlayTurn.Shared.Interfaces
 {
     public interface IStartTurnPresenter
     {
-        // TODO
+        void OnLoadEventHandler(int userId, int roundId);
     }
 }
