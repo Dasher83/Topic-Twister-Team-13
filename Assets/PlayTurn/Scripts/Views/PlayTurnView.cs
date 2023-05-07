@@ -5,11 +5,11 @@ using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using TopicTwister.PlayTurn.Shared.DTOs;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Constants;
-
+using TopicTwister.Shared.Utils;
 
 namespace TopicTwister.PlayTurn.Views
 {
-    public class PlayTurnView : MonoBehaviour
+    public class PlayTurnView : MonoBehaviour, IPlayTurnView
     {
         [SerializeField]
         private MatchCacheScriptable _matchCacheData;
@@ -38,11 +38,14 @@ namespace TopicTwister.PlayTurn.Views
         [SerializeField]
         private LoadSceneEventScriptable _loadSceneEventContainer;
 
+        public event EventDelegates.PlayTurnView.LoadEventHandler OnLoad;
+
         private void Start()
         {
             LoadRoundData();
             _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
             _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
+            OnLoad?.Invoke(userId: _, roundId: _);
         }
 
         private void LoadRoundData()
@@ -63,7 +66,7 @@ namespace TopicTwister.PlayTurn.Views
             _turnAnswersDraftData.Initialize(turnAnswerDrafts);
         }
 
-        public void CaptureAndSaveDataEventHandler()
+        private void CaptureAndSaveDataEventHandler()
         {
             _turnAnswersData.ClearAnswers();
 
@@ -82,6 +85,11 @@ namespace TopicTwister.PlayTurn.Views
 
             _turnAnswersData.AddAnswers(turnAnswers);
             _loadSceneEventContainer.LoadSceneWithDelay(Scenes.TurnResultScene, 1f);
+        }
+
+        public void ReceiveUpdate(TurnDto turn)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
