@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TopicTwister.Shared.Interfaces;
@@ -34,10 +35,14 @@ namespace TopicTwister.Shared.DAOs
 
         public TurnDaoJson ToDAO(Turn turn)
         {
+            string endDateTime = turn.EndDateTime == null ?
+                "" : ((DateTime)turn.EndDateTime).ToString("s"); //ISO 8601
+
             TurnDaoJson turnDaoJson = new TurnDaoJson(
                 userId: turn.User.Id,
                 roundId: turn.Round.Id,
-                startDateTime: turn.StartDateTime.ToString("s")); //ISO 8601
+                startDateTime: turn.StartDateTime.ToString("s"), //ISO 8601
+                endDateTime: endDateTime);
 
             return turnDaoJson;
         }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Utils;
 
 
@@ -14,8 +16,9 @@ public class StartTurnUseCaseUnitTests
     IUsersReadOnlyRepository _usersReadOnlyRepository;
     IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     IUserMatchesRepository _userMatchesRepository;
-    ITurnsReadOnlyRepository _turnsReadOnlyRepository;
+    ITurnsRepository _turnsRepository;
     IRoundsReadOnlyRepository _roundsReadOnlyRepository;
+    IdtoMapper<Turn, TurnDto> _turnDtoMapper;
 
     [SetUp]
     public void SetUp()
@@ -23,21 +26,146 @@ public class StartTurnUseCaseUnitTests
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
         _matchesReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _turnsReadOnlyRepository = Substitute.For<ITurnsReadOnlyRepository>();
+        _turnsRepository = Substitute.For<ITurnsRepository>();
         _roundsReadOnlyRepository = Substitute.For<IRoundsReadOnlyRepository>();
+        _turnDtoMapper = Substitute.For<IdtoMapper<Turn,TurnDto>>();
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository,
-            turnsReadOnlyRepository: _turnsReadOnlyRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+            turnsRepository: _turnsRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository,
+            turnDtoMapper: _turnDtoMapper);
     }
 
     [Test]
-    public void Test_ok_scenario()
+    public void Test_ok()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userWithIniciativeId = 1;
+        int userWithoutIniciativeId = 2;
+        int matchId = 0;
+        int roundId = 0;
+
+        User userWithIniciative = new User(id: userWithIniciativeId);
+        User userWithoutIniciative = new User(id: userWithoutIniciativeId);
+
+        _usersReadOnlyRepository.Get(userWithIniciativeId)
+            .Returns((args) => { return Operation<User>.Success(result: userWithIniciative); });
+
+        _usersReadOnlyRepository.Get(userWithoutIniciativeId)
+            .Returns((args) => { return Operation<User>.Success(result: userWithoutIniciative); });
+
+        Match match = new Match(
+            id: matchId,
+            startDateTime: DateTime.UtcNow,
+            endDateTime: null);
+
+        _roundsReadOnlyRepository.Get(roundId).Returns(
+            (args) =>
+            {
+                Round round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'f',
+                    isActive: true,
+                    match: match,
+                    categories: new List<Category>());
+                return Operation<Round>.Success(result: round);
+            });
+
+        match = new Match(
+            id: matchId,
+            startDateTime: DateTime.UtcNow,
+            endDateTime: null,
+            rounds: new List<Round>() { _roundsReadOnlyRepository.Get(roundId).Result });
+
+        _matchesReadOnlyRepository.Get(match.Id).Returns(
+            (args) => { return Operation<Match>.Success(result: match); });
+
+        _userMatchesRepository.Get(userWithoutIniciativeId, matchId).Returns(
+            (args) =>
+            {
+                return Operation<UserMatch>.Success(result: new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: false,
+                    user: userWithoutIniciative,
+                    match: match)
+                );
+            });
+
+        _userMatchesRepository.Get(userWithIniciativeId, matchId).Returns(
+            (args) =>
+            {
+                return Operation<UserMatch>.Success(result: new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: true,
+                    user: userWithIniciative,
+                    match: match)
+                );
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[2];
+                userMatches[0] = _userMatchesRepository.Get(userWithoutIniciativeId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(userWithIniciativeId, matchId).Result;
+                return Operation<UserMatch[]>.Success(result: userMatches);
+            });
+
+        _roundsReadOnlyRepository.GetMany(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int matchId = (int)args[0];
+                List<Round> rounds = new List<Round>() { _roundsReadOnlyRepository.Get(roundId).Result };
+                return Operation<List<Round>>.Success(result: rounds);
+            });
+
+        _turnsRepository.Get(userWithIniciativeId, roundId).Returns(
+            (args) =>
+            {
+                string errorMessage = $"Turn not found with userId: {userWithIniciativeId} and roundId: {roundId}";
+                return Operation<Turn>.Failure(errorMessage: errorMessage);
+            });
+
+        _turnsRepository.Insert(Arg.Any<Turn>()).Returns(
+            (args) =>
+            {
+                Turn turn = (Turn)args[0];
+                return Operation<Turn>.Success(result: turn);
+            });
+
+        _turnDtoMapper.ToDTO(Arg.Any<Turn>()).Returns(
+            (args) =>
+            {
+                Turn turn = (Turn)args[0];
+                TurnDto turnDto = new TurnDto(
+                    userId: turn.User.Id,
+                    roundId: turn.Round.Id,
+                    startDateTime: turn.StartDateTime,
+                    endDateTime: turn.EndDateTime);
+                return turnDto;
+            });
+        #endregion
+
+        #region -- Act --
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userWithIniciativeId, matchId: matchId);
+        #endregion
+
+        #region -- Assert --
+        TurnDto expectedTurnDto = new TurnDto(
+            userId: userWithIniciative.Id,
+            roundId: match.ActiveRound.Id,
+            startDateTime: DateTime.UtcNow,
+            endDateTime: null);
+
+        Assert.IsTrue(useCaseOperation.WasOk);
+        Assert.AreEqual(expected: expectedTurnDto, actual: useCaseOperation.Result);
+        #endregion
     }
 
     [Test]
@@ -56,7 +184,7 @@ public class StartTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
         #endregion
 
         #region -- Assert --
@@ -90,7 +218,7 @@ public class StartTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
         #endregion
 
         #region -- Assert --
@@ -149,7 +277,7 @@ public class StartTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
         #endregion
 
         #region -- Assert --
@@ -227,7 +355,7 @@ public class StartTurnUseCaseUnitTests
                 return Operation<List<Round>>.Success(result: rounds);
             });
 
-        _turnsReadOnlyRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+        _turnsRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
             (args) =>
             {
                 int userId = (int)args[0];
@@ -243,7 +371,7 @@ public class StartTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
         #endregion
 
         #region -- Assert --
@@ -258,9 +386,8 @@ public class StartTurnUseCaseUnitTests
     public void Test_fail_due_to_user_turn_order()
     {
         #region -- Arrange --
-
-        int realTestUserId = 1;
-        int botId = 2;
+        int userWithIniciativeId = 1;
+        int userWithoutIniciativeId = 2;
         int matchId = 0;
         int roundId = 1;
 
@@ -278,26 +405,26 @@ public class StartTurnUseCaseUnitTests
                 return Operation<Match>.Success(result: new Match(id: matchId, startDateTime: DateTime.UtcNow));
             });
 
-        _userMatchesRepository.Get(botId, matchId).Returns(
+        _userMatchesRepository.Get(userWithoutIniciativeId, matchId).Returns(
             (args) =>
             {
                 return Operation<UserMatch>.Success(result: new UserMatch(
                     score: 0,
                     isWinner: false,
                     hasInitiative: false,
-                    new User(botId),
+                    new User(userWithoutIniciativeId),
                     new Match(id: matchId, startDateTime: DateTime.UtcNow))
                 );
             });
 
-        _userMatchesRepository.Get(realTestUserId, matchId).Returns(
+        _userMatchesRepository.Get(userWithIniciativeId, matchId).Returns(
             (args) =>
             {
                 return Operation<UserMatch>.Success(result: new UserMatch(
                     score: 0,
                     isWinner: false,
                     hasInitiative: true,
-                    new User(realTestUserId),
+                    new User(userWithIniciativeId),
                     new Match(id: matchId, startDateTime: DateTime.UtcNow))
                 );
             });
@@ -306,8 +433,8 @@ public class StartTurnUseCaseUnitTests
             (args) =>
             {
                 UserMatch[] userMatches = new UserMatch[2];
-                userMatches[0] = _userMatchesRepository.Get(botId, matchId).Result;
-                userMatches[1] = _userMatchesRepository.Get(realTestUserId, matchId).Result;
+                userMatches[0] = _userMatchesRepository.Get(userWithoutIniciativeId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(userWithIniciativeId, matchId).Result;
 
                 return Operation<UserMatch[]>.Success(result: userMatches);
             });
@@ -342,7 +469,7 @@ public class StartTurnUseCaseUnitTests
                 return Operation<List<Round>>.Success(result: rounds);
             });
 
-        _turnsReadOnlyRepository.Get(Arg.Any<int>(), roundId).Returns(
+        _turnsRepository.Get(Arg.Any<int>(), roundId).Returns(
             (args) =>
             {
                 int userId = (int)args[0];
@@ -351,15 +478,15 @@ public class StartTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: botId, matchId: matchId);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userWithoutIniciativeId, matchId: matchId);
         #endregion
 
         #region -- Assert --
         Assert.IsFalse(useCaseOperation.WasOk);
         Assert.AreEqual(
-            expected: $"Turn can not be created for user with id {botId} " +
+            expected: $"Turn can not be created for user with id {userWithoutIniciativeId} " +
                 $"in round with id {roundId} in match with id {matchId} " +
-                $"since user with id {realTestUserId} has not finished his turn yet",
+                $"since user with id {userWithIniciativeId} has not finished his turn yet",
             actual: useCaseOperation.ErrorMessage);
         #endregion
     }

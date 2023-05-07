@@ -4,6 +4,7 @@ using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Repositories.IdGenerators;
 using TopicTwister.Shared.DAOs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
@@ -19,7 +20,6 @@ public class StartTurnUseCaseIntegrationTests
     private IUserMatchesRepository _userMatchesRepository;
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
-    private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
     private IdaoMapper<Turn, TurnDaoJson> _turnDaoJsonMapper;
     private IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
     private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
@@ -30,8 +30,8 @@ public class StartTurnUseCaseIntegrationTests
     private IdaoMapper<Category, CategoryDaoJson> _categoryDaoJsonMapper;
     private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
     private IRoundsRepository _roundsRepository;
-    private IUniqueIdGenerator _turnsIdGenerator;
     private ITurnsRepository _turnsRepository;
+    private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
 
     [SetUp]
     public void SetUp()
@@ -72,16 +72,19 @@ public class StartTurnUseCaseIntegrationTests
             usersReadOnlyRepository: _usersReadOnlyRepository,
             roundsReadOnlyRepository: _roundsReadOnlyRepository);
 
-        _turnsReadOnlyRepository = new TurnsReadOnlyRepositoryJson(
+        _turnsRepository = new TurnsRepositoryJson(
             resourceName: "TestData/Turns",
             turnDaoMapper: _turnDaoJsonMapper);
+
+        _turnDtoMapper = new TurnDtoMapper();
 
         _useCase = new StartTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository,
-            turnsReadOnlyRepository: _turnsReadOnlyRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+            turnsRepository: _turnsRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository,
+            turnDtoMapper: _turnDtoMapper);
 
         _roundsIdGenerator = new RoundsIdGenerator(roundsReadOnlyRepository: _roundsReadOnlyRepository);
 
@@ -90,10 +93,6 @@ public class StartTurnUseCaseIntegrationTests
             roundsIdGenerator: _roundsIdGenerator,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
-
-        _turnsRepository = new TurnsRepositoryJson(
-            resourceName: "TestData/Turns",
-            turnDaoMapper: _turnDaoJsonMapper);
     }
 
     [TearDown]
@@ -120,7 +119,7 @@ public class StartTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
         #endregion
 
         #region -- Assert --
@@ -140,7 +139,7 @@ public class StartTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId);
         #endregion
 
         #region -- Assert --
@@ -171,7 +170,7 @@ public class StartTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(userId: userId, matchId: round.Match.Id);
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: round.Match.Id);
         #endregion
 
         #region -- Assert --
@@ -225,7 +224,7 @@ public class StartTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(
             userId: turn.User.Id,
             matchId: userMatch.Match.Id);
         #endregion
@@ -238,9 +237,7 @@ public class StartTurnUseCaseIntegrationTests
             $"in round with id {match.ActiveRound.Id} " +
             $"in match with id {match.Id}";
 
-        Assert.AreEqual(
-            expected: expectedMessage,
-            actual: useCaseOperation.ErrorMessage);
+        Assert.AreEqual(expected: expectedMessage, actual: useCaseOperation.ErrorMessage);
         #endregion
     }
 
@@ -283,7 +280,7 @@ public class StartTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<bool> useCaseOperation = _useCase.Execute(
+        Operation<TurnDto> useCaseOperation = _useCase.Execute(
             userId: userWithoutIniciative.Id, matchId: match.Id);
         #endregion
 

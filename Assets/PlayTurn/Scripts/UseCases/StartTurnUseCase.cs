@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Utils;
 
 
@@ -10,37 +13,40 @@ public class StartTurnUseCase : IStartTurnUseCase
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IUserMatchesRepository _userMatchesRepository;
-    private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
+    private ITurnsRepository _turnsRepository;
     private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
+    private IdtoMapper<Turn,TurnDto> _turnDtoMapper;
 
     public StartTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
         IMatchesReadOnlyRepository matchesReadOnlyRepository,
         IUserMatchesRepository userMatchesRepository,
-        ITurnsReadOnlyRepository turnsReadOnlyRepository,
-        IRoundsReadOnlyRepository roundsReadOnlyRepository)
+        ITurnsRepository turnsRepository,
+        IRoundsReadOnlyRepository roundsReadOnlyRepository,
+        IdtoMapper<Turn, TurnDto> turnDtoMapper)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
         _userMatchesRepository = userMatchesRepository;
-        _turnsReadOnlyRepository = turnsReadOnlyRepository;
+        _turnsRepository = turnsRepository;
         _roundsReadOnlyRepository = roundsReadOnlyRepository;
+        _turnDtoMapper = turnDtoMapper;
     }
 
-    public Operation<bool> Execute(int userId, int matchId)
+    public Operation<TurnDto> Execute(int userId, int matchId)
     {
         Operation<User> getUserOperation = _usersReadOnlyRepository.Get(id: userId);
 
         if(getUserOperation.WasOk == false)
         {
-            return Operation<bool>.Failure(errorMessage: getUserOperation.ErrorMessage);
+            return Operation<TurnDto>.Failure(errorMessage: getUserOperation.ErrorMessage);
         }
 
         Operation<Match> getMatchOperation = _matchesReadOnlyRepository.Get(id: matchId);
 
         if (getMatchOperation.WasOk == false)
         {
-            return Operation<bool>.Failure(errorMessage: getMatchOperation.ErrorMessage);
+            return Operation<TurnDto>.Failure(errorMessage: getMatchOperation.ErrorMessage);
         }
 
         Match match = getMatchOperation.Result;
@@ -58,14 +64,14 @@ public class StartTurnUseCase : IStartTurnUseCase
 
         if(getUserMatchOperation.WasOk == false)
         {
-            return Operation<bool>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
+            return Operation<TurnDto>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
         }
 
-        Operation<Turn> getTurnOperation = _turnsReadOnlyRepository.Get(userId: userId, roundId: activeRoundId);
+        Operation<Turn> getTurnOperation = _turnsRepository.Get(userId: userId, roundId: activeRoundId);
         
         if(getTurnOperation.WasOk == true)
         {
-            return Operation<bool>.Failure(
+            return Operation<TurnDto>.Failure(
                 errorMessage: $"Turn already exists for user with id {userId} " +
                 $"in round with id {activeRoundId} in match with id {matchId}");
         }
@@ -74,7 +80,7 @@ public class StartTurnUseCase : IStartTurnUseCase
 
         if (getUserMatchesOperation.WasOk == false)
         {
-            return Operation<bool>.Failure(errorMessage: getUserMatchesOperation.ErrorMessage);
+            return Operation<TurnDto>.Failure(errorMessage: getUserMatchesOperation.ErrorMessage);
         }
 
         UserMatch[] userMatches = getUserMatchesOperation.Result;
@@ -91,7 +97,7 @@ public class StartTurnUseCase : IStartTurnUseCase
 
         if (opponentUserMatch.HasInitiative)
         {
-            Operation<Turn> getOpponentTurnOperation = _turnsReadOnlyRepository
+            Operation<Turn> getOpponentTurnOperation = _turnsRepository
                 .Get(userId: opponentUserMatch.User.Id, roundId: activeRoundId);
 
             if(getOpponentTurnOperation.WasOk == false)
@@ -100,10 +106,25 @@ public class StartTurnUseCase : IStartTurnUseCase
                 $"in round with id {activeRoundId} in match with id {matchId} " +
                 $"since user with id {opponentUserMatch.User.Id} has not finished his turn yet";
 
-                return Operation<bool>.Failure(errorMessage: message);
+                return Operation<TurnDto>.Failure(errorMessage: message);
             }
         }
 
-        throw new System.NotImplementedException();
+        User user = getUserOperation.Result;
+
+        Turn newturn = new Turn(
+            user: user,
+            round: match.ActiveRound,
+            startDateTime: DateTime.UtcNow);
+
+        Operation<Turn> insertTurnOperation = _turnsRepository.Insert(newturn);
+
+        if(insertTurnOperation.WasOk == false)
+        {
+            return Operation<TurnDto>.Failure(errorMessage: insertTurnOperation.ErrorMessage);
+        }
+
+        TurnDto turnDto = _turnDtoMapper.ToDTO(insertTurnOperation.Result);
+        return Operation<TurnDto>.Success(result: turnDto);
     }
 }
