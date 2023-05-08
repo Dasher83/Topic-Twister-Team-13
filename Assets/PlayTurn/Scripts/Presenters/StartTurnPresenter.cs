@@ -16,12 +16,12 @@ namespace TopicTwister.PlayTurn.Presenters
         public StartTurnPresenter(IPlayTurnView view)
         {
             _view = view;
-            _view.OnLoad += OnLoadEventHandler;
+            _view.Load += LoadEventHandler;
             _startTurnCommand = new CommandProvider<StartTurnCommand>().Provide();
             _startTurnCommand.Presenter = this;
         }
 
-        public void OnLoadEventHandler(int userId, int matchId)
+        public void LoadEventHandler(int userId, int matchId)
         {
             ((StartTurnCommand)_startTurnCommand).UserId = userId;
             ((StartTurnCommand)_startTurnCommand).MatchId = matchId;

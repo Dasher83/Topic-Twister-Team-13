@@ -17,7 +17,7 @@ namespace TopicTwister.NewRound.Presenters
             _view = view;
             _createRoundCommand = new CommandProvider<ResumeMatchCommand>().Provide();
             _createRoundCommand.Presenter = this;
-            _view.OnLoad += ResumeMatch;
+            _view.Load += ResumeMatch;
         }
 
         public void ResumeMatch(MatchDto matchDto)

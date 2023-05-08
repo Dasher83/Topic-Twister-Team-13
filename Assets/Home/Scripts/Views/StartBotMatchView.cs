@@ -13,7 +13,7 @@ namespace TopicTwister.Home.Views
 {
     public class StartBotMatchView : MonoBehaviour, IStartBotMatchView
     {
-        public event Action StartMatchVersusBot;
+        public event EventDelegates.IStartBotMatchView.StartMatchVersusBotEventHandler StartMatchVersusBot;
 
         [SerializeField]
         private LoadSceneEventScriptable _loadSceneEventContainer;

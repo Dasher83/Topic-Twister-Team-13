@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using TopicTwister.NewRound.Presenters;
 using TopicTwister.NewRound.Shared.Interfaces;
@@ -13,7 +12,7 @@ namespace TopicTwister.NewRound.Views
 {
     public class ResumeMatchView : MonoBehaviour, IResumeMatchView
     {
-        public event Action<MatchDto> OnLoad;
+        public event EventDelegates.IResumeMatchView.LoadEventHandler Load;
 
         [SerializeField]
         private TextMeshProUGUI _roundNumberDisplay;
@@ -36,7 +35,7 @@ namespace TopicTwister.NewRound.Views
         private void Start()
         {
             new ResumeMatchPresenter(this);
-            OnLoad?.Invoke(_matchCacheData.MatchDto);
+            Load?.Invoke(matchDto: _matchCacheData.MatchDto);
             _initialLetterButton = _initialLetterButtonContainer.GetComponentInChildren<Button>();
             __initialLetterText = _initialLetterButtonContainer.GetComponentInChildren<TextMeshProUGUI>();
             _initialLetterButton.onClick.AddListener(() => InitialLetterRevealed());

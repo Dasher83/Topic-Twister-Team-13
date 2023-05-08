@@ -22,9 +22,6 @@ namespace TopicTwister.PlayTurn.Views
         private TextMeshProUGUI _roundNumber;
 
         [SerializeField]
-        private Transform _categoryListRoot;
-
-        [SerializeField]
         private TextMeshProUGUI _initialLetter;
 
         [SerializeField]
@@ -36,25 +33,29 @@ namespace TopicTwister.PlayTurn.Views
         [SerializeField]
         private LoadSceneEventScriptable _loadSceneEventContainer;
 
-        public event EventDelegates.PlayTurnView.LoadEventHandler OnLoad;
         private List<TextMeshProUGUI> _userInputTexts;
+        private Transform _categoryListRoot;
+        public event EventDelegates.IPlayTurnView.LoadEventHandler Load;
 
         private void Start()
         {
             new StartTurnPresenter(this);
-            LoadRoundData();
-            _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
-            _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
-
-            OnLoad?.Invoke(
-                userId: Configuration.TestUserId,
-                matchId: _matchCacheData.MatchDto.Id);
-
+            _categoryListRoot = GameObject.Find("CategoryInputList").transform;
             _userInputTexts = new List<TextMeshProUGUI>();
+
             foreach (Transform child in _categoryListRoot)
             {
                 _userInputTexts.Add(child.Find("UserInput").GetComponent<TextMeshProUGUI>());
             }
+
+            LoadRoundData();
+            _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
+            _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
+
+            Load?.Invoke(
+                userId: Configuration.TestUserId,
+                matchId: _matchCacheData.MatchDto.Id);
+
             _matchCacheData.UserInputChanged += UpdateUserInputText;
         }
 
@@ -83,9 +84,9 @@ namespace TopicTwister.PlayTurn.Views
             TurnAnswerDto[] turnAnswers = new TurnAnswerDto[5];
             int index = 0;
 
-            foreach (Transform childTransform in _categoryListRoot)
+            foreach (TextMeshProUGUI userInputText in _userInputTexts)
             {
-                string userInput = childTransform.Find("UserInput").gameObject.GetComponent<TextMeshProUGUI>().text.Trim();
+                string userInput = userInputText.text.Trim();
                 turnAnswers[index] = new TurnAnswerDto(
                     category: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[index],
                     userInput: userInput,

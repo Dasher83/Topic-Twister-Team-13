@@ -16,7 +16,7 @@ namespace TopicTwister.TurnResult.Views
 {
     public class TurnResultView : MonoBehaviour, ITurnResultView
     {
-        public event Action OnLoad;
+        public event EventDelegates.ITurnResultView.LoadEventHandler Load;
 
         [SerializeField]
         private Transform _categoryResultList;
@@ -51,7 +51,7 @@ namespace TopicTwister.TurnResult.Views
                 .text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
             LoadCategoryResultList();
             new TurnResultPresenter(turnResultView: this);
-            OnLoad?.Invoke();
+            Load?.Invoke();
         }
 
         public void EvaluateAnswers(List<EvaluatedAnswerDto> evaluatedAnswers)

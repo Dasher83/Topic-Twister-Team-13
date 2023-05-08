@@ -26,17 +26,17 @@ namespace TopicTwister.TurnResult.Presenters
         public TurnResultPresenter(ITurnResultView turnResultView)
         {
             _turnResultView = turnResultView;
-            _turnResultView.OnLoad += OnLoadHandler;
+            _turnResultView.Load += LoadEventHandler;
             _evaluateAnswerCommand = new CommandProvider<EvaluateAnswersAction>().Provide();
             _evaluateAnswerCommand.Presenter = this;
         }
 
         ~TurnResultPresenter()
         {
-            this._turnResultView.OnLoad -= OnLoadHandler;
+            this._turnResultView.Load -= LoadEventHandler;
         }
 
-        private void OnLoadHandler()
+        private void LoadEventHandler()
         {
             EvaluateAnswers(_turnResultView.GetAnswersToEvaluate());
         }
