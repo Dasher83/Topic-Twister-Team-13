@@ -6,9 +6,9 @@ using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.DTOs;
 
 
-namespace TopicTwister.TurnResult.Actions
+namespace TopicTwister.TurnResult.Commands
 {
-    public class EvaluateAnswersAction : ICommand<ITurnResultPresenter>
+    public class EvaluateAnswersCommand : ICommand<ITurnResultPresenter>
     {
         private ITurnResultPresenter _turnResultPresenter;
         private readonly IAnswersEvaluationService _answersEvaluationService;
@@ -27,7 +27,7 @@ namespace TopicTwister.TurnResult.Actions
 
         public ITurnResultPresenter Presenter { set => _turnResultPresenter = value; }
 
-        public EvaluateAnswersAction(IAnswersEvaluationService answersEvaluationService)
+        public EvaluateAnswersCommand(IAnswersEvaluationService answersEvaluationService)
         {
             _answersEvaluationService = answersEvaluationService;
         }

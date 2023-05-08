@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using TopicTwister.TurnResult.Actions;
+using TopicTwister.TurnResult.Commands;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.TurnResult.Services;
 using TopicTwister.TurnResult.UseCases;
@@ -12,11 +12,11 @@ namespace TopicTwister.TurnResult.Shared.Providers
 {
     public class CommandProvider<Command> where Command : ICommand<ITurnResultPresenter>
     {
-        private readonly Dictionary<Type, object> _actions = new()
+        private readonly Dictionary<Type, object> _commands = new()
         {
             {
-                typeof(EvaluateAnswersAction),
-                new EvaluateAnswersAction(
+                typeof(EvaluateAnswersCommand),
+                new EvaluateAnswersCommand(
                     new AnswersEvaluationService(
                         new EvaluateAnswersUseCase(
                             new WordsRepositoryJson("JSON/TestData/WordsTest"))))
@@ -25,8 +25,8 @@ namespace TopicTwister.TurnResult.Shared.Providers
 
         public Command Provide()
         {
-            _actions.TryGetValue(typeof(Command), out object action);
-            return (Command)action;
+            _commands.TryGetValue(typeof(Command), out object command);
+            return (Command)command;
         }
     }
 }

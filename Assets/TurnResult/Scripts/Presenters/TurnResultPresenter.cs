@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TopicTwister.TurnResult.Actions;
+using TopicTwister.TurnResult.Commands;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.Providers;
 using TopicTwister.TurnResult.Shared.DTOs;
@@ -27,7 +27,7 @@ namespace TopicTwister.TurnResult.Presenters
         {
             _turnResultView = turnResultView;
             _turnResultView.Load += LoadEventHandler;
-            _evaluateAnswerCommand = new CommandProvider<EvaluateAnswersAction>().Provide();
+            _evaluateAnswerCommand = new CommandProvider<EvaluateAnswersCommand>().Provide();
             _evaluateAnswerCommand.Presenter = this;
         }
 
@@ -43,8 +43,8 @@ namespace TopicTwister.TurnResult.Presenters
         
         public void EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            ((EvaluateAnswersAction)_evaluateAnswerCommand).TurnAnswers = answerToEvaluate.turnAnswers;
-            ((EvaluateAnswersAction)_evaluateAnswerCommand).InitialLetter = answerToEvaluate.initialLetter;
+            ((EvaluateAnswersCommand)_evaluateAnswerCommand).TurnAnswers = answerToEvaluate.turnAnswers;
+            ((EvaluateAnswersCommand)_evaluateAnswerCommand).InitialLetter = answerToEvaluate.initialLetter;
             _evaluateAnswerCommand.Execute();
         }
     }
