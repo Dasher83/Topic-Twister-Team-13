@@ -1,10 +1,9 @@
-﻿using TMPro;
-using TopicTwister.PlayTurn.Shared.ScriptableObjects;
+﻿using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 
 
-namespace TopicTwister.PlayTurn.Keyboard
+namespace TopicTwister.PlayTurn.UI
 {
     public class KeyboardController : MonoBehaviour
     {

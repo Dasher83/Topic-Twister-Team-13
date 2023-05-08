@@ -4,7 +4,7 @@ using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 
 
-namespace TopicTwister.PlayTurn.CategoryInputList
+namespace TopicTwister.PlayTurn.UI
 {
     public class UpdateCategoryInputList : MonoBehaviour
     {

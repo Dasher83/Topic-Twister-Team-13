@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace TopicTwister.PlayTurn.StopButton
+namespace TopicTwister.PlayTurn.UI
 {
     public class StopButton : MonoBehaviour
     {

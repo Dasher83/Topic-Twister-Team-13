@@ -5,7 +5,7 @@ using System;
 using TopicTwister.Shared.Constants;
 
 
-namespace TopicTwister.PlayTurn.Timer
+namespace TopicTwister.PlayTurn.UI
 {
     public class Timer : MonoBehaviour
     {
