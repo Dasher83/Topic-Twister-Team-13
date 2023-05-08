@@ -16,7 +16,7 @@ using TopicTwister.Shared.UseCases;
 
 namespace TopicTwister.NewRound.Shared.Providers
 {
-    public class CommandProvider<Command, Presenter> where Command : ICommand<Presenter>
+    public class CommandProvider<Command> where Command : ICommand<IResumeMatchPresenter>
     {
         private IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
         private IMatchesReadOnlyRepository _matchesReadOnlyRepository;

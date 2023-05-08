@@ -27,7 +27,7 @@ namespace TopicTwister.TurnResult.Presenters
         {
             _turnResultView = turnResultView;
             _turnResultView.OnLoad += OnLoadHandler;
-            _evaluateAnswerCommand = new ActionProvider<EvaluateAnswersAction, ITurnResultPresenter>().Provide();
+            _evaluateAnswerCommand = new ActionProvider<EvaluateAnswersAction>().Provide();
             _evaluateAnswerCommand.Presenter = this;
         }
 

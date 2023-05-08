@@ -5,11 +5,12 @@ using TopicTwister.Shared.Interfaces;
 using TopicTwister.TurnResult.Services;
 using TopicTwister.TurnResult.UseCases;
 using TopicTwister.TurnResult.Repositories;
+using TopicTwister.TurnResult.Shared.Interfaces;
 
 
 namespace TopicTwister.TurnResult.Shared.Providers
 {
-    public class ActionProvider<Command, Presenter> where Command : ICommand<Presenter>
+    public class ActionProvider<Command> where Command : ICommand<ITurnResultPresenter>
     {
         private readonly Dictionary<Type, object> _actions = new()
         {

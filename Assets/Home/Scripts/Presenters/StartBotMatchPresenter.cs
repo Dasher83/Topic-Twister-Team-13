@@ -15,7 +15,7 @@ namespace TopicTwister.Home.Presenters
         {
             _view = view;
             _view.StartMatchVersusBot += StartMatchVersusBot;
-            _createMatchCommand = new CommandProvider<StartNewBotMatchCommand, IStartBotMatchPresenter>().Provide();
+            _createMatchCommand = new CommandProvider<StartNewBotMatchCommand>().Provide();
             _createMatchCommand.Presenter = this;
         }
 

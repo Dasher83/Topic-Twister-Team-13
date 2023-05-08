@@ -17,7 +17,7 @@ using TopicTwister.Shared.UseCases;
 
 namespace TopicTwister.Home.Shared.Providers
 {
-    public class CommandProvider<Command, Presenter> where Command : ICommand<Presenter>
+    public class CommandProvider<Command> where Command : ICommand<IStartBotMatchPresenter>
     {
         private IdtoMapper<Match, MatchDto> _matchDtoMapper;
         private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
