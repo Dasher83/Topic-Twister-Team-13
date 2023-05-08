@@ -26,12 +26,12 @@ namespace TopicTwister.Home.UseCases
             _matchDtoMapper = matchDtoMapper;
         }
 
-        public Operation<MatchDto> Create(int userIdPlayerOne, int userIdPlayerTwo)
+        public Operation<MatchDto> Create(int userWithIniciative, int userWithoutIniciative)
         {
-            if(userIdPlayerOne == userIdPlayerTwo)
+            if(userWithIniciative == userWithoutIniciative)
             {
                 return Operation<MatchDto>.Failure(
-                    errorMessage: $"A user cannot have a match with itself. User id: {userIdPlayerOne}");
+                    errorMessage: $"A user cannot have a match with itself. User id: {userWithIniciative}");
             }
 
             Match match = new Match();
@@ -44,14 +44,20 @@ namespace TopicTwister.Home.UseCases
 
             match = saveMatchOperation.Result;
 
-            Operation<UserMatch> createUserMatchOperation = CreateUserMatch(userId: userIdPlayerOne, match: match);
+            Operation<UserMatch> createUserMatchOperation = CreateUserMatch(
+                userId: userWithIniciative,
+                match: match,
+                hasInitiative: true);
             
             if(createUserMatchOperation.WasOk == false)
             {
                 return Operation<MatchDto>.Failure(errorMessage: createUserMatchOperation.ErrorMessage);
             }
             
-            createUserMatchOperation = CreateUserMatch(userId: userIdPlayerTwo, match: match);
+            createUserMatchOperation = CreateUserMatch(
+                userId: userWithoutIniciative,
+                match: match,
+                hasInitiative: false);
 
             if (createUserMatchOperation.WasOk == false)
             {
@@ -62,7 +68,7 @@ namespace TopicTwister.Home.UseCases
             return useCaseResult;
         }
 
-        private Operation<UserMatch> CreateUserMatch(int userId, Match match)
+        private Operation<UserMatch> CreateUserMatch(int userId, Match match, bool hasInitiative)
         {
             Operation<User> getUserOperation = _usersReadOnlyRepository.Get(userId);
 
@@ -76,7 +82,7 @@ namespace TopicTwister.Home.UseCases
             UserMatch userMatch = new UserMatch(
                 score: 0,
                 isWinner: false,
-                hasInitiative: true,
+                hasInitiative: hasInitiative,
                 user: user,
                 match: match);
 

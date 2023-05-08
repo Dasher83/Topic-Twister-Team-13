@@ -40,18 +40,17 @@ namespace TopicTwister.TurnResult.Views
         private FakeMatchScriptable _fakeMatchData;
 
         private List<TurnAnswerDto> _turnResultViewList;
-        private TurnResultPresenter _turnResultPresenter;
         private Sprite _answerResultImage;
         private EvaluatedAnswerDto _evaluatedAnswer;
 
         void Start()
         {
             _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
-                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
+                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
             _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>()
                 .text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
             LoadCategoryResultList();
-            _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
+            new TurnResultPresenter(turnResultView: this);
             OnLoad?.Invoke();
         }
 

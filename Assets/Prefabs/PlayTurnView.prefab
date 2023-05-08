@@ -120,7 +120,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _matchCacheData: {fileID: 11400000, guid: 7dd6362091babca41b6ffb0cda03e6c0, type: 2}
-  _turnAnswersDraftData: {fileID: 11400000, guid: 80d196076f36ef34ca42c4a8ef00ed14, type: 2}
   _turnAnswersData: {fileID: 11400000, guid: d649cc2a517e4c34ba6f960257e9bf31, type: 2}
   _roundNumber: {fileID: 1919376079422969773}
   _categoryListRoot: {fileID: 7582015830160536880}
@@ -7352,7 +7351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timeOutEventContainer: {fileID: 11400000, guid: dc7399b0fdfec4843866fd2bf8243191, type: 2}
   _interruptTurnEventContainer: {fileID: 11400000, guid: 3714fbed2e3fd614cbe66bdf91037174, type: 2}
-  _turnAnswersDraftData: {fileID: 11400000, guid: 80d196076f36ef34ca42c4a8ef00ed14, type: 2}
+  _matchCacheData: {fileID: 11400000, guid: 7dd6362091babca41b6ffb0cda03e6c0, type: 2}
   _userInputPressedEventContainer: {fileID: 11400000, guid: 4fec4d142c422d543862c5153eac6c42, type: 2}
 --- !u!1 &7582015829549836437
 GameObject:
@@ -9020,7 +9019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ecc93e9919de3c4a9281811b6b28a47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _turnAnswerDraftData: {fileID: 11400000, guid: 80d196076f36ef34ca42c4a8ef00ed14, type: 2}
+  _matchCacheData: {fileID: 11400000, guid: 7dd6362091babca41b6ffb0cda03e6c0, type: 2}
 --- !u!1 &7582015830209329018
 GameObject:
   m_ObjectHideFlags: 0

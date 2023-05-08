@@ -4,7 +4,7 @@ namespace TopicTwister.Shared.Constants
     {
         public static class PlayTurnView
         {
-            public delegate void LoadEventHandler(int userId, int roundId);
+            public delegate void LoadEventHandler(int userId, int matchId);
         }
     }
 }

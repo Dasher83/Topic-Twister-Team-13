@@ -45,14 +45,14 @@ namespace TopicTwister.PlayTurn.Views
             _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
             OnLoad?.Invoke(
                 userId: Configuration.TestUserId,
-                roundId: _matchCacheData.RoundWithCategoriesDto.RoundDto.Id);
+                matchId: _matchCacheData.MatchDto.Id);
         }
 
         private void LoadRoundData()
         {
             TurnAnswerDraftDto[] turnAnswerDrafts = new TurnAnswerDraftDto[_categoryListRoot.childCount];
             _roundNumber.text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
-            _initialLetter.text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
+            _initialLetter.text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
             GameObject child;
 
             for(int i = 0; i < _categoryListRoot.childCount; i++)
@@ -89,9 +89,9 @@ namespace TopicTwister.PlayTurn.Views
                 Configuration.TransitionsDuration.FromPlayTurnToTurnResult);
         }
 
-        public void ReceiveUpdate(TurnDto turn)
+        public void ReceiveUpdate(TurnDto turnDto)
         {
-            throw new System.NotImplementedException();
+            _matchCacheData.TurnDto = turnDto;
         }
     }
 }

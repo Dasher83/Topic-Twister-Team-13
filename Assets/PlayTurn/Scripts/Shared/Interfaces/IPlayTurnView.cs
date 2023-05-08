@@ -7,6 +7,6 @@ namespace TopicTwister.PlayTurn.Views
     public interface IPlayTurnView
     {
         event EventDelegates.PlayTurnView.LoadEventHandler OnLoad;
-        void ReceiveUpdate(TurnDto turn);
+        void ReceiveUpdate(TurnDto turnDto);
     }
 }

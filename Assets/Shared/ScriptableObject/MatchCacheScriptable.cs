@@ -14,12 +14,14 @@ namespace TopicTwister.Shared.ScriptableObjects
 
         [SerializeField] private MatchDto _matchDto;
         [SerializeField] private RoundWithCategoriesDto _roundWithCategoriesDto;
+        [SerializeField] private TurnDto _turnDto;
         [SerializeField] private List<TurnAnswerDraftDto> _turnAnswerDrafts;
 
         public void Initialize()
         {
             _matchDto = null;
             _roundWithCategoriesDto = null;
+            _turnDto = null;
             _turnAnswerDrafts = new List<TurnAnswerDraftDto>();
         }
 
@@ -30,17 +32,23 @@ namespace TopicTwister.Shared.ScriptableObjects
 
         public MatchDto MatchDto
         {
-            get {  return _matchDto; }
-            set { _matchDto = value; }
+            get => _matchDto;
+            set => _matchDto = value;
         }
 
         public RoundWithCategoriesDto RoundWithCategoriesDto
         {
-            get { return _roundWithCategoriesDto; }
-            set { _roundWithCategoriesDto = value; }
+            get => _roundWithCategoriesDto;
+            set => _roundWithCategoriesDto = value;
         }
 
         public List<TurnAnswerDraftDto> TurnAnswerDrafts => _turnAnswerDrafts.ToList();
+
+        public TurnDto TurnDto
+        {
+            get => _turnDto;
+            set => _turnDto = value;
+        }
 
         public void AddUserInput(string userInput, int index)
         {
