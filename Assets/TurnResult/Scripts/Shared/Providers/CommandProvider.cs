@@ -10,7 +10,7 @@ using TopicTwister.TurnResult.Shared.Interfaces;
 
 namespace TopicTwister.TurnResult.Shared.Providers
 {
-    public class ActionProvider<Command> where Command : ICommand<ITurnResultPresenter>
+    public class CommandProvider<Command> where Command : ICommand<ITurnResultPresenter>
     {
         private readonly Dictionary<Type, object> _actions = new()
         {
