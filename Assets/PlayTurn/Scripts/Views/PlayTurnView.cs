@@ -5,6 +5,7 @@ using TopicTwister.PlayTurn.Shared.ScriptableObjects;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Constants;
 using TopicTwister.PlayTurn.Presenters;
+using System.Collections.Generic;
 
 
 namespace TopicTwister.PlayTurn.Views
@@ -36,6 +37,7 @@ namespace TopicTwister.PlayTurn.Views
         private LoadSceneEventScriptable _loadSceneEventContainer;
 
         public event EventDelegates.PlayTurnView.LoadEventHandler OnLoad;
+        private List<TextMeshProUGUI> _userInputTexts;
 
         private void Start()
         {
@@ -43,9 +45,17 @@ namespace TopicTwister.PlayTurn.Views
             LoadRoundData();
             _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
             _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
+
             OnLoad?.Invoke(
                 userId: Configuration.TestUserId,
                 matchId: _matchCacheData.MatchDto.Id);
+
+            _userInputTexts = new List<TextMeshProUGUI>();
+            foreach (Transform child in _categoryListRoot)
+            {
+                _userInputTexts.Add(child.Find("UserInput").GetComponent<TextMeshProUGUI>());
+            }
+            _matchCacheData.UserInputChanged += UpdateUserInputText;
         }
 
         private void LoadRoundData()
@@ -92,6 +102,11 @@ namespace TopicTwister.PlayTurn.Views
         public void ReceiveUpdate(TurnDto turnDto)
         {
             _matchCacheData.TurnDto = turnDto;
+        }
+
+        private void UpdateUserInputText(int index)
+        {
+            _userInputTexts[index].text = _matchCacheData.TurnAnswerDrafts[index].UserInput;
         }
     }
 }
