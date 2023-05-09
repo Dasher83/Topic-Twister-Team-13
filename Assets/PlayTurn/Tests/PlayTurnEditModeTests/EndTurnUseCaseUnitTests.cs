@@ -7,6 +7,7 @@ using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Utils;
 
 
@@ -16,6 +17,8 @@ public class EndTurnUseCaseUnitTests
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IUserMatchesRepository _userMatchesRepository;
+    private ITurnsRepository _turnsRepository;
+    private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
 
     [SetUp]
     public void SetUp()
@@ -26,10 +29,16 @@ public class EndTurnUseCaseUnitTests
 
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
 
+        _turnsRepository = Substitute.For<ITurnsRepository>();
+
+        _roundsReadOnlyRepository = Substitute.For<IRoundsReadOnlyRepository>();
+
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository);
+            userMatchesRepository: _userMatchesRepository,
+            turnsRepository: _turnsRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
     }
 
     [Test]
@@ -63,10 +72,9 @@ public class EndTurnUseCaseUnitTests
         int userId = -1;
         int matchId = -1;
 
-        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+        _usersReadOnlyRepository.Get(userId).Returns(
             (args) =>
             {
-                int userId = (int)args[0];
                 return Operation<User>.Failure(errorMessage: $"User not found with id: {userId}");
             });
         #endregion
@@ -91,17 +99,15 @@ public class EndTurnUseCaseUnitTests
         int userId = Configuration.TestUserId;
         int matchId = -1;
 
-        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+        _usersReadOnlyRepository.Get(userId).Returns(
             (args) =>
             {
-                int userId = (int)args[0];
                 return Operation<User>.Success(result: new User(id: userId));
             });
 
-        _matchesReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+        _matchesReadOnlyRepository.Get(matchId).Returns(
             (args) =>
             {
-                int matchId = (int)args[0];
                 return Operation<Match>.Failure(errorMessage: $"Match not found with id: {matchId}");
             });
         #endregion
@@ -126,25 +132,21 @@ public class EndTurnUseCaseUnitTests
         int userId = Configuration.TestUserId;
         int matchId = 0;
 
-        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+        _usersReadOnlyRepository.Get(userId).Returns(
             (args) =>
             {
-                int userId = (int)args[0];
                 return Operation<User>.Success(result: new User(id: userId));
             });
 
-        _matchesReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+        _matchesReadOnlyRepository.Get(matchId).Returns(
             (args) =>
             {
-                int matchId = (int)args[0];
                 return Operation<Match>.Success(result: new Match(id: matchId, startDateTime: DateTime.UtcNow));
             });
 
-        _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+        _userMatchesRepository.Get(userId, matchId).Returns(
             (args) =>
             {
-                int userId = (int)args[0];
-                int matchId = (int)args[1];
                 return Operation<UserMatch>.Failure(
                     errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
             });
@@ -166,7 +168,101 @@ public class EndTurnUseCaseUnitTests
     [Test]
     public void Test_fail_due_to_unknown_turn()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        int matchId = 0;
+        int roundId = 0;
+        Match match;
+        Round round;
+
+        _usersReadOnlyRepository.Get(userId).Returns(
+            (args) =>
+            {
+                return Operation<User>.Success(result: new User(id: userId));
+            });
+
+        _matchesReadOnlyRepository.Get(matchId).Returns(
+            (args) =>
+            {
+                match = new Match(
+                    id: matchId,
+                    startDateTime: DateTime.UtcNow);
+
+                round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'j',
+                    isActive: true,
+                    match: match,
+                    categories: new List<Category>());
+
+                match = new Match(
+                    id: matchId,
+                    startDateTime: match.StartDateTime,
+                    endDateTime: null,
+                    rounds: new List<Round>() { round } );
+
+                return Operation<Match>.Success(result: match);
+            });
+
+        _userMatchesRepository.Get(userId, matchId).Returns(
+            (args) =>
+            {
+                UserMatch userMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: true,
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    match: _matchesReadOnlyRepository.Get(matchId).Result);
+
+                return Operation<UserMatch>.Success(result: userMatch);
+            });
+
+        _roundsReadOnlyRepository.Get(roundId).Returns(
+            (args) =>
+            {
+                Round round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'f',
+                    isActive: true,
+                    match: _matchesReadOnlyRepository.Get(id: matchId).Result,
+                    categories: new List<Category>());
+
+                return Operation<Round>.Success(result: round);
+            });
+
+        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                List<Round> rounds = new List<Round>();
+                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                rounds.Add(activeRound);
+                return Operation<List<Round>>.Success(result: rounds);
+            });
+
+        _turnsRepository.Get(userId, roundId).Returns(
+            (args) =>
+            {
+                string errorMessage =
+                    $"Turn not found for user with id {userId} " +
+                    $"in round with id {roundId} in match with id {matchId}";
+
+                return Operation<Turn>.Failure(errorMessage: errorMessage);
+            });
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Turn not found for user with id {userId} in round with id {roundId} in match with id {matchId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]

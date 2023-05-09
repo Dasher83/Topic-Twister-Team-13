@@ -22,6 +22,11 @@ public class EndTurnUseCaseIntegrationTests
     private IdaoMapper<UserMatch, UserMatchDaoJson> _userMatchDaoMapper;
     private IMatchesRepository _matchesRepository;
     private IUniqueIdGenerator _matchesIdGenerator;
+    private ITurnsRepository _turnsRepository;
+    private IdaoMapper<Turn, TurnDaoJson> _turnDaoMapper;
+    private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
+    private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
+    private IdaoMapper<Category, CategoryDaoJson> _categoryDaoJsonMapper;
 
     [SetUp]
     public void SetUp()
@@ -42,10 +47,31 @@ public class EndTurnUseCaseIntegrationTests
             resourceName: "TestData/UserMatches",
             userMatchDaoMapper: _userMatchDaoMapper);
 
+        _categoryDaoJsonMapper = new CategoryDaoJsonMapper();
+
+        _categoriesReadOnlyRepository = new CategoriesReadOnlyRepositoryJson(
+            resourceName: "TestData/Categories",
+            categoryDaoJsonMapper: _categoryDaoJsonMapper);
+
+        _roundsReadOnlyRepository = new RoundsReadOnlyRepositoryJson(
+            resourceName: "TestData/Rounds",
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
+
+        _turnDaoMapper = new TurnDaoJsonMapper(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+
+        _turnsRepository = new TurnsRepositoryJson(
+            resourceName: "TestData/Turns",
+            turnDaoMapper: _turnDaoMapper);
+
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository);
+            userMatchesRepository: _userMatchesRepository,
+            turnsRepository: _turnsRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
 
         _matchesIdGenerator = new MatchesIdGenerator(
             matchesReadOnlyRepository: _matchesReadOnlyRepository);
