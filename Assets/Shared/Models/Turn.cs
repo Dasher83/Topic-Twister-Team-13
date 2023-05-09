@@ -24,5 +24,7 @@ namespace TopicTwister.Shared.Models
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
         }
+
+        public bool HasEnded => string.IsNullOrEmpty(_endDateTime) == false;
     }
 }

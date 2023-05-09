@@ -82,6 +82,16 @@ public class EndTurnUseCase : IEndTurnUseCase
                 $"in round with id {activeRound.Id} in match with id {match.Id}");
         }
 
+        Turn turn = getTurnOperation.Result;
+
+        if (turn.HasEnded)
+        {
+            string errorMessage = $"Turn already ended for user with id {user.Id} " +
+                    $"in round with id {activeRound.Id} in match with id {match.Id}";
+
+            return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
+        }
+
         throw new NotImplementedException();
     }
 }

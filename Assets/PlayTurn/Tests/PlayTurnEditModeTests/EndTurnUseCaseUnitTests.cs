@@ -268,7 +268,104 @@ public class EndTurnUseCaseUnitTests
     [Test]
     public void Test_fail_due_already_ended_turn()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        int matchId = 0;
+        int roundId = 0;
+        Match match;
+        Round round;
+
+        _usersReadOnlyRepository.Get(userId).Returns(
+            (args) =>
+            {
+                return Operation<User>.Success(result: new User(id: userId));
+            });
+
+        _matchesReadOnlyRepository.Get(matchId).Returns(
+            (args) =>
+            {
+                match = new Match(
+                    id: matchId,
+                    startDateTime: DateTime.UtcNow);
+
+                round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'j',
+                    isActive: true,
+                    match: match,
+                    categories: new List<Category>());
+
+                match = new Match(
+                    id: matchId,
+                    startDateTime: match.StartDateTime,
+                    endDateTime: null,
+                    rounds: new List<Round>() { round });
+
+                return Operation<Match>.Success(result: match);
+            });
+
+        _userMatchesRepository.Get(userId, matchId).Returns(
+            (args) =>
+            {
+                UserMatch userMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: true,
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    match: _matchesReadOnlyRepository.Get(matchId).Result);
+
+                return Operation<UserMatch>.Success(result: userMatch);
+            });
+
+        _roundsReadOnlyRepository.Get(roundId).Returns(
+            (args) =>
+            {
+                Round round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'f',
+                    isActive: true,
+                    match: _matchesReadOnlyRepository.Get(id: matchId).Result,
+                    categories: new List<Category>());
+
+                return Operation<Round>.Success(result: round);
+            });
+
+        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                List<Round> rounds = new List<Round>();
+                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                rounds.Add(activeRound);
+                return Operation<List<Round>>.Success(result: rounds);
+            });
+
+        _turnsRepository.Get(userId, roundId).Returns(
+            (args) =>
+            {
+                Turn turn = new Turn(
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds),
+                    endDateTime: DateTime.UtcNow);
+
+                return Operation<Turn>.Success(result: turn);
+            });
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Turn already ended for user with id {userId} " +
+                    $"in round with id {roundId} in match with id {matchId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]
