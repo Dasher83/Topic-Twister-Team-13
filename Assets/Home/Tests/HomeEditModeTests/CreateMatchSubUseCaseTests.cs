@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Home.UseCases;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
@@ -15,7 +16,7 @@ public class CreateMatchSubUseCaseTests
 {
     private ICreateMatchSubUseCase _useCase;
     private IUserMatchesRepository _userMatchesRepository;
-    private IdtoMapper<Match, MatchDto> _matchDtomapper;
+    private IdtoMapper<Match, MatchDto> _matchDtoMapper;
     private IMatchesRepository _matchesRepository;
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
 
@@ -31,11 +32,11 @@ public class CreateMatchSubUseCaseTests
     public void Test_ok_creation_of_match_and_usermatches()
     {
         #region -- Arrange --
-        int testUserId = 1;
-        int botId = 2;
+        int testUserId = Configuration.TestUserId;
+        int botId = Configuration.TestBotId;
 
-        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
-        _matchDtomapper.ToDTO(Arg.Any<Match>()).Returns(
+        _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtoMapper.ToDTO(Arg.Any<Match>()).Returns(
             (args) =>
             {
                 Match match = (Match)args[0];
@@ -44,7 +45,7 @@ public class CreateMatchSubUseCaseTests
                     startDateTime: match.StartDateTime,
                     endDateTime: match.EndDateTime);
             });
-        _matchDtomapper.FromDTO(Arg.Any<MatchDto>()).Returns(
+        _matchDtoMapper.FromDTO(Arg.Any<MatchDto>()).Returns(
             (args) =>
             {
                 MatchDto match = (MatchDto)args[0];
@@ -109,7 +110,7 @@ public class CreateMatchSubUseCaseTests
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             usersReadOnlyRespository: _usersReadOnlyRepository,
-            matchDtoMapper: _matchDtomapper);
+            matchDtoMapper: _matchDtoMapper);
         #endregion
 
         #region -- Act --
@@ -121,12 +122,12 @@ public class CreateMatchSubUseCaseTests
         Assert.AreEqual(expectedMatch, actualResult.Result);
 
         UserMatch expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: true, user: _usersReadOnlyRepository.Get(testUserId).Result, match: _matchDtomapper.FromDTO(expectedMatch));
+            score: 0, isWinner: false, hasInitiative: true, user: _usersReadOnlyRepository.Get(testUserId).Result, match: _matchDtoMapper.FromDTO(expectedMatch));
         UserMatch actualUserMatch = _userMatchesRepository.Get(userId: testUserId, matchId: expectedMatch.Id).Result;
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
 
         expectedUserMatch = new UserMatch(
-            score: 0, isWinner: false, hasInitiative: false, user: _usersReadOnlyRepository.Get(botId).Result, match: _matchDtomapper.FromDTO(expectedMatch));
+            score: 0, isWinner: false, hasInitiative: false, user: _usersReadOnlyRepository.Get(botId).Result, match: _matchDtoMapper.FromDTO(expectedMatch));
         actualUserMatch = _userMatchesRepository.Get(userId: botId, matchId: expectedMatch.Id).Result;
         Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         #endregion
@@ -146,7 +147,7 @@ public class CreateMatchSubUseCaseTests
                 return Operation<Match>.Success(result: (Match)(args[0]));
             });
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
 
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
         _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
@@ -164,7 +165,7 @@ public class CreateMatchSubUseCaseTests
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             usersReadOnlyRespository: _usersReadOnlyRepository,
-            matchDtoMapper: _matchDtomapper);
+            matchDtoMapper: _matchDtoMapper);
         #endregion
 
         #region -- Act --
@@ -192,7 +193,7 @@ public class CreateMatchSubUseCaseTests
             });
 
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
 
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
 
@@ -207,7 +208,7 @@ public class CreateMatchSubUseCaseTests
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             usersReadOnlyRespository: _usersReadOnlyRepository,
-            matchDtoMapper: _matchDtomapper);
+            matchDtoMapper: _matchDtoMapper);
         #endregion
 
         #region -- Act --
@@ -242,13 +243,13 @@ public class CreateMatchSubUseCaseTests
                 return Operation<User>.Success(new User(id: userId));
             });
 
-        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
 
         _useCase = new CreateMatchSubUseCase(
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             usersReadOnlyRespository: _usersReadOnlyRepository,
-            matchDtoMapper: _matchDtomapper);
+            matchDtoMapper: _matchDtoMapper);
         #endregion
 
         #region -- Act --
@@ -283,7 +284,7 @@ public class CreateMatchSubUseCaseTests
             });
 
 
-        _matchDtomapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _userMatchesRepository.Insert(Arg.Any<UserMatch>()).Returns(
             (args) =>
@@ -295,7 +296,7 @@ public class CreateMatchSubUseCaseTests
             matchesRepository: _matchesRepository,
             userMatchesRepository: _userMatchesRepository,
             usersReadOnlyRespository: _usersReadOnlyRepository,
-            matchDtoMapper: _matchDtomapper);
+            matchDtoMapper: _matchDtoMapper);
         #endregion
 
         #region -- Act --
