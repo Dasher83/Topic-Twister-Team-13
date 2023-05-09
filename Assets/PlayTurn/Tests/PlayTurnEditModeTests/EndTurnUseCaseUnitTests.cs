@@ -2,6 +2,7 @@ using System;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
@@ -63,7 +64,7 @@ public class EndTurnUseCaseUnitTests
 
         #region -- Act --
         Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
-            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[5]);
+            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
         #region -- Assert --

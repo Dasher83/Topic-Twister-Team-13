@@ -1,11 +1,26 @@
 using System;
 using NUnit.Framework;
+using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.Constants;
+using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.Utils;
 
 
 public class EndTurnUseCaseIntegrationTests
 {
+    private IEndTurnUseCase _useCase;
+    private IUsersReadOnlyRepository _usersReadOnlyRepository;
+
     [SetUp]
-    public void SetUp() {}
+    public void SetUp()
+    {
+        _usersReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+
+        _useCase = new EndTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository);
+    }
 
     [TearDown]
     public void TearDown() { }
@@ -37,7 +52,22 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_unknown_user()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = -1;
+        int matchId = -1;
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"User not found with id: {userId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]
