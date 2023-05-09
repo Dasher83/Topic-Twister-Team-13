@@ -8,6 +8,7 @@ using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.Utils;
 
 
@@ -19,6 +20,8 @@ public class EndTurnUseCaseIntegrationTests
     private IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
     private IUserMatchesRepository _userMatchesRepository;
     private IdaoMapper<UserMatch, UserMatchDaoJson> _userMatchDaoMapper;
+    private IMatchesRepository _matchesRepository;
+    private IUniqueIdGenerator _matchesIdGenerator;
 
     [SetUp]
     public void SetUp()
@@ -43,6 +46,14 @@ public class EndTurnUseCaseIntegrationTests
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository);
+
+        _matchesIdGenerator = new MatchesIdGenerator(
+            matchesReadOnlyRepository: _matchesReadOnlyRepository);
+
+        _matchesRepository = new MatchesRepositoryJson(
+            resourceName: "TestData/Matches",
+            matchesIdGenerator: _matchesIdGenerator,
+            matchDaoMapper: _matchDaoJsonMapper);
     }
 
     [TearDown]
@@ -117,7 +128,27 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_user_not_in_match()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        User user = _usersReadOnlyRepository.Get(userId).Result;
+        Match match = new Match();
+        match = _matchesRepository.Insert(match).Result;
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(
+                userId: user.Id,
+                matchId: match.Id,
+                answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"User with id {user.Id} is not involved in match with id {match.Id}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]
