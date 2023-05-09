@@ -16,7 +16,7 @@ namespace TopicTwister.TurnResult.Views
 {
     public class TurnResultView : MonoBehaviour, ITurnResultView
     {
-        public event Action OnLoad;
+        public event EventDelegates.ITurnResultView.LoadEventHandler Load;
 
         [SerializeField]
         private Transform _categoryResultList;
@@ -40,19 +40,18 @@ namespace TopicTwister.TurnResult.Views
         private FakeMatchScriptable _fakeMatchData;
 
         private List<TurnAnswerDto> _turnResultViewList;
-        private TurnResultPresenter _turnResultPresenter;
         private Sprite _answerResultImage;
         private EvaluatedAnswerDto _evaluatedAnswer;
 
         void Start()
         {
             _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
-                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
+                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
             _header.Find("Round").GetComponentInChildren<TextMeshProUGUI>()
                 .text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
             LoadCategoryResultList();
-            _turnResultPresenter = new TurnResultPresenter(turnResultView: this);
-            OnLoad?.Invoke();
+            new TurnResultPresenter(turnResultView: this);
+            Load?.Invoke();
         }
 
         public void EvaluateAnswers(List<EvaluatedAnswerDto> evaluatedAnswers)
@@ -103,7 +102,7 @@ namespace TopicTwister.TurnResult.Views
 
         public void FinishTurnReview()
         {
-            _eventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.RoundResults);
+            _eventContainer.LoadSceneWithoutDelay?.Invoke(Configuration.Scenes.RoundResults);
         }
     }
 }

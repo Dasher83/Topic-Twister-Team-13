@@ -35,7 +35,7 @@ namespace TopicTwister.TurnResult.UseCases
                     isCorrect = _wordRepository.Exists(
                         text: turnAnswer.UserInput,
                         categoryId: turnAnswer.Category.Id,
-                        initialLetter: answerToEvaluate.initialLetter).Outcome;
+                        initialLetter: answerToEvaluate.initialLetter).Result;
                 }
 
                 evaluatedAnswer = new EvaluatedAnswerDto(
@@ -47,7 +47,7 @@ namespace TopicTwister.TurnResult.UseCases
                 result.Add(evaluatedAnswer);
             }
 
-            Operation<List<EvaluatedAnswerDto>> useCaseResult = Operation<List<EvaluatedAnswerDto>>.Success(outcome: result);
+            Operation<List<EvaluatedAnswerDto>> useCaseResult = Operation<List<EvaluatedAnswerDto>>.Success(result: result);
             return useCaseResult;
         }
     }

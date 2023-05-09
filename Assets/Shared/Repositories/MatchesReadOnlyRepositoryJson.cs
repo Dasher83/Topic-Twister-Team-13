@@ -23,7 +23,7 @@ namespace TopicTwister.Shared.Repositories
         {
             _path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
             _matchDaoMapper = matchDaoMapper;
-            _readCache = _matchDaoMapper.ToDAOs(GetAll().Outcome);
+            _readCache = _matchDaoMapper.ToDAOs(GetAll().Result);
         }
 
         public Operation<List<Match>> GetAll()
@@ -31,7 +31,7 @@ namespace TopicTwister.Shared.Repositories
             string data = File.ReadAllText(_path);
             _readCache = new MatchDaosCollectionDeserializer().Deserialize(data).Matches;
             List<Match> matches = _matchDaoMapper.FromDAOs(_readCache.ToList());
-            return Operation<List<Match>>.Success(outcome: matches);
+            return Operation<List<Match>>.Success(result: matches);
         }
 
         public Operation<Match> Get(int id)
@@ -42,7 +42,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Match>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _matchDaoMapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _matchDaoMapper.ToDAOs(GetAllOperationResult.Result);
             MatchDaoJson matchDAO = _readCache.SingleOrDefault(match => match.Id == id && match.Id >= 0);
             if(matchDAO == null)
             {
@@ -50,7 +50,7 @@ namespace TopicTwister.Shared.Repositories
             }
             Match match = _matchDaoMapper.FromDAO(matchDAO);
 
-            return Operation<Match>.Success(outcome: match);
+            return Operation<Match>.Success(result: match);
         }
     }
 }

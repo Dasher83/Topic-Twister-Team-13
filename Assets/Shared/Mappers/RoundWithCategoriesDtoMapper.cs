@@ -26,7 +26,7 @@ namespace TopicTwister.Shared.Mappers
         public Round FromDTO(RoundWithCategoriesDto dto)
         {
             Operation<Round> getRoundOperation = _roundReadOnlyRepository.Get(dto.RoundDto.Id);
-            return getRoundOperation.Outcome;
+            return getRoundOperation.Result;
         }
 
         public List<Round> FromDTOs(List<RoundWithCategoriesDto> dtos)

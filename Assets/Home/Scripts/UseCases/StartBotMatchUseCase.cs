@@ -23,14 +23,14 @@ namespace TopicTwister.Home.UseCases
         public Operation<MatchDto> Execute(int userId)
         {
             Operation<MatchDto> createMatchSubUseCaseOperation = _createMatchSubUseCase.Create(
-                userIdPlayerOne: userId, userIdPlayerTwo: BotId);
+                userWithIniciative: userId, userWithoutIniciative: BotId);
 
             if(createMatchSubUseCaseOperation.WasOk == false)
             {
                 return Operation<MatchDto>.Failure(errorMessage: createMatchSubUseCaseOperation.ErrorMessage);
             }
 
-            MatchDto matchDto = createMatchSubUseCaseOperation.Outcome;
+            MatchDto matchDto = createMatchSubUseCaseOperation.Result;
 
             Operation<RoundWithCategoriesDto> createRoundSubUseCaseOperation = _createRoundSubUseCase.Execute(matchDto);
 

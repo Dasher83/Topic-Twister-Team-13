@@ -33,7 +33,7 @@ namespace TopicTwister.RoundResults
         private void LoadHeader()
         {
             _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
-                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
+                .text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
 
             _header.Find("Title").GetComponentInChildren<TextMeshProUGUI>()
                 .text = $"Final de ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";

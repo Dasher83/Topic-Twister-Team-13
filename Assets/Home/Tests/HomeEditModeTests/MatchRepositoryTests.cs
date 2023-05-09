@@ -52,26 +52,26 @@ public class MatchRepositoryTests
 
         for(int i = 0; i < matches.Count; i++)
         {
-            matches[i] = _matchesRepository.Save(matches[i]).Outcome;
+            matches[i] = _matchesRepository.Insert(matches[i]).Result;
             Match expectedMatch = new Match(id: ids[i], startDateTime: DateTime.UtcNow, endDateTime: null);
             Assert.AreEqual(expected: expectedMatch, actual: matches[i]);
         }
 
         for (int i = 0; i < ids.Length; i++)
         {
-            Match actualMatch = _matchesRepository.Get(ids[i]).Outcome;
+            Match actualMatch = _matchesRepository.Get(ids[i]).Result;
             Match expectedMatch = matches[i];
             Assert.AreEqual(expected: expectedMatch, actual: actualMatch);
         }
 
-        List<Match> actualMatches = _matchesRepository.GetAll().Outcome;
+        List<Match> actualMatches = _matchesRepository.GetAll().Result;
         Assert.AreEqual(expected: matches, actual: actualMatches);
 
         for(int i = 0; i < ids.Length; i++)
         {
             Operation<bool> deleteOperation = _matchesRepository.Delete(ids[i]);
             Assert.IsTrue(deleteOperation.WasOk);
-            Assert.IsTrue(deleteOperation.Outcome);
+            Assert.IsTrue(deleteOperation.Result);
         }
 
         idGenerator = Substitute.For<IUniqueIdGenerator>();
@@ -85,7 +85,7 @@ public class MatchRepositoryTests
             matchesIdGenerator: idGenerator,
             matchDaoMapper: _matchDaoMapper);
 
-        Operation<Match> saveOperation = _matchesRepository.Save(
+        Operation<Match> saveOperation = _matchesRepository.Insert(
                 match: new Match(
                     id: -1,
                     startDateTime: DateTime.UtcNow));

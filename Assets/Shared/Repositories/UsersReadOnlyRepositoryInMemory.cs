@@ -7,7 +7,7 @@ using TopicTwister.Shared.Utils;
 
 namespace TopicTwister.Shared.Repositories
 {
-    public class UsersReadOnlyRepositoryInMemory : IUserReadOnlyRepository
+    public class UsersReadOnlyRepositoryInMemory : IUsersReadOnlyRepository
     {
         private List<User> _readCache;
 
@@ -15,6 +15,7 @@ namespace TopicTwister.Shared.Repositories
         {
             _readCache = new List<User>()
             {
+                new User(id: 0),
                 new User(id: 1),
                 new User(id: 2)
             };
@@ -27,7 +28,7 @@ namespace TopicTwister.Shared.Repositories
             {
                 return Operation<User>.Failure(errorMessage: $"User not found with id: {id}");
             }
-            return Operation<User>.Success(outcome: user);
+            return Operation<User>.Success(result: user);
         }
     }
 }

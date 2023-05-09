@@ -38,7 +38,7 @@ namespace TopicTwister.Shared.UseCases
                 return Operation<RoundWithCategoriesDto>.Failure(errorMessage: getMatchOperationResult.ErrorMessage);
             }
 
-            Match match = getMatchOperationResult.Outcome;
+            Match match = getMatchOperationResult.Result;
 
             Operation<List<Round>> getRoundsOperationResult = _roundsRepository.GetMany(matchId: match.Id);
 
@@ -51,7 +51,7 @@ namespace TopicTwister.Shared.UseCases
                 id: match.Id,
                 startDateTime: match.StartDateTime,
                 endDateTime: match.EndDateTime,
-                rounds: getRoundsOperationResult.Outcome);
+                rounds: getRoundsOperationResult.Result);
 
             if (match.IsValid == false)
             {
@@ -88,10 +88,10 @@ namespace TopicTwister.Shared.UseCases
 
             Round round = new Round(
                 roundNumber: match.Rounds.Count,
-                initialLetter: _letterReadOnlyRepository.GetRandomLetter().Outcome,
+                initialLetter: _letterReadOnlyRepository.GetRandomLetter().Result,
                 isActive: true,
                 match: match,
-                categories: getRandomCategoriesOperationResult.Outcome);
+                categories: getRandomCategoriesOperationResult.Result);
 
             Operation<Round> saveRoundOperationResult = _roundsRepository.Insert(round);
 
@@ -101,9 +101,9 @@ namespace TopicTwister.Shared.UseCases
             }
 
             RoundWithCategoriesDto roundWithCategoriesDto = _roundWithCategoriesDtoMapper.ToDTO(
-                model: saveRoundOperationResult.Outcome);
+                model: saveRoundOperationResult.Result);
 
-            return Operation<RoundWithCategoriesDto>.Success(outcome: roundWithCategoriesDto);
+            return Operation<RoundWithCategoriesDto>.Success(result: roundWithCategoriesDto);
         }
     }
 }

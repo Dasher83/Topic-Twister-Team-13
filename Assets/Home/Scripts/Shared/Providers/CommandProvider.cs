@@ -17,14 +17,15 @@ using TopicTwister.Shared.UseCases;
 
 namespace TopicTwister.Home.Shared.Providers
 {
-    public class CommandProvider<Command, Presenter> where Command : ICommand<Presenter>
+    public class CommandProvider<Command> where Command : ICommand<IStartBotMatchPresenter>
     {
         private IdtoMapper<Match, MatchDto> _matchDtoMapper;
         private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
         private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
         private IUniqueIdGenerator _matchesIdGenerator;
         private IMatchesRepository _matchRepository;
-        private IUserReadOnlyRepository _userReadOnlyRepository;
+        private IUsersReadOnlyRepository _usersReadOnlyRepository;
+        private IdaoMapper<UserMatch, UserMatchDaoJson> _userMatchDaoJsonMapper;
         private IUserMatchesRepository _userMatchesRepository;
         private ICreateMatchSubUseCase _createMatchSubUseCase;
 
@@ -62,17 +63,20 @@ namespace TopicTwister.Home.Shared.Providers
                 matchesIdGenerator: _matchesIdGenerator,
                 matchDaoMapper: _matchDaoMapper);
 
-            _userReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+            _usersReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+
+            _userMatchDaoJsonMapper = new UserMatchDaoJsonMapper(
+                matchesReadOnlyRepository: _matchesReadOnlyRepository,
+                userReadOnlyRepository: _usersReadOnlyRepository);
 
             _userMatchesRepository = new UserMatchesRepositoryJson(
                 resourceName: "DevelopmentData/UserMatches",
-                matchesRepository: _matchRepository,
-                userReadOnlyRepository: _userReadOnlyRepository);
+                userMatchDaoMapper: _userMatchDaoJsonMapper);
 
             _createMatchSubUseCase = new CreateMatchSubUseCase(
                 matchesRepository: _matchRepository,
                 userMatchesRepository: _userMatchesRepository,
-                userRespository: _userReadOnlyRepository,
+                usersReadOnlyRespository: _usersReadOnlyRepository,
                 matchDtoMapper: _matchDtoMapper);
 
             _categoryDaoMapper = new CategoryDaoJsonMapper();

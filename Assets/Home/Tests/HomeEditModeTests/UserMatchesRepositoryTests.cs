@@ -15,8 +15,9 @@ public class UserMatchesRepositoryTests
     private IMatchesRepository _matchesRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IUniqueIdGenerator _matchIdGenerator;
-    private IUserReadOnlyRepository _userReadOnlyRepository;
+    private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
+    private IdaoMapper<UserMatch, UserMatchDaoJson> _userMatchDaoMapper;
 
     [SetUp]
     public void SetUp()
@@ -26,7 +27,7 @@ public class UserMatchesRepositoryTests
         _matchesReadOnlyRepository = new MatchesReadOnlyRepositoryJson(
             resourceName: "TestData/Matches", matchDaoMapper: _matchDaoMapper);
 
-        _userReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
+        _usersReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
         _matchIdGenerator = new MatchesIdGenerator(matchesReadOnlyRepository: _matchesReadOnlyRepository);
 
         _matchesRepository = new MatchesRepositoryJson(
@@ -34,10 +35,13 @@ public class UserMatchesRepositoryTests
             matchesIdGenerator: _matchIdGenerator,
             matchDaoMapper: _matchDaoMapper);
 
+        _userMatchDaoMapper = new UserMatchDaoJsonMapper(
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userReadOnlyRepository: _usersReadOnlyRepository);
+
         _userMatchesRepository = new UserMatchesRepositoryJson(
             resourceName: "TestData/UserMatches",
-            matchesRepository: _matchesRepository,
-            userReadOnlyRepository: _userReadOnlyRepository);
+            userMatchDaoMapper: _userMatchDaoMapper);
     }
 
     [TearDown]
@@ -51,7 +55,7 @@ public class UserMatchesRepositoryTests
     public void Test_ok_all_operations()
     {
         Match match = new Match();
-        match = _matchesRepository.Save(match).Outcome;
+        match = _matchesRepository.Insert(match).Result;
 
         List<UserMatch> userMatches = new List<UserMatch>() {
             new UserMatch(
@@ -71,7 +75,7 @@ public class UserMatchesRepositoryTests
 
         for (int i = 0; i < userMatches.Count; i++)
         {
-            userMatches[i] = _userMatchesRepository.Save(userMatches[i]).Outcome;
+            userMatches[i] = _userMatchesRepository.Insert(userMatches[i]).Result;
 
             UserMatch expectedUserMatch = new UserMatch(
                 score: userMatches[i].Score,
@@ -87,12 +91,12 @@ public class UserMatchesRepositoryTests
         {
             UserMatch actualUserMatch = _userMatchesRepository.Get(
                 userId: userMatches[i].User.Id,
-                matchId: userMatches[i].Match.Id).Outcome;
+                matchId: userMatches[i].Match.Id).Result;
             UserMatch expectedUserMatch = userMatches[i];
             Assert.AreEqual(expected: expectedUserMatch, actual: actualUserMatch);
         }
 
-        List<UserMatch> expectedUserMatches = _userMatchesRepository.GetAll().Outcome;
+        List<UserMatch> expectedUserMatches = _userMatchesRepository.GetAll().Result;
         Assert.AreEqual(expected: expectedUserMatches, actual: userMatches);
     }
 }

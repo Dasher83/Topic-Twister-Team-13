@@ -2,29 +2,24 @@ using TMPro;
 using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 using TopicTwister.PlayTurn.Shared.ScriptableObjects;
-using TopicTwister.PlayTurn.Shared.DTOs;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Constants;
+using TopicTwister.PlayTurn.Presenters;
+using System.Collections.Generic;
 
 
 namespace TopicTwister.PlayTurn.Views
 {
-    public class PlayTurnView : MonoBehaviour
+    public class PlayTurnView : MonoBehaviour, IPlayTurnView
     {
         [SerializeField]
         private MatchCacheScriptable _matchCacheData;
-
-        [SerializeField]
-        private TurnAnswersDraftScriptable _turnAnswersDraftData;
 
         [SerializeField]
         private TurnAnswersScriptable _turnAnswersData;
 
         [SerializeField]
         private TextMeshProUGUI _roundNumber;
-
-        [SerializeField]
-        private Transform _categoryListRoot;
 
         [SerializeField]
         private TextMeshProUGUI _initialLetter;
@@ -38,41 +33,60 @@ namespace TopicTwister.PlayTurn.Views
         [SerializeField]
         private LoadSceneEventScriptable _loadSceneEventContainer;
 
+        private List<TextMeshProUGUI> _userInputTexts;
+        private Transform _categoryListRoot;
+        public event EventDelegates.IPlayTurnView.LoadEventHandler Load;
+
         private void Start()
         {
+            new StartTurnPresenter(this);
+            _categoryListRoot = GameObject.Find("CategoryInputList").transform;
+            _userInputTexts = new List<TextMeshProUGUI>();
+
+            foreach (Transform child in _categoryListRoot)
+            {
+                _userInputTexts.Add(child.Find("UserInput").GetComponent<TextMeshProUGUI>());
+            }
+
             LoadRoundData();
             _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
             _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
+
+            Load?.Invoke(
+                userId: Configuration.TestUserId,
+                matchId: _matchCacheData.MatchDto.Id);
+
+            _matchCacheData.UserInputChanged += UpdateUserInputText;
         }
 
         private void LoadRoundData()
         {
-            TurnAnswerDraftDTO[] turnAnswerDrafts = new TurnAnswerDraftDTO[_categoryListRoot.childCount];
+            TurnAnswerDraftDto[] turnAnswerDrafts = new TurnAnswerDraftDto[_categoryListRoot.childCount];
             _roundNumber.text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
-            _initialLetter.text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString();
+            _initialLetter.text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
             GameObject child;
 
             for(int i = 0; i < _categoryListRoot.childCount; i++)
             {
                 child = _categoryListRoot.GetChild(i).Find("Category").gameObject;
                 child.GetComponent<TextMeshProUGUI>().text = _matchCacheData.RoundWithCategoriesDto.CategoryDtos[i].Name;
-                turnAnswerDrafts[i] = new TurnAnswerDraftDTO(
+                turnAnswerDrafts[i] = new TurnAnswerDraftDto(
                     category: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[i],
                     order: i);
             }
-            _turnAnswersDraftData.Initialize(turnAnswerDrafts);
+            _matchCacheData.Initialize(turnAnswerDrafts);
         }
 
-        public void CaptureAndSaveDataEventHandler()
+        private void CaptureAndSaveDataEventHandler()
         {
             _turnAnswersData.ClearAnswers();
 
             TurnAnswerDto[] turnAnswers = new TurnAnswerDto[5];
             int index = 0;
 
-            foreach (Transform childTransform in _categoryListRoot)
+            foreach (TextMeshProUGUI userInputText in _userInputTexts)
             {
-                string userInput = childTransform.Find("UserInput").gameObject.GetComponent<TextMeshProUGUI>().text.Trim();
+                string userInput = userInputText.text.Trim();
                 turnAnswers[index] = new TurnAnswerDto(
                     category: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[index],
                     userInput: userInput,
@@ -81,7 +95,19 @@ namespace TopicTwister.PlayTurn.Views
             }
 
             _turnAnswersData.AddAnswers(turnAnswers);
-            _loadSceneEventContainer.LoadSceneWithDelay(Scenes.TurnResultScene, 1f);
+            _loadSceneEventContainer.LoadSceneWithDelay(
+                Configuration.Scenes.TurnResultScene,
+                Configuration.TransitionsDuration.FromPlayTurnToTurnResult);
+        }
+
+        public void ReceiveUpdate(TurnDto turnDto)
+        {
+            _matchCacheData.TurnDto = turnDto;
+        }
+
+        private void UpdateUserInputText(int index)
+        {
+            _userInputTexts[index].text = _matchCacheData.TurnAnswerDrafts[index].UserInput;
         }
     }
 }

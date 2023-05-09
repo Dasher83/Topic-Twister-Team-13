@@ -25,7 +25,7 @@ namespace TopicTwister.Shared.Repositories
             _matchesIdGenerator = matchesIdGenerator;
         }
 
-        public Operation<Match> Save(Match match)
+        public Operation<Match> Insert(Match match)
         {
             Operation<List<Match>> GetAllOperationResult = GetAll();
             if (GetAllOperationResult.WasOk == false)
@@ -33,7 +33,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Match>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
             }
 
-            _readCache = _matchDaoMapper.ToDAOs(GetAllOperationResult.Outcome);
+            _readCache = _matchDaoMapper.ToDAOs(GetAllOperationResult.Result);
             _writeCache = _readCache.ToList();
             MatchDaoJson matchDao = _matchDaoMapper.ToDAO(match);
 
@@ -57,14 +57,14 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<bool>.Failure(errorMessage: GetOperationResult.ErrorMessage);
             }
 
-            MatchDaoJson matchToDelete = _matchDaoMapper.ToDAO(GetOperationResult.Outcome);
+            MatchDaoJson matchToDelete = _matchDaoMapper.ToDAO(GetOperationResult.Result);
             _writeCache = _readCache.ToList();
             _writeCache.Remove(matchToDelete);
             MatchDaosCollection collection = new MatchDaosCollection(_writeCache.ToArray());
             string newData = JsonUtility.ToJson(collection);
             File.WriteAllText(this._path, newData);
 
-            return Operation<bool>.Success(outcome: true);
+            return Operation<bool>.Success(result: true);
         }
     }
 }

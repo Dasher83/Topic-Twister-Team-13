@@ -91,7 +91,7 @@ namespace NewRoundTests
             #region -- Arrange --
             DateTime startDateTime = DateTime.UtcNow;
             Match match = new Match(startDateTime: startDateTime);
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Result;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
 
             int idsIndex = 0;
@@ -111,7 +111,7 @@ namespace NewRoundTests
             {
                 Operation<RoundWithCategoriesDto> actualResult = _useCase.Execute(matchDto: matchDto);
 
-                Round round = _roundWithCategoriesDtoMapper.FromDTO(actualResult.Outcome);
+                Round round = _roundWithCategoriesDtoMapper.FromDTO(actualResult.Result);
 
                 round = new Round(
                     id: round.Id,
@@ -123,7 +123,7 @@ namespace NewRoundTests
 
                 _roundsRepository.Update(round);
                 actualResults.Add(Operation<RoundWithCategoriesDto>.Success(
-                    outcome: _roundWithCategoriesDtoMapper.ToDTO(round)));
+                    result: _roundWithCategoriesDtoMapper.ToDTO(round)));
             }
             #endregion
 
@@ -137,10 +137,10 @@ namespace NewRoundTests
                         roundDto: new RoundDto(
                             id: ids[i],
                             roundNumber: i,
-                            initialLetter: actualResults[i].Outcome.RoundDto.InitialLetter,
+                            initialLetter: actualResults[i].Result.RoundDto.InitialLetter,
                             isActive: false,
                             matchId: match.Id),
-                        categoryDtos: actualResults[i].Outcome.CategoryDtos);
+                        categoryDtos: actualResults[i].Result.CategoryDtos);
 
                 expectedDtos.Add(expectedDto);
             }
@@ -149,13 +149,13 @@ namespace NewRoundTests
             {
                 if (i < MaxRounds - 1)
                 {
-                    Assert.AreNotEqual(actualResults[i].Outcome, actualResults[i + 1].Outcome);
+                    Assert.AreNotEqual(actualResults[i].Result, actualResults[i + 1].Result);
                 }
                 Assert.IsTrue(actualResults[i].WasOk);
-                Assert.AreEqual(expected: expectedDtos[i], actual: actualResults[i].Outcome);
-                Assert.AreEqual(expected: MaxCategories, actual: actualResults[i].Outcome.CategoryDtos.Count);
-                Assert.IsFalse(actualResults[i].Outcome.CategoryDtos.Any(category => category == null));
-                List<CategoryDto> duplicates = actualResults[i].Outcome.CategoryDtos
+                Assert.AreEqual(expected: expectedDtos[i], actual: actualResults[i].Result);
+                Assert.AreEqual(expected: MaxCategories, actual: actualResults[i].Result.CategoryDtos.Count);
+                Assert.IsFalse(actualResults[i].Result.CategoryDtos.Any(category => category == null));
+                List<CategoryDto> duplicates = actualResults[i].Result.CategoryDtos
                     .GroupBy(category => category.Id)
                     .Where(category => category.Count() > 1)
                     .SelectMany(category => category)
@@ -196,7 +196,7 @@ namespace NewRoundTests
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
 
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Result;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
@@ -223,7 +223,7 @@ namespace NewRoundTests
                 startDateTime: startDateTime,
                 endDateTime: endDateTime);
 
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Result;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
             #endregion
 
@@ -247,7 +247,7 @@ namespace NewRoundTests
             Match match = new Match(
                 startDateTime: startDateTime);
 
-            match = _matchesRepository.Save(match).Outcome;
+            match = _matchesRepository.Insert(match).Result;
             MatchDto matchDto = _matchDtoMapper.ToDTO(match);
 
             int idsIndex = 0;
@@ -267,7 +267,7 @@ namespace NewRoundTests
             {
                 Operation<RoundWithCategoriesDto> useCaseOperation = _useCase.Execute(matchDto: matchDto);
 
-                Round round = _roundWithCategoriesDtoMapper.FromDTO(useCaseOperation.Outcome);
+                Round round = _roundWithCategoriesDtoMapper.FromDTO(useCaseOperation.Result);
 
                 round = new Round(
                     id: round.Id,
@@ -279,7 +279,7 @@ namespace NewRoundTests
 
                 _roundsRepository.Update(round);
                 actualResults.Add(Operation<RoundWithCategoriesDto>.Success(
-                    outcome: _roundWithCategoriesDtoMapper.ToDTO(round)));
+                    result: _roundWithCategoriesDtoMapper.ToDTO(round)));
             }
 
             actualResults.Add(_useCase.Execute(matchDto: matchDto));

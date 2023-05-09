@@ -1,4 +1,3 @@
-using System;
 using TopicTwister.NewRound.Commands;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.Shared.Providers;
@@ -16,9 +15,9 @@ namespace TopicTwister.NewRound.Presenters
         public ResumeMatchPresenter(IResumeMatchView view)
         {
             _view = view;
-            _createRoundCommand = new CommandProvider<ResumeMatchCommand, IResumeMatchPresenter>().Provide();
+            _createRoundCommand = new CommandProvider<ResumeMatchCommand>().Provide();
             _createRoundCommand.Presenter = this;
-            _view.OnLoad += ResumeMatch;
+            _view.Load += ResumeMatch;
         }
 
         public void ResumeMatch(MatchDto matchDto)

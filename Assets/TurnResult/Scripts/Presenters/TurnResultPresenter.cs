@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TopicTwister.TurnResult.Actions;
+using TopicTwister.TurnResult.Commands;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.Providers;
 using TopicTwister.TurnResult.Shared.DTOs;
@@ -26,25 +26,25 @@ namespace TopicTwister.TurnResult.Presenters
         public TurnResultPresenter(ITurnResultView turnResultView)
         {
             _turnResultView = turnResultView;
-            _turnResultView.OnLoad += OnLoadHandler;
-            _evaluateAnswerCommand = new ActionProvider<EvaluateAnswersAction, ITurnResultPresenter>().Provide();
+            _turnResultView.Load += LoadEventHandler;
+            _evaluateAnswerCommand = new CommandProvider<EvaluateAnswersCommand>().Provide();
             _evaluateAnswerCommand.Presenter = this;
         }
 
         ~TurnResultPresenter()
         {
-            this._turnResultView.OnLoad -= OnLoadHandler;
+            this._turnResultView.Load -= LoadEventHandler;
         }
 
-        private void OnLoadHandler()
+        private void LoadEventHandler()
         {
             EvaluateAnswers(_turnResultView.GetAnswersToEvaluate());
         }
         
         public void EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
-            ((EvaluateAnswersAction)_evaluateAnswerCommand).TurnAnswers = answerToEvaluate.turnAnswers;
-            ((EvaluateAnswersAction)_evaluateAnswerCommand).InitialLetter = answerToEvaluate.initialLetter;
+            ((EvaluateAnswersCommand)_evaluateAnswerCommand).TurnAnswers = answerToEvaluate.turnAnswers;
+            ((EvaluateAnswersCommand)_evaluateAnswerCommand).InitialLetter = answerToEvaluate.initialLetter;
             _evaluateAnswerCommand.Execute();
         }
     }

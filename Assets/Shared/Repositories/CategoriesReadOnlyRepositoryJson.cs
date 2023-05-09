@@ -23,7 +23,7 @@ namespace TopicTwister.Shared.Repositories
         {
             _resourceName = resourceName;
             string data = Resources.Load<TextAsset>($"JSON/{_resourceName}").text;
-            _readCache = JsonUtility.FromJson<CategoryDaoCollection>(data).Categories;
+            _readCache = JsonUtility.FromJson<CategoryDaosCollection>(data).Categories;
             _categoryDaoMapper = categoryDaoJsonMapper;
         }
 
@@ -35,7 +35,7 @@ namespace TopicTwister.Shared.Repositories
                 .Select(categoryDao => _categoryDaoMapper.FromDAO(categoryDao))
                 .ToList();
 
-            return Operation<List<Category>>.Success(outcome: randomCategories);
+            return Operation<List<Category>>.Success(result: randomCategories);
         }
 
         public Operation<List<Category>> GetMany(List<int> categoryIds)
@@ -55,17 +55,17 @@ namespace TopicTwister.Shared.Repositories
                     errorMessage: $"Categories not found with ids: [{string.Join(", ", notFoundIds)}]");
             }
 
-            return Operation<List<Category>>.Success(outcome: filteredCategories);
+            return Operation<List<Category>>.Success(result: filteredCategories);
         }
 
         public Operation<bool> Exists(string name)
         {
-            return Operation<bool>.Success(outcome: _readCache.Any(catgory => catgory.Name == name));
+            return Operation<bool>.Success(result: _readCache.Any(catgory => catgory.Name == name));
         }
 
         public Operation<bool> Exists(string[] names)
         {
-            return Operation<bool>.Success(outcome: names.All(name => Exists(name).Outcome));
+            return Operation<bool>.Success(result: names.All(name => Exists(name).Result));
         }
     }
 }

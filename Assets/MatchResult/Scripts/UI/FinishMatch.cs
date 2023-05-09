@@ -16,6 +16,6 @@ public class FinishMatch : MonoBehaviour
 
     public void OnClickEventHandler()
     {
-        _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Scenes.Home);
+        _loadSceneEventContainer.LoadSceneWithoutDelay?.Invoke(Configuration.Scenes.Home);
     }
 }

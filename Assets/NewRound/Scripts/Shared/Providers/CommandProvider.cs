@@ -16,7 +16,7 @@ using TopicTwister.Shared.UseCases;
 
 namespace TopicTwister.NewRound.Shared.Providers
 {
-    public class CommandProvider<Command, Presenter> where Command : ICommand<Presenter>
+    public class CommandProvider<Command> where Command : ICommand<IResumeMatchPresenter>
     {
         private IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
         private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
@@ -32,7 +32,7 @@ namespace TopicTwister.NewRound.Shared.Providers
         private ICreateRoundSubUseCase _createRoundSubUseCase;
         private IResumeMatchUseCase _resumeMatchUseCase;
 
-        private readonly Dictionary<Type, object> _actions;
+        private readonly Dictionary<Type, object> _commands;
 
         public CommandProvider()
         {
@@ -84,7 +84,7 @@ namespace TopicTwister.NewRound.Shared.Providers
                 roundsReadOnlyRepository: _roundsReadOnlyRepository,
                 roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
 
-            _actions = new()
+            _commands = new()
             {
                 {
                     typeof(ResumeMatchCommand),
@@ -96,8 +96,8 @@ namespace TopicTwister.NewRound.Shared.Providers
 
         public Command Provide()
         {
-            _actions.TryGetValue(typeof(Command), out object action);
-            return (Command)action;
+            _commands.TryGetValue(typeof(Command), out object command);
+            return (Command)command;
         }
     }
 }

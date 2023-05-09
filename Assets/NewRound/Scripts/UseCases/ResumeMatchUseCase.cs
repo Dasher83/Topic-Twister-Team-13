@@ -32,19 +32,19 @@ namespace TopicTwister.NewRound.UseCases
 
             if(createRoundSubUseCaseOperation.WasOk == true)
             {
-                return Operation<RoundWithCategoriesDto>.Success(outcome: createRoundSubUseCaseOperation.Outcome);
+                return Operation<RoundWithCategoriesDto>.Success(result: createRoundSubUseCaseOperation.Result);
             }
 
-            Match match = _matchesReadOnlyRepository.Get(matchDto.Id).Outcome;
+            Match match = _matchesReadOnlyRepository.Get(matchDto.Id).Result;
             match = new Match(
                 id: match.Id,
                 startDateTime: match.StartDateTime,
                 endDateTime: match.EndDateTime,
-                rounds: _roundsReadOnlyRepository.GetMany(matchDto.Id).Outcome);
+                rounds: _roundsReadOnlyRepository.GetMany(matchDto.Id).Result);
 
             RoundWithCategoriesDto roundWithCategoriesDto = _roundWithCategoriesDtoMapper.ToDTO(match.ActiveRound);
 
-            return Operation<RoundWithCategoriesDto>.Success(outcome: roundWithCategoriesDto);
+            return Operation<RoundWithCategoriesDto>.Success(result: roundWithCategoriesDto);
         }
     }
 }

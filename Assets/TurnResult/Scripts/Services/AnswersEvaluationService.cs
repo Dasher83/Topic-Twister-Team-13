@@ -21,7 +21,7 @@ namespace TopicTwister.TurnResult.Services
         public List<EvaluatedAnswerDto> EvaluateAnswers(AnswersToEvaluateDTO answerToEvaluate)
         {
             Operation<List<EvaluatedAnswerDto>> useCaseOperation = _useCase.EvaluateAnswers(answerToEvaluate);
-            return useCaseOperation.WasOk ? useCaseOperation.Outcome : null;
+            return useCaseOperation.WasOk ? useCaseOperation.Result : null;
         }
     }
 }

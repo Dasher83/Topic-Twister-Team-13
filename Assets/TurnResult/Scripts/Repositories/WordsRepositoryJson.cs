@@ -28,7 +28,7 @@ namespace TopicTwister.TurnResult.Repositories
                     word.CategoryId == categoryId &&
                     word.Text.ToLower()[0] == initialLetter.ToString().ToLower()[0]);
 
-            Operation<bool> filterWordsOperationResult = Operation<bool>.Success(outcome: exists);
+            Operation<bool> filterWordsOperationResult = Operation<bool>.Success(result: exists);
             return filterWordsOperationResult;
         }
     }
