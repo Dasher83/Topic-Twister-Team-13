@@ -25,13 +25,13 @@ public class EvaluateAnswersUseCaseTest
     {
         #region -- Arrange --
         char initialLetter = 'A';
-        List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
+        List<AnswerDto> turnAnswers = new List<AnswerDto>()
         {
-            new TurnAnswerDto(category: new CategoryDto(id: 1, ""), userInput: "", order: 0),
-            new TurnAnswerDto(category: new CategoryDto(id: 2, ""), userInput: "", order: 1),
-            new TurnAnswerDto(category: new CategoryDto(id: 3, ""), userInput: "", order: 2),
-            new TurnAnswerDto(category: new CategoryDto(id: 4, ""), userInput: "", order: 3),
-            new TurnAnswerDto(category: new CategoryDto(id: 5, ""), userInput: "", order: 4),
+            new AnswerDto(category: new CategoryDto(id: 1, ""), userInput: "", order: 0),
+            new AnswerDto(category: new CategoryDto(id: 2, ""), userInput: "", order: 1),
+            new AnswerDto(category: new CategoryDto(id: 3, ""), userInput: "", order: 2),
+            new AnswerDto(category: new CategoryDto(id: 4, ""), userInput: "", order: 3),
+            new AnswerDto(category: new CategoryDto(id: 5, ""), userInput: "", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
@@ -42,7 +42,7 @@ public class EvaluateAnswersUseCaseTest
 
         #region -- Assert --
         List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>();
-        foreach (TurnAnswerDto answer in turnAnswers)
+        foreach (AnswerDto answer in turnAnswers)
         {
             expectedOperation.Add(new EvaluatedAnswerDto(
                 answer.Category,
@@ -60,13 +60,13 @@ public class EvaluateAnswersUseCaseTest
     {
         #region -- Arrange --
         char initialLetter = 'A';
-        List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
+        List<AnswerDto> turnAnswers = new List<AnswerDto>()
         {
-            new TurnAnswerDto(category: new CategoryDto(id: 1, ""), userInput: "notTest", order: 0),
-            new TurnAnswerDto(category: new CategoryDto(id: 2, ""), userInput: "notTest", order: 1),
-            new TurnAnswerDto(category: new CategoryDto(id: 3, ""), userInput: "notTest", order: 2),
-            new TurnAnswerDto(category: new CategoryDto(id: 4, ""), userInput: "notTest", order: 3),
-            new TurnAnswerDto(category: new CategoryDto(id: 5, ""), userInput: "notTest", order: 4),
+            new AnswerDto(category: new CategoryDto(id: 1, ""), userInput: "notTest", order: 0),
+            new AnswerDto(category: new CategoryDto(id: 2, ""), userInput: "notTest", order: 1),
+            new AnswerDto(category: new CategoryDto(id: 3, ""), userInput: "notTest", order: 2),
+            new AnswerDto(category: new CategoryDto(id: 4, ""), userInput: "notTest", order: 3),
+            new AnswerDto(category: new CategoryDto(id: 5, ""), userInput: "notTest", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
@@ -77,7 +77,7 @@ public class EvaluateAnswersUseCaseTest
 
         #region -- Assert --
         List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>();
-        foreach (TurnAnswerDto answer in turnAnswers)
+        foreach (AnswerDto answer in turnAnswers)
         {
             expectedOperation.Add(new EvaluatedAnswerDto(
                 answer.Category,
@@ -104,21 +104,21 @@ public class EvaluateAnswersUseCaseTest
         {
             foreach (char letter in alphabet)
             {
-                List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
+                List<AnswerDto> turnAnswers = new List<AnswerDto>()
                 {
-                    new TurnAnswerDto(
+                    new AnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 0),
-                    new TurnAnswerDto(
+                    new AnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 1),
-                    new TurnAnswerDto(
+                    new AnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 2),
-                    new TurnAnswerDto(
+                    new AnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 3),
-                    new TurnAnswerDto(
+                    new AnswerDto(
                         category: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 4),
                 };
@@ -131,7 +131,7 @@ public class EvaluateAnswersUseCaseTest
 
                 #region -- Assert --
                 List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>();
-                foreach (TurnAnswerDto answer in turnAnswers)
+                foreach (AnswerDto answer in turnAnswers)
                 {
                     expectedOperation.Add(new EvaluatedAnswerDto(
                         answer.Category,
@@ -160,21 +160,21 @@ public class EvaluateAnswersUseCaseTest
 
         foreach (char letter in alphabet)
         {
-            List<TurnAnswerDto> turnAnswers = new List<TurnAnswerDto>()
+            List<AnswerDto> turnAnswers = new List<AnswerDto>()
             {
-                new TurnAnswerDto(
+                new AnswerDto(
                     category: new CategoryDto(randomCategoryIds[0], ""),
                     userInput: $"{letter} test", order: 0),
-                new TurnAnswerDto(
+                new AnswerDto(
                     category: new CategoryDto(randomCategoryIds[1], ""),
                     userInput: "", order: 1),
-                new TurnAnswerDto(
+                new AnswerDto(
                     category: new CategoryDto(randomCategoryIds[2], ""),
                     userInput: "notTest", order: 2),
-                new TurnAnswerDto(
+                new AnswerDto(
                     category: new CategoryDto(randomCategoryIds[3], ""),
                     userInput: "", order: 3),
-                new TurnAnswerDto(
+                new AnswerDto(
                     category: new CategoryDto(randomCategoryIds[4], ""),
                     userInput: $"{letter} test", order: 4),
             };

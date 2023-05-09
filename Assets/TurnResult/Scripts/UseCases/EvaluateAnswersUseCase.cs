@@ -24,7 +24,7 @@ namespace TopicTwister.TurnResult.UseCases
             EvaluatedAnswerDto evaluatedAnswer;
             bool isCorrect;
 
-            foreach(TurnAnswerDto turnAnswer in answerToEvaluate.turnAnswers)
+            foreach(AnswerDto turnAnswer in answerToEvaluate.turnAnswers)
             {
                 if (string.IsNullOrEmpty(turnAnswer.UserInput))
                 {

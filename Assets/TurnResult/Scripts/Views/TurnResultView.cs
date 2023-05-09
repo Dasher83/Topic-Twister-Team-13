@@ -39,7 +39,7 @@ namespace TopicTwister.TurnResult.Views
         [SerializeField]
         private FakeMatchScriptable _fakeMatchData;
 
-        private List<TurnAnswerDto> _turnResultViewList;
+        private List<AnswerDto> _turnResultViewList;
         private Sprite _answerResultImage;
         private EvaluatedAnswerDto _evaluatedAnswer;
 

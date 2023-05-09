@@ -1,11 +1,26 @@
 using System;
+using NSubstitute;
 using NUnit.Framework;
+using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.DTOs;
+using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Models;
+using TopicTwister.Shared.Utils;
 
 
 public class EndTurnUseCaseUnitTests
 {
+    private IEndTurnUseCase _useCase;
+    private IUsersReadOnlyRepository _usersReadOnlyRepository;
+
     [SetUp]
-    public void SetUp() {}
+    public void SetUp()
+    {
+        _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
+
+        _useCase = new EndTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository);
+    }
 
     [Test]
     public void Test_ok_for_user_with_iniciative_inside_time_limit()
@@ -34,7 +49,29 @@ public class EndTurnUseCaseUnitTests
     [Test]
     public void Test_fail_due_to_unknown_user()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = -1;
+        int matchId = -1;
+
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                return Operation<User>.Failure(errorMessage: $"User not found with id: {userId}");
+            });
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[5]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"User not found with id: {userId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]

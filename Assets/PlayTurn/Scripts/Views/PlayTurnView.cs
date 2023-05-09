@@ -61,7 +61,7 @@ namespace TopicTwister.PlayTurn.Views
 
         private void LoadRoundData()
         {
-            TurnAnswerDraftDto[] turnAnswerDrafts = new TurnAnswerDraftDto[_categoryListRoot.childCount];
+            AnswerDraftDto[] answerDrafts = new AnswerDraftDto[_categoryListRoot.childCount];
             _roundNumber.text = $"Ronda {_matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber + 1}";
             _initialLetter.text = _matchCacheData.RoundWithCategoriesDto.RoundDto.InitialLetter.ToString().ToUpper();
             GameObject child;
@@ -70,31 +70,31 @@ namespace TopicTwister.PlayTurn.Views
             {
                 child = _categoryListRoot.GetChild(i).Find("Category").gameObject;
                 child.GetComponent<TextMeshProUGUI>().text = _matchCacheData.RoundWithCategoriesDto.CategoryDtos[i].Name;
-                turnAnswerDrafts[i] = new TurnAnswerDraftDto(
+                answerDrafts[i] = new AnswerDraftDto(
                     category: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[i],
                     order: i);
             }
-            _matchCacheData.Initialize(turnAnswerDrafts);
+            _matchCacheData.Initialize(answerDrafts);
         }
 
         private void CaptureAndSaveDataEventHandler()
         {
             _turnAnswersData.ClearAnswers();
 
-            TurnAnswerDto[] turnAnswers = new TurnAnswerDto[5];
+            AnswerDto[] answers = new AnswerDto[5];
             int index = 0;
 
             foreach (TextMeshProUGUI userInputText in _userInputTexts)
             {
                 string userInput = userInputText.text.Trim();
-                turnAnswers[index] = new TurnAnswerDto(
+                answers[index] = new AnswerDto(
                     category: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[index],
                     userInput: userInput,
                     order: index);
                 index++;
             }
 
-            _turnAnswersData.AddAnswers(turnAnswers);
+            _turnAnswersData.AddAnswers(answers);
             _loadSceneEventContainer.LoadSceneWithDelay(
                 Configuration.Scenes.TurnResultScene,
                 Configuration.TransitionsDuration.FromPlayTurnToTurnResult);

@@ -5,15 +5,15 @@ using System;
 namespace TopicTwister.Shared.DTOs
 {
     [Serializable]
-    public class TurnAnswerDto
+    public class AnswerDto
     {
         [SerializeField] private CategoryDto _category;
         [SerializeField] private string _userInput;
         [SerializeField] private int _order;
 
-        private TurnAnswerDto() { }
+        private AnswerDto() { }
 
-        public TurnAnswerDto(CategoryDto category, string userInput, int order)
+        public AnswerDto(CategoryDto category, string userInput, int order)
         {
             _category = category;
             _userInput = userInput;
