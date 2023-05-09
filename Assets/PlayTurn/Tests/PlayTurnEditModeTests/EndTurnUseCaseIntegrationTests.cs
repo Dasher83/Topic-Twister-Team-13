@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Repositories.IdGenerators;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
@@ -9,6 +11,7 @@ using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.IdGenerators;
+using TopicTwister.Shared.TestUtils;
 using TopicTwister.Shared.Utils;
 
 
@@ -27,6 +30,8 @@ public class EndTurnUseCaseIntegrationTests
     private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
     private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
     private IdaoMapper<Category, CategoryDaoJson> _categoryDaoJsonMapper;
+    private IRoundsRepository _roundsRepository;
+    private IUniqueIdGenerator _roundsIdGenerator;
 
     [SetUp]
     public void SetUp()
@@ -80,10 +85,25 @@ public class EndTurnUseCaseIntegrationTests
             resourceName: "TestData/Matches",
             matchesIdGenerator: _matchesIdGenerator,
             matchDaoMapper: _matchDaoJsonMapper);
+
+        _roundsIdGenerator = new RoundsIdGenerator(
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+
+        _roundsRepository = new RoundsRepositoryJson(
+            resourceName: "TestData/Rounds",
+            roundsIdGenerator: _roundsIdGenerator,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
     }
 
     [TearDown]
-    public void TearDown() { }
+    public void TearDown()
+    {
+        new MatchesDeleteJson().Delete();
+        new UserMatchesDeleteJson().Delete();
+        new RoundsDeleteJson().Delete();
+        new TurnsDeleteJson().Delete();
+    }
 
     [Test]
     public void Test_ok_for_user_with_iniciative_inside_time_limit()
@@ -180,7 +200,52 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_unknown_turn()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        User user = _usersReadOnlyRepository.Get(userId).Result;
+        Match match = new Match();
+        match = _matchesRepository.Insert(match).Result;
+
+        Round round = new Round(
+            roundNumber: 0,
+            initialLetter: 'P',
+            isActive: true,
+            match: match,
+            categories: new List<Category>());
+
+        _roundsRepository.Insert(round);
+
+        match = new Match(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime,
+            rounds: _roundsReadOnlyRepository.GetMany(match.Id).Result);
+
+        UserMatch userMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: user,
+            match: match);
+        userMatch = _userMatchesRepository.Insert(userMatch).Result;
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(
+            userId: userMatch.User.Id,
+            matchId: userMatch.Match.Id,
+            answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+
+        Assert.AreEqual(
+            expected: $"Turn not found for user with id {user.Id} " +
+                $"in round with id {match.ActiveRound.Id} in match with id {match.Id}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]
