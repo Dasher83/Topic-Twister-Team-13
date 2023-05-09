@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Utils;
@@ -88,6 +90,22 @@ public class EndTurnUseCase : IEndTurnUseCase
         {
             string errorMessage = $"Turn already ended for user with id {user.Id} " +
                     $"in round with id {activeRound.Id} in match with id {match.Id}";
+
+            return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
+        }
+
+        if(answerDtos.Length > Configuration.CategoriesPerRound)
+        {
+            string errorMessage = $"Too many answers for turn of user with id {user.Id} " +
+                $"for round with id {activeRound.Id} for match with id {match.Id}";
+
+            return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
+        }
+
+        if (answerDtos.Length < Configuration.CategoriesPerRound)
+        {
+            string errorMessage = $"Too few answers for turn of user with id {user.Id} " +
+                $"for round with id {activeRound.Id} for match with id {match.Id}";
 
             return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
         }
