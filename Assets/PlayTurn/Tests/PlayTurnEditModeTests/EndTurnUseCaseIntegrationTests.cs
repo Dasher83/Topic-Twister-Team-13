@@ -309,7 +309,68 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_too_many_or_too_few_answers()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        User user = _usersReadOnlyRepository.Get(userId).Result;
+        Match match = new Match();
+        match = _matchesRepository.Insert(match).Result;
+
+        Round round = new Round(
+            roundNumber: 0,
+            initialLetter: 'P',
+            isActive: true,
+            match: match,
+            categories: new List<Category>());
+
+        _roundsRepository.Insert(round);
+
+        match = new Match(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime,
+            rounds: _roundsReadOnlyRepository.GetMany(match.Id).Result);
+
+        UserMatch userMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: user,
+            match: match);
+        userMatch = _userMatchesRepository.Insert(userMatch).Result;
+
+        Turn turn = new Turn(
+            user: user,
+            round: match.ActiveRound,
+            startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds));
+
+        turn = _turnsRepository.Insert(turn).Result;
+        #endregion
+
+        #region -- Act & Assert--
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(
+                userId: user.Id,
+                matchId: match.Id,
+                answerDtos: new AnswerDto[Configuration.CategoriesPerRound - 1]);
+
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Too few answers for turn of user with id {user.Id} " +
+                $"for round with id {match.ActiveRound.Id} for match with id {match.Id}",
+            actual: useCaseOperation.ErrorMessage);
+
+        useCaseOperation = _useCase
+            .Execute(
+                userId: user.Id,
+                matchId: match.Id,
+                answerDtos: new AnswerDto[Configuration.CategoriesPerRound + 1]);
+
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Too many answers for turn of user with id {user.Id} " +
+                $"for round with id {match.ActiveRound.Id} for match with id {match.Id}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]
