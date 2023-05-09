@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
@@ -14,6 +15,7 @@ public class EndTurnUseCaseUnitTests
     private IEndTurnUseCase _useCase;
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+    private IUserMatchesRepository _userMatchesRepository;
 
     [SetUp]
     public void SetUp()
@@ -22,9 +24,12 @@ public class EndTurnUseCaseUnitTests
 
         _matchesReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
 
+        _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
+
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository);
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository);
     }
 
     [Test]
@@ -117,7 +122,45 @@ public class EndTurnUseCaseUnitTests
     [Test]
     public void Test_fail_due_to_user_not_in_match()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        int matchId = 0;
+
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                return Operation<User>.Success(result: new User(id: userId));
+            });
+
+        _matchesReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int matchId = (int)args[0];
+                return Operation<Match>.Success(result: new Match(id: matchId, startDateTime: DateTime.UtcNow));
+            });
+
+        _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                int matchId = (int)args[1];
+                return Operation<UserMatch>.Failure(
+                    errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
+            });
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"User with id {userId} is not involved in match with id {matchId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]

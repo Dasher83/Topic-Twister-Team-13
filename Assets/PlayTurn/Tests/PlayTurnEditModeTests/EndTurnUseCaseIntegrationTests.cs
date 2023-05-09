@@ -17,6 +17,8 @@ public class EndTurnUseCaseIntegrationTests
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
+    private IUserMatchesRepository _userMatchesRepository;
+    private IdaoMapper<UserMatch, UserMatchDaoJson> _userMatchDaoMapper;
 
     [SetUp]
     public void SetUp()
@@ -29,9 +31,18 @@ public class EndTurnUseCaseIntegrationTests
             resourceName: "TestData/Matches",
             matchDaoMapper: _matchDaoJsonMapper);
 
+        _userMatchDaoMapper = new UserMatchDaoJsonMapper(
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userReadOnlyRepository: _usersReadOnlyRepository);
+
+        _userMatchesRepository = new UserMatchesRepositoryJson(
+            resourceName: "TestData/UserMatches",
+            userMatchDaoMapper: _userMatchDaoMapper);
+
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository);
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository);
     }
 
     [TearDown]

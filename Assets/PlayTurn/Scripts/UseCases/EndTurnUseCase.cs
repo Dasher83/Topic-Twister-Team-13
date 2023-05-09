@@ -10,13 +10,16 @@ public class EndTurnUseCase : IEndTurnUseCase
 {
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
+    private IUserMatchesRepository _userMatchesRepository;
 
     public EndTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
-        IMatchesReadOnlyRepository matchesReadOnlyRepository)
+        IMatchesReadOnlyRepository matchesReadOnlyRepository,
+        IUserMatchesRepository userMatchesRepository)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
+        _userMatchesRepository = userMatchesRepository;
     }
 
     public Operation<TurnWithEvaluatedAnswersDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
@@ -33,6 +36,16 @@ public class EndTurnUseCase : IEndTurnUseCase
         if (getMatchOperation.WasOk == false)
         {
             return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: getMatchOperation.ErrorMessage);
+        }
+
+        Match match = getMatchOperation.Result;
+
+        Operation<UserMatch> getUserMatchOperation = _userMatchesRepository.Get(userId: userId, matchId: match.Id);
+
+        if (getUserMatchOperation.WasOk == false)
+        {
+            return Operation<TurnWithEvaluatedAnswersDto>.Failure(
+                errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
         }
 
         throw new NotImplementedException();
