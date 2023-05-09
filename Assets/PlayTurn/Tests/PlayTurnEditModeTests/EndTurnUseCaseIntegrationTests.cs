@@ -346,7 +346,7 @@ public class EndTurnUseCaseIntegrationTests
         turn = _turnsRepository.Insert(turn).Result;
         #endregion
 
-        #region -- Act & Assert--
+        #region -- Act & Assert --
         Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
             .Execute(
                 userId: user.Id,
