@@ -13,14 +13,18 @@ public class EndTurnUseCaseUnitTests
 {
     private IEndTurnUseCase _useCase;
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
+    private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
 
     [SetUp]
     public void SetUp()
     {
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
 
+        _matchesReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
+
         _useCase = new EndTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository);
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository);
     }
 
     [Test]
@@ -78,7 +82,36 @@ public class EndTurnUseCaseUnitTests
     [Test]
     public void Test_fail_due_to_unknown_match()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        int matchId = -1;
+
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int userId = (int)args[0];
+                return Operation<User>.Success(result: new User(id: userId));
+            });
+
+        _matchesReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int matchId = (int)args[0];
+                return Operation<Match>.Failure(errorMessage: $"Match not found with id: {matchId}");
+            });
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Match not found with id: {matchId}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]

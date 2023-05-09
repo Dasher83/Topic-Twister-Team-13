@@ -9,10 +9,14 @@ using TopicTwister.Shared.Utils;
 public class EndTurnUseCase : IEndTurnUseCase
 {
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
+    private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
 
-    public EndTurnUseCase(IUsersReadOnlyRepository usersReadOnlyRepository)
+    public EndTurnUseCase(
+        IUsersReadOnlyRepository usersReadOnlyRepository,
+        IMatchesReadOnlyRepository matchesReadOnlyRepository)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
+        _matchesReadOnlyRepository = matchesReadOnlyRepository;
     }
 
     public Operation<TurnWithEvaluatedAnswersDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
@@ -22,6 +26,13 @@ public class EndTurnUseCase : IEndTurnUseCase
         if (getUserOperation.WasOk == false)
         {
             return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: getUserOperation.ErrorMessage);
+        }
+
+        Operation<Match> getMatchOperation = _matchesReadOnlyRepository.Get(id: matchId);
+
+        if (getMatchOperation.WasOk == false)
+        {
+            return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: getMatchOperation.ErrorMessage);
         }
 
         throw new NotImplementedException();

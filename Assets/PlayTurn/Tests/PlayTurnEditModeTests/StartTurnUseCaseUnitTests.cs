@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
@@ -199,7 +200,7 @@ public class StartTurnUseCaseUnitTests
     public void Test_fail_due_to_unknown_match()
     {
         #region -- Arrange --
-        int userId = 0;
+        int userId = Configuration.TestUserId;
         int matchId = -1;
 
         _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(

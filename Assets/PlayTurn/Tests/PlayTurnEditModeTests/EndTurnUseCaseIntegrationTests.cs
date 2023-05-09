@@ -12,6 +12,7 @@ public class EndTurnUseCaseIntegrationTests
 {
     private IEndTurnUseCase _useCase;
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
+    private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
 
     [SetUp]
     public void SetUp()
@@ -19,7 +20,8 @@ public class EndTurnUseCaseIntegrationTests
         _usersReadOnlyRepository = new UsersReadOnlyRepositoryInMemory();
 
         _useCase = new EndTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository);
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository);
     }
 
     [TearDown]
