@@ -251,7 +251,59 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_already_ended_turn()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        User user = _usersReadOnlyRepository.Get(userId).Result;
+        Match match = new Match();
+        match = _matchesRepository.Insert(match).Result;
+
+        Round round = new Round(
+            roundNumber: 0,
+            initialLetter: 'P',
+            isActive: true,
+            match: match,
+            categories: new List<Category>());
+
+        _roundsRepository.Insert(round);
+
+        match = new Match(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime,
+            rounds: _roundsReadOnlyRepository.GetMany(match.Id).Result);
+
+        UserMatch userMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: user,
+            match: match);
+        userMatch = _userMatchesRepository.Insert(userMatch).Result;
+
+        Turn turn = new Turn(
+            user: user,
+            round: match.ActiveRound,
+            startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds),
+            endDateTime: DateTime.UtcNow);
+
+        turn = _turnsRepository.Insert(turn).Result;
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(
+                userId: userMatch.User.Id,
+                matchId: userMatch.Match.Id,
+                answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+        Assert.AreEqual(
+            expected: $"Turn already ended for user with id {turn.User.Id} " +
+                    $"in round with id {turn.Round.Id} in match with id {turn.Round.Match.Id}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 
     [Test]
