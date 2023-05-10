@@ -61,25 +61,25 @@ public class EndTurnUseCaseUnitTests
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_outside_time_limit()
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_non_final_round()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_round()
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_non_final_round()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_match()
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_final_round_and_match()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_round()
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_final_round_and_match()
     {
         throw new NotImplementedException();
     }
@@ -577,13 +577,15 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch>.Success(result: userMatch);
             });
 
-        List<Category> categories = new List<Category>();
-        categories.Add(new Category(id: 0, name: ""));
-        categories.Add(new Category(id: 1, name: ""));
-        categories.Add(new Category(id: 2, name: ""));
-        categories.Add(new Category(id: 3, name: ""));
-        categories.Add(new Category(id: 4, name: ""));
-        
+        List<Category> categories = new List<Category>
+        {
+            new Category(id: 0, name: ""),
+            new Category(id: 1, name: ""),
+            new Category(id: 2, name: ""),
+            new Category(id: 3, name: ""),
+            new Category(id: 4, name: "")
+        };
+
         _roundsReadOnlyRepository.Get(roundId).Returns(
             (args) =>
             {

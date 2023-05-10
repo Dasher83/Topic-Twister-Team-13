@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Repositories.IdGenerators;
@@ -375,10 +376,10 @@ public class EndTurnUseCaseIntegrationTests
             startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds));
 
         turn = _turnsRepository.Insert(turn).Result;
-        AnswerDto[] answerDto = new AnswerDto[Configuration.CategoriesPerRound + 1];
-        for(int i = 0; i < answerDto.Length; i++)
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound + 1];
+        for(int i = 0; i < answerDtos.Length; i++)
         {
-            answerDto[i] = new AnswerDto(
+            answerDtos[i] = new AnswerDto(
                 categoryDto: _categoryDtoMapper.ToDTO(categories[i]),
                 userInput: "", order: i);
         }
@@ -389,7 +390,7 @@ public class EndTurnUseCaseIntegrationTests
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
-                answerDtos: answerDto.Take(Configuration.CategoriesPerRound - 1).ToArray());
+                answerDtos: answerDtos.Take(Configuration.CategoriesPerRound - 1).ToArray());
 
         Assert.IsFalse(useCaseOperation.WasOk);
         Assert.AreEqual(
@@ -401,7 +402,7 @@ public class EndTurnUseCaseIntegrationTests
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
-                answerDtos: answerDto.Take(Configuration.CategoriesPerRound + 1).ToArray());
+                answerDtos: answerDtos.Take(Configuration.CategoriesPerRound + 1).ToArray());
 
         Assert.IsFalse(useCaseOperation.WasOk);
         Assert.AreEqual(
@@ -414,6 +415,73 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_fail_due_to_category_mismatch()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userId = Configuration.TestUserId;
+        User user = _usersReadOnlyRepository.Get(userId).Result;
+        Match match = new Match();
+        match = _matchesRepository.Insert(match).Result;
+
+        List<Category> categories = _categoriesReadOnlyRepository
+            .GetRandomCategories(Configuration.CategoriesPerRound + 1).Result;
+
+        Round round = new Round(
+            roundNumber: 0,
+            initialLetter: 'P',
+            isActive: true,
+            match: match,
+            categories: categories);
+
+        _roundsRepository.Insert(round);
+
+        match = new Match(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime,
+            rounds: _roundsReadOnlyRepository.GetMany(match.Id).Result);
+
+        UserMatch userMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: user,
+            match: match);
+        userMatch = _userMatchesRepository.Insert(userMatch).Result;
+
+        Turn turn = new Turn(
+            user: userMatch.User,
+            round: match.ActiveRound,
+            startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds));
+
+        turn = _turnsRepository.Insert(turn).Result;
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];
+
+        for (int i = 0; i < answerDtos.Length - 1; i++)
+        {
+            answerDtos[i] = new AnswerDto(
+                categoryDto: _categoryDtoMapper.ToDTO(categories[i]),
+                userInput: "", order: i);
+        }
+
+        answerDtos[^1] = new AnswerDto(
+            categoryDto: new CategoryDto(id: -1, name: ""),
+            userInput: "", order: answerDtos.Length - 1);
+        #endregion
+
+        #region -- Act --
+        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+            .Execute(
+                userId: turn.User.Id,
+                matchId: turn.Round.Match.Id,
+                answerDtos: answerDtos);
+        #endregion
+
+        #region -- Assert --
+        Assert.IsFalse(useCaseOperation.WasOk);
+
+        Assert.AreEqual(
+            expected: $"Some of your answers don't match the categories for round with id " +
+                $"{turn.Round.Id} in match with id {turn.Round.Match.Id}",
+            actual: useCaseOperation.ErrorMessage);
+        #endregion
     }
 }
