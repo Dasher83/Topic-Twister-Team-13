@@ -88,7 +88,7 @@ namespace TopicTwister.PlayTurn.Views
             {
                 string userInput = userInputText.text.Trim();
                 answers[index] = new AnswerDto(
-                    category: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[index],
+                    categoryDto: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[index],
                     userInput: userInput,
                     order: index);
                 index++;

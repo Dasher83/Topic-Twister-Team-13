@@ -67,6 +67,30 @@ public class EndTurnUseCaseUnitTests
     }
 
     [Test]
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_round()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_match()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_round()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_match()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
     public void Test_fail_due_to_unknown_user()
     {
         #region -- Arrange --
@@ -469,7 +493,7 @@ public class EndTurnUseCaseUnitTests
         for (int i = 0; i < answerDtos.Length; i++)
         {
             categoryDto = new CategoryDto(id: categories[i].Id, name: categories[i].Name);
-            answerDtos[i] = new AnswerDto(category: categoryDto, userInput: "", order: i);
+            answerDtos[i] = new AnswerDto(categoryDto: categoryDto, userInput: "", order: i);
         }
         #endregion
 
@@ -599,11 +623,11 @@ public class EndTurnUseCaseUnitTests
         for (int i = 0; i < answerDtos.Length-1; i++)
         {
             categoryDto = new CategoryDto(id: categories[i].Id, name: categories[i].Name);
-            answerDtos[i] = new AnswerDto(category: categoryDto, userInput: "", order: i);
+            answerDtos[i] = new AnswerDto(categoryDto: categoryDto, userInput: "", order: i);
         }
         
         categoryDto = new CategoryDto(id: -1, name: "");
-        answerDtos[^1] = new AnswerDto(category: categoryDto, userInput: "", order: answerDtos.Length-1);
+        answerDtos[^1] = new AnswerDto(categoryDto: categoryDto, userInput: "", order: answerDtos.Length-1);
         #endregion
 
         #region -- Act --

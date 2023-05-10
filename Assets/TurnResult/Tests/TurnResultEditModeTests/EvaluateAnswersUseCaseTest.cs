@@ -27,11 +27,11 @@ public class EvaluateAnswersUseCaseTest
         char initialLetter = 'A';
         List<AnswerDto> turnAnswers = new List<AnswerDto>()
         {
-            new AnswerDto(category: new CategoryDto(id: 1, ""), userInput: "", order: 0),
-            new AnswerDto(category: new CategoryDto(id: 2, ""), userInput: "", order: 1),
-            new AnswerDto(category: new CategoryDto(id: 3, ""), userInput: "", order: 2),
-            new AnswerDto(category: new CategoryDto(id: 4, ""), userInput: "", order: 3),
-            new AnswerDto(category: new CategoryDto(id: 5, ""), userInput: "", order: 4),
+            new AnswerDto(categoryDto: new CategoryDto(id: 1, ""), userInput: "", order: 0),
+            new AnswerDto(categoryDto: new CategoryDto(id: 2, ""), userInput: "", order: 1),
+            new AnswerDto(categoryDto: new CategoryDto(id: 3, ""), userInput: "", order: 2),
+            new AnswerDto(categoryDto: new CategoryDto(id: 4, ""), userInput: "", order: 3),
+            new AnswerDto(categoryDto: new CategoryDto(id: 5, ""), userInput: "", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
@@ -62,11 +62,11 @@ public class EvaluateAnswersUseCaseTest
         char initialLetter = 'A';
         List<AnswerDto> turnAnswers = new List<AnswerDto>()
         {
-            new AnswerDto(category: new CategoryDto(id: 1, ""), userInput: "notTest", order: 0),
-            new AnswerDto(category: new CategoryDto(id: 2, ""), userInput: "notTest", order: 1),
-            new AnswerDto(category: new CategoryDto(id: 3, ""), userInput: "notTest", order: 2),
-            new AnswerDto(category: new CategoryDto(id: 4, ""), userInput: "notTest", order: 3),
-            new AnswerDto(category: new CategoryDto(id: 5, ""), userInput: "notTest", order: 4),
+            new AnswerDto(categoryDto: new CategoryDto(id: 1, ""), userInput: "notTest", order: 0),
+            new AnswerDto(categoryDto: new CategoryDto(id: 2, ""), userInput: "notTest", order: 1),
+            new AnswerDto(categoryDto: new CategoryDto(id: 3, ""), userInput: "notTest", order: 2),
+            new AnswerDto(categoryDto: new CategoryDto(id: 4, ""), userInput: "notTest", order: 3),
+            new AnswerDto(categoryDto: new CategoryDto(id: 5, ""), userInput: "notTest", order: 4),
         };
         AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter, turnAnswers);
         #endregion
@@ -107,19 +107,19 @@ public class EvaluateAnswersUseCaseTest
                 List<AnswerDto> turnAnswers = new List<AnswerDto>()
                 {
                     new AnswerDto(
-                        category: new CategoryDto(categoryId, ""),
+                        categoryDto: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 0),
                     new AnswerDto(
-                        category: new CategoryDto(categoryId, ""),
+                        categoryDto: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 1),
                     new AnswerDto(
-                        category: new CategoryDto(categoryId, ""),
+                        categoryDto: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 2),
                     new AnswerDto(
-                        category: new CategoryDto(categoryId, ""),
+                        categoryDto: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 3),
                     new AnswerDto(
-                        category: new CategoryDto(categoryId, ""),
+                        categoryDto: new CategoryDto(categoryId, ""),
                         userInput: $"{letter} test", order: 4),
                 };
                 AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter: letter, turnAnswers);
@@ -163,19 +163,19 @@ public class EvaluateAnswersUseCaseTest
             List<AnswerDto> turnAnswers = new List<AnswerDto>()
             {
                 new AnswerDto(
-                    category: new CategoryDto(randomCategoryIds[0], ""),
+                    categoryDto: new CategoryDto(randomCategoryIds[0], ""),
                     userInput: $"{letter} test", order: 0),
                 new AnswerDto(
-                    category: new CategoryDto(randomCategoryIds[1], ""),
+                    categoryDto: new CategoryDto(randomCategoryIds[1], ""),
                     userInput: "", order: 1),
                 new AnswerDto(
-                    category: new CategoryDto(randomCategoryIds[2], ""),
+                    categoryDto: new CategoryDto(randomCategoryIds[2], ""),
                     userInput: "notTest", order: 2),
                 new AnswerDto(
-                    category: new CategoryDto(randomCategoryIds[3], ""),
+                    categoryDto: new CategoryDto(randomCategoryIds[3], ""),
                     userInput: "", order: 3),
                 new AnswerDto(
-                    category: new CategoryDto(randomCategoryIds[4], ""),
+                    categoryDto: new CategoryDto(randomCategoryIds[4], ""),
                     userInput: $"{letter} test", order: 4),
             };
             AnswersToEvaluateDTO answersToEvaluateStruct = new AnswersToEvaluateDTO(initialLetter: letter, turnAnswers);

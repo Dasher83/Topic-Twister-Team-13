@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Repositories.IdGenerators;
@@ -32,6 +33,7 @@ public class EndTurnUseCaseIntegrationTests
     private IdaoMapper<Category, CategoryDaoJson> _categoryDaoJsonMapper;
     private IRoundsRepository _roundsRepository;
     private IUniqueIdGenerator _roundsIdGenerator;
+    private IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
 
     [SetUp]
     public void SetUp()
@@ -94,6 +96,8 @@ public class EndTurnUseCaseIntegrationTests
             roundsIdGenerator: _roundsIdGenerator,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
+
+        _categoryDtoMapper = new CategoryDtoMapper();
     }
 
     [TearDown]
@@ -125,6 +129,30 @@ public class EndTurnUseCaseIntegrationTests
 
     [Test]
     public void Test_ok_for_user_without_iniciative_outside_time_limit()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_round()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_match()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_round()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_match()
     {
         throw new NotImplementedException();
     }
@@ -315,12 +343,15 @@ public class EndTurnUseCaseIntegrationTests
         Match match = new Match();
         match = _matchesRepository.Insert(match).Result;
 
+        List<Category> categories = _categoriesReadOnlyRepository
+            .GetRandomCategories(Configuration.CategoriesPerRound + 1).Result;
+
         Round round = new Round(
             roundNumber: 0,
             initialLetter: 'P',
             isActive: true,
             match: match,
-            categories: new List<Category>());
+            categories: categories);
 
         _roundsRepository.Insert(round);
 
@@ -339,11 +370,18 @@ public class EndTurnUseCaseIntegrationTests
         userMatch = _userMatchesRepository.Insert(userMatch).Result;
 
         Turn turn = new Turn(
-            user: user,
+            user: userMatch.User,
             round: match.ActiveRound,
             startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds));
 
         turn = _turnsRepository.Insert(turn).Result;
+        AnswerDto[] answerDto = new AnswerDto[Configuration.CategoriesPerRound + 1];
+        for(int i = 0; i < answerDto.Length; i++)
+        {
+            answerDto[i] = new AnswerDto(
+                categoryDto: _categoryDtoMapper.ToDTO(categories[i]),
+                userInput: "", order: i);
+        }
         #endregion
 
         #region -- Act & Assert --
@@ -351,24 +389,24 @@ public class EndTurnUseCaseIntegrationTests
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
-                answerDtos: new AnswerDto[Configuration.CategoriesPerRound - 1]);
+                answerDtos: answerDto.Take(Configuration.CategoriesPerRound - 1).ToArray());
 
         Assert.IsFalse(useCaseOperation.WasOk);
         Assert.AreEqual(
-            expected: $"Too few answers for turn of user with id {user.Id} " +
-                $"for round with id {match.ActiveRound.Id} for match with id {match.Id}",
+            expected: $"Too few answers for turn of user with id {turn.User.Id} " +
+                $"for round with id {turn.Round.Id} for match with id {turn.Round.Match.Id}",
             actual: useCaseOperation.ErrorMessage);
 
         useCaseOperation = _useCase
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
-                answerDtos: new AnswerDto[Configuration.CategoriesPerRound + 1]);
+                answerDtos: answerDto.Take(Configuration.CategoriesPerRound + 1).ToArray());
 
         Assert.IsFalse(useCaseOperation.WasOk);
         Assert.AreEqual(
-            expected: $"Too many answers for turn of user with id {user.Id} " +
-                $"for round with id {match.ActiveRound.Id} for match with id {match.Id}",
+            expected: $"Too many answers for turn of user with id {turn.User.Id} " +
+                $"for round with id {turn.Round.Id} for match with id {turn.Round.Match.Id}",
             actual: useCaseOperation.ErrorMessage);
         #endregion
     }
