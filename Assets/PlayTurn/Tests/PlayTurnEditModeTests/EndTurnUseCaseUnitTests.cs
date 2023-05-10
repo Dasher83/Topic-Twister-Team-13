@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
@@ -421,6 +422,14 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch>.Success(result: userMatch);
             });
 
+        List<Category> categories = new List<Category>();
+        categories.Add(new Category(id: 0, name: ""));
+        categories.Add(new Category(id: 1, name: ""));
+        categories.Add(new Category(id: 2, name: ""));
+        categories.Add(new Category(id: 3, name: ""));
+        categories.Add(new Category(id: 4, name: ""));
+        categories.Add(new Category(id: 5, name: ""));
+        
         _roundsReadOnlyRepository.Get(roundId).Returns(
             (args) =>
             {
@@ -430,7 +439,7 @@ public class EndTurnUseCaseUnitTests
                     initialLetter: 'f',
                     isActive: true,
                     match: _matchesReadOnlyRepository.Get(id: matchId).Result,
-                    categories: new List<Category>());
+                    categories: categories.Take(Configuration.CategoriesPerRound).ToList());
 
                 return Operation<Round>.Success(result: round);
             });
@@ -454,6 +463,14 @@ public class EndTurnUseCaseUnitTests
 
                 return Operation<Turn>.Success(result: turn);
             });
+        
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound + 1];
+        CategoryDto categoryDto;
+        for (int i = 0; i < answerDtos.Length; i++)
+        {
+            categoryDto = new CategoryDto(id: categories[i].Id, name: categories[i].Name);
+            answerDtos[i] = new AnswerDto(category: categoryDto, userInput: "", order: i);
+        }
         #endregion
 
         #region -- Act & Assert --
@@ -461,7 +478,7 @@ public class EndTurnUseCaseUnitTests
             .Execute(
                 userId: userId,
                 matchId: matchId,
-                answerDtos: new AnswerDto[Configuration.CategoriesPerRound - 1]);
+                answerDtos: answerDtos.Take(Configuration.CategoriesPerRound - 1).ToArray());
 
         Assert.IsFalse(useCaseOperation.WasOk);
         Assert.AreEqual(
@@ -473,7 +490,7 @@ public class EndTurnUseCaseUnitTests
             .Execute(
                 userId: userId,
                 matchId: matchId,
-                answerDtos: new AnswerDto[Configuration.CategoriesPerRound + 1]);
+                answerDtos: answerDtos.Take(Configuration.CategoriesPerRound + 1).ToArray());
 
         Assert.IsFalse(useCaseOperation.WasOk);
         Assert.AreEqual(
@@ -536,6 +553,13 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch>.Success(result: userMatch);
             });
 
+        List<Category> categories = new List<Category>();
+        categories.Add(new Category(id: 0, name: ""));
+        categories.Add(new Category(id: 1, name: ""));
+        categories.Add(new Category(id: 2, name: ""));
+        categories.Add(new Category(id: 3, name: ""));
+        categories.Add(new Category(id: 4, name: ""));
+        
         _roundsReadOnlyRepository.Get(roundId).Returns(
             (args) =>
             {
@@ -545,7 +569,7 @@ public class EndTurnUseCaseUnitTests
                     initialLetter: 'f',
                     isActive: true,
                     match: _matchesReadOnlyRepository.Get(id: matchId).Result,
-                    categories: new List<Category>());
+                    categories: categories);
 
                 return Operation<Round>.Success(result: round);
             });
@@ -569,6 +593,17 @@ public class EndTurnUseCaseUnitTests
 
                 return Operation<Turn>.Success(result: turn);
             });
+
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];
+        CategoryDto categoryDto;
+        for (int i = 0; i < answerDtos.Length-1; i++)
+        {
+            categoryDto = new CategoryDto(id: categories[i].Id, name: categories[i].Name);
+            answerDtos[i] = new AnswerDto(category: categoryDto, userInput: "", order: i);
+        }
+        
+        categoryDto = new CategoryDto(id: -1, name: "");
+        answerDtos[^1] = new AnswerDto(category: categoryDto, userInput: "", order: answerDtos.Length-1);
         #endregion
 
         #region -- Act --
@@ -576,7 +611,7 @@ public class EndTurnUseCaseUnitTests
             .Execute(
                 userId: userId,
                 matchId: matchId,
-                answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
+                answerDtos: answerDtos);
         #endregion
 
         #region -- Assert --

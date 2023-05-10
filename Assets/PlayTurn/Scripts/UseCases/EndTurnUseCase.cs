@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
@@ -94,7 +95,12 @@ public class EndTurnUseCase : IEndTurnUseCase
             return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
         }
 
-        if(answerDtos.Length > Configuration.CategoriesPerRound)
+        List<AnswerDto> cleanAnswerDtos = answerDtos.Where(answerDto => answerDto != null).ToList();
+
+        List<int> answerCategoryIds = cleanAnswerDtos.Select(answerDto => answerDto.Category.Id).Distinct().ToList();
+        
+        
+        if(answerCategoryIds.Count > Configuration.CategoriesPerRound)
         {
             string errorMessage = $"Too many answers for turn of user with id {user.Id} " +
                 $"for round with id {activeRound.Id} for match with id {match.Id}";
@@ -102,7 +108,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
         }
 
-        if (answerDtos.Length < Configuration.CategoriesPerRound)
+        if (answerCategoryIds.Count < Configuration.CategoriesPerRound)
         {
             string errorMessage = $"Too few answers for turn of user with id {user.Id} " +
                 $"for round with id {activeRound.Id} for match with id {match.Id}";
@@ -110,6 +116,17 @@ public class EndTurnUseCase : IEndTurnUseCase
             return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
         }
 
+        List<int> roundCategoryIds = activeRound.Categories.Select(category => category.Id).Distinct().ToList();
+
+        if (answerCategoryIds.Except(roundCategoryIds).Any() || roundCategoryIds.Except(answerCategoryIds).Any())
+        {
+            string errorMessage =
+                $"Some of your answers don't match the categories for " +
+                $"round with id {activeRound.Id} in match with id {match.Id}";
+
+            return Operation<TurnWithEvaluatedAnswersDto>.Failure(errorMessage: errorMessage);
+        }
+        
         throw new NotImplementedException();
     }
 }
