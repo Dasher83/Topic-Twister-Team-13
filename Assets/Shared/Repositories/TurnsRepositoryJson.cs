@@ -36,5 +36,10 @@ namespace TopicTwister.Shared.Repositories
             Operation<Turn> getOperation = Get(userId: turn.User.Id, roundId: turn.Round.Id);
             return getOperation.WasOk ? getOperation : Operation<Turn>.Failure(errorMessage: "failure to save Turn");
         }
+
+        public Operation<Turn> Update(Turn turn)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -94,7 +94,7 @@ namespace TopicTwister.TurnResult.Views
             for(int i = 0; i < _categoryResultList.childCount; i++)
             {
                 _categoryResultList.transform.GetChild(i).Find("Category")
-                    .gameObject.GetComponent<TextMeshProUGUI>().text = _turnResultViewList[i].Category.Name;
+                    .gameObject.GetComponent<TextMeshProUGUI>().text = _turnResultViewList[i].CategoryDto.Name;
                 _categoryResultList.transform.GetChild(i).Find("Answer")
                     .gameObject.GetComponent<TextMeshProUGUI>().text = _turnResultViewList[i].UserInput;
             }

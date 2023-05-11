@@ -66,5 +66,10 @@ namespace TopicTwister.Shared.Repositories
 
             return Operation<bool>.Success(result: true);
         }
+
+        public Operation<Match> Update(Match match)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

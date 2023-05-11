@@ -7,9 +7,14 @@ namespace TopicTwister.Shared.Constants
 
         public const int CategoriesPerRound = 5;
 
+        public const int PlayersPerMatch = 2;
+
         public const int TestUserId = 1;
 
         public const int TestBotId = 2;
+
+        public const int ExtraUserOneId = 3;
+        public const int ExtraUserTwoId = 4;
 
         public static class Scenes
         {

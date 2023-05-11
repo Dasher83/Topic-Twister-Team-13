@@ -56,5 +56,10 @@ namespace TopicTwister.Shared.Repositories
             List<Turn> turns = turnDaoMapper.FromDAOs(readCache.ToList());
             return Operation<List<Turn>>.Success(result: turns);
         }
+
+        public Operation<List<Turn>> GetMany(int userId, int matchId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

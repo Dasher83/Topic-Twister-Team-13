@@ -7,6 +7,7 @@ using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
+using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Utils;
@@ -20,26 +21,34 @@ public class EndTurnUseCaseUnitTests
     private IUserMatchesRepository _userMatchesRepository;
     private ITurnsRepository _turnsRepository;
     private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
+    private IdtoMapper<Match, MatchDto> _matchDtoMapper;
+    private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
+    private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
+    private IdtoMapper<Turn,  TurnDto> _turnDtoMapper;
 
     [SetUp]
     public void SetUp()
     {
         _usersReadOnlyRepository = Substitute.For<IUsersReadOnlyRepository>();
-
         _matchesReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
-
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
-
         _turnsRepository = Substitute.For<ITurnsRepository>();
-
         _roundsReadOnlyRepository = Substitute.For<IRoundsReadOnlyRepository>();
+        _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
+        _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
+        _userMatchDtoMapper = Substitute.For<IdtoMapper<UserMatch, UserMatchDto>>();
+        _turnDtoMapper = Substitute.For<IdtoMapper<Turn, TurnDto>>();
 
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository,
             turnsRepository: _turnsRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+            roundsReadOnlyRepository: _roundsReadOnlyRepository,
+            matchDtoMapper: _matchDtoMapper,
+            roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
+            userMatchDtoMapper: _userMatchDtoMapper,
+            turnDtoMapper: _turnDtoMapper);
     }
 
     [Test]
@@ -49,9 +58,301 @@ public class EndTurnUseCaseUnitTests
     }
 
     [Test]
-    public void Test_ok_for_user_with_iniciative_outside_time_limit()
+    public void Test_ok_for_user_with_initiative_outside_time_limit()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userWithInitiativeId = Configuration.TestUserId;
+        int userWithoutInitiativeId = Configuration.TestBotId;
+        int matchId = 0;
+        int roundId = 0;
+        Match match;
+        Round round;
+
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int lambdaUserId = (int)args[0];
+                return Operation<User>.Success(result: new User(id: lambdaUserId));
+            });
+
+        _matchesReadOnlyRepository.Get(matchId).Returns(
+            (args) =>
+            {
+                match = new Match(
+                    id: matchId,
+                    startDateTime: DateTime.UtcNow);
+
+                round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'j',
+                    isActive: true,
+                    match: match,
+                    categories: new List<Category>());
+
+                match = new Match(
+                    id: matchId,
+                    startDateTime: match.StartDateTime,
+                    endDateTime: null,
+                    rounds: new List<Round>() { round });
+
+                return Operation<Match>.Success(result: match);
+            });
+
+        _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int lambdaUserId = (int)args[0];
+                int lambdaMatchId = (int)args[1];
+
+                UserMatch lambdaUserMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: lambdaUserId == userWithInitiativeId,
+                    user: _usersReadOnlyRepository.Get(id: lambdaUserId).Result,
+                    match: _matchesReadOnlyRepository.Get(lambdaMatchId).Result);
+
+                return Operation<UserMatch>.Success(result: lambdaUserMatch);
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[2];
+                userMatches[0] = _userMatchesRepository.Get(userWithInitiativeId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(userWithoutInitiativeId, matchId).Result;
+
+                return Operation<UserMatch[]>.Success(result: userMatches);
+            });
+
+        List<Category> categories = new List<Category>
+        {
+            new Category(id: 0, name: ""),
+            new Category(id: 1, name: ""),
+            new Category(id: 2, name: ""),
+            new Category(id: 3, name: ""),
+            new Category(id: 4, name: "")
+        };
+
+        _roundsReadOnlyRepository.Get(roundId).Returns(
+            (args) =>
+            {
+                Round round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'f',
+                    isActive: true,
+                    match: _matchesReadOnlyRepository.Get(id: matchId).Result,
+                    categories: categories);
+
+                return Operation<Round>.Success(result: round);
+            });
+
+        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                List<Round> rounds = new List<Round>();
+                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                rounds.Add(activeRound);
+                return Operation<List<Round>>.Success(result: rounds);
+            });
+
+        _turnsRepository.Get(userWithInitiativeId, roundId).Returns(
+            (args) =>
+            {
+                Turn lambdaTurn = new Turn(
+                    user: _usersReadOnlyRepository.Get(id: userWithInitiativeId).Result,
+                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds));
+
+                return Operation<Turn>.Success(result: lambdaTurn);
+            });
+
+        _turnsRepository.GetMany(Arg.Any<int>(), Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int lambdaUserId = (int)args[0];
+
+                List<Turn> lambdaTurns;
+
+                if (lambdaUserId == userWithInitiativeId)
+                {
+                    lambdaTurns = new List<Turn>
+                    {
+                        _turnsRepository.Get(userWithInitiativeId, roundId).Result
+                    };
+                }
+                else
+                {
+                    lambdaTurns = new List<Turn>();
+                }
+
+                return Operation<List<Turn>>.Success(result: lambdaTurns);
+            });
+
+        _turnsRepository.Update(Arg.Any<Turn>()).Returns(
+            (args) =>
+            {
+                Turn lambdaTurn = (Turn)args[0];
+
+                lambdaTurn = new Turn(
+                    user: lambdaTurn.User,
+                    round: lambdaTurn.Round,
+                    startDateTime: lambdaTurn.StartDateTime,
+                    endDateTime: DateTime.UtcNow);
+
+                return Operation<Turn>.Success(result: lambdaTurn);
+            });
+
+        _roundWithCategoriesDtoMapper.ToDTO(Arg.Any<Round>()).Returns(
+            (args) =>
+            {
+                Round round = (Round)args[0];
+
+                RoundDto roundDto = new RoundDto(
+                    id: round.Id,
+                    roundNumber: round.RoundNumber,
+                    initialLetter: round.InitialLetter,
+                    isActive: round.IsActive,
+                    matchId: round.Match.Id);
+
+                List<CategoryDto> categoryDtos = round.Categories
+                    .Select(category => new CategoryDto(id: category.Id, name: category.Name))
+                    .ToList();
+
+                return new RoundWithCategoriesDto(roundDto: roundDto, categoryDtos: categoryDtos);
+            });
+
+        _roundWithCategoriesDtoMapper.ToDTOs(Arg.Any<List<Round>>()).Returns(
+            (args) =>
+            {
+                List<Round> rounds = (List<Round>)args[0];
+                return rounds.Select(_roundWithCategoriesDtoMapper.ToDTO).ToList();
+            });
+
+        _turnDtoMapper.ToDTO(Arg.Any<Turn>()).Returns(
+            (args) =>
+            {
+                Turn turn = (Turn)args[0];
+
+                TurnDto turnDto = new TurnDto(
+                    userId: turn.User.Id,
+                    roundId: turn.Round.Id,
+                    startDateTime: turn.StartDateTime,
+                    endDateTime: turn.EndDateTime);
+
+                return turnDto;
+            });
+
+        _matchDtoMapper.ToDTO(Arg.Any<Match>()).Returns(
+            (args) =>
+            {
+                Match lambaMatch = (Match)args[0];
+                MatchDto lambaMatchDto = new MatchDto(
+                    id: lambaMatch.Id,
+                    startDateTime: lambaMatch.StartDateTime,
+                    endDateTime: lambaMatch.EndDateTime);
+                return lambaMatchDto;
+            });
+
+        _userMatchDtoMapper.ToDTO(Arg.Any<UserMatch>()).Returns(
+            (args) =>
+            {
+                UserMatch lambaUserMatch = (UserMatch)args[0];
+
+                UserMatchDto lambaUserMatchDto = new UserMatchDto(
+                    score: lambaUserMatch.Score,
+                    isWinner: lambaUserMatch.IsWinner,
+                    hasInitiative: lambaUserMatch.HasInitiative,
+                    userId: lambaUserMatch.User.Id,
+                    matchId: lambaUserMatch.Match.Id);
+
+                return lambaUserMatchDto;
+            });
+
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];
+
+        List<CategoryDto> categoryDtos = categories
+            .Select((category, index) => new CategoryDto(id: categories[index].Id, name: categories[index].Name))
+            .ToList();
+
+        for (int i = 0; i < answerDtos.Length; i++)
+        {
+            answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "", order: i);
+        }
+
+        match = _matchesReadOnlyRepository.Get(matchId).Result;
+
+        MatchDto matchDto = new MatchDto(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime);
+
+        round = _roundsReadOnlyRepository.Get(matchId).Result;
+
+        RoundDto roundDto = new RoundDto(
+            id: round.Id,
+            roundNumber: round.RoundNumber,
+            initialLetter: round.InitialLetter,
+            isActive: round.IsActive,
+            matchId: round.Match.Id);
+
+        UserMatch userWithInitiativeMatch = _userMatchesRepository.Get(
+            userId: userWithInitiativeId, matchId: match.Id).Result;
+
+        UserMatchDto userWithInitiativeMatchDto = new UserMatchDto(
+            score: userWithInitiativeMatch.Score,
+            isWinner: userWithInitiativeMatch.IsWinner,
+            hasInitiative: userWithInitiativeMatch.HasInitiative,
+            userId: userWithInitiativeMatch.User.Id,
+            matchId: userWithInitiativeMatch.Match.Id);
+
+        UserMatch userWithoutInitiativeMatch = _userMatchesRepository.Get(
+            userId: userWithoutInitiativeId, matchId: match.Id).Result;
+
+        UserMatchDto userWithoutIniciativeMatchDto = new UserMatchDto(
+            score: userWithoutInitiativeMatch.Score,
+            isWinner: userWithoutInitiativeMatch.IsWinner,
+            hasInitiative: userWithoutInitiativeMatch.HasInitiative,
+            userId: userWithoutInitiativeMatch.User.Id,
+            matchId: userWithoutInitiativeMatch.Match.Id);
+
+        RoundWithCategoriesDto roundWithCategoriesDto = new RoundWithCategoriesDto(
+            roundDto: roundDto, categoryDtos: categoryDtos);
+
+        List<AnswerDto> emptyAnswerDto = answerDtos
+            .Select(answerDto => new AnswerDto(categoryDto: answerDto.CategoryDto, userInput: "", order: answerDto.Order))
+            .ToList();
+
+        Turn turn = _turnsRepository.Get(userWithInitiativeId, roundId).Result;
+
+        TurnDto turnDto = _turnDtoMapper.ToDTO(turn);
+        #endregion
+
+        #region -- Act --
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
+            .Execute(
+                userId: userWithInitiativeId,
+                matchId: matchId,
+                answerDtos: answerDtos);
+        #endregion
+
+        #region -- Assert --
+        MatchFullStateDto expectedDto = new MatchFullStateDto(
+            matchDto: matchDto,
+            roundWithCategoriesDtos: new List<RoundWithCategoriesDto>() { roundWithCategoriesDto },
+            userWithInitiativeMatchDto: userWithInitiativeMatchDto,
+            userWithoutInitiativeMatchDto: userWithoutIniciativeMatchDto,
+            userWithInitiativeRoundDtos: new List<UserRoundDto>(),
+            userWithoutInitiativeRoundDtos: new List<UserRoundDto>(),
+            answerDtosOfUserWithInitiative: emptyAnswerDto,
+            answerDtosOfUserWithoutInitiative: new List<AnswerDto>(),
+            turnDtosOfUserWithInitiative: new List<TurnDto>() { turnDto },
+            turnDtosOfUserWithoutInitiative: new List<TurnDto>());
+
+        Assert.IsTrue(useCaseOperation.WasOk);
+        Assert.AreEqual(expected: expectedDto, actual: useCaseOperation.Result);
+        #endregion
     }
 
     [Test]
@@ -93,7 +394,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -126,7 +427,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -145,10 +446,11 @@ public class EndTurnUseCaseUnitTests
         int userId = Configuration.TestUserId;
         int matchId = 0;
 
-        _usersReadOnlyRepository.Get(userId).Returns(
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
             (args) =>
             {
-                return Operation<User>.Success(result: new User(id: userId));
+                int lambdaUserId = (int)args[0];
+                return Operation<User>.Success(result: new User(id: lambdaUserId));
             });
 
         _matchesReadOnlyRepository.Get(matchId).Returns(
@@ -157,16 +459,36 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Match>.Success(result: new Match(id: matchId, startDateTime: DateTime.UtcNow));
             });
 
-        _userMatchesRepository.Get(userId, matchId).Returns(
+        _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
             (args) =>
             {
-                return Operation<UserMatch>.Failure(
-                    errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
+                int userId = (int)args[0];
+                userId = userId > 0 ? userId * -1 : userId;
+
+                UserMatch userMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: false,
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    match: _matchesReadOnlyRepository.Get(matchId).Result);
+
+                return Operation<UserMatch>.Success(result: userMatch);
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[Configuration.PlayersPerMatch]
+                {
+                    _userMatchesRepository.Get(userId: -1, matchId: matchId).Result,
+                    _userMatchesRepository.Get(userId: -2, matchId: matchId).Result
+                };
+                return Operation<UserMatch[]>.Success(result: userMatches);
             });
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -231,6 +553,29 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch>.Success(result: userMatch);
             });
 
+        _userMatchesRepository.Get(-1, matchId).Returns(
+            (args) =>
+            {
+                UserMatch userMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: false,
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    match: _matchesReadOnlyRepository.Get(matchId).Result);
+
+                return Operation<UserMatch>.Success(result: userMatch);
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[2];
+                userMatches[0] = _userMatchesRepository.Get(userId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(-1, matchId).Result;
+
+                return Operation<UserMatch[]>.Success(result: userMatches);
+            });
+
         _roundsReadOnlyRepository.Get(roundId).Returns(
             (args) =>
             {
@@ -266,7 +611,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -331,6 +676,29 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch>.Success(result: userMatch);
             });
 
+        _userMatchesRepository.Get(-1, matchId).Returns(
+            (args) =>
+            {
+                UserMatch userMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: false,
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    match: _matchesReadOnlyRepository.Get(matchId).Result);
+
+                return Operation<UserMatch>.Success(result: userMatch);
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[2];
+                userMatches[0] = _userMatchesRepository.Get(userId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(-1, matchId).Result;
+
+                return Operation<UserMatch[]>.Success(result: userMatches);
+            });
+
         _roundsReadOnlyRepository.Get(roundId).Returns(
             (args) =>
             {
@@ -368,7 +736,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -434,6 +802,29 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch>.Success(result: userMatch);
             });
 
+        _userMatchesRepository.Get(-1, matchId).Returns(
+            (args) =>
+            {
+                UserMatch userMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: false,
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    match: _matchesReadOnlyRepository.Get(matchId).Result);
+
+                return Operation<UserMatch>.Success(result: userMatch);
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[2];
+                userMatches[0] = _userMatchesRepository.Get(userId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(-1, matchId).Result;
+
+                return Operation<UserMatch[]>.Success(result: userMatches);
+            });
+
         List<Category> categories = new List<Category>();
         categories.Add(new Category(id: 0, name: ""));
         categories.Add(new Category(id: 1, name: ""));
@@ -486,7 +877,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act & Assert --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(
                 userId: userId,
                 matchId: matchId,
@@ -565,6 +956,29 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch>.Success(result: userMatch);
             });
 
+        _userMatchesRepository.Get(-1, matchId).Returns(
+            (args) =>
+            {
+                UserMatch userMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: false,
+                    user: _usersReadOnlyRepository.Get(id: userId).Result,
+                    match: _matchesReadOnlyRepository.Get(matchId).Result);
+
+                return Operation<UserMatch>.Success(result: userMatch);
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[2];
+                userMatches[0] = _userMatchesRepository.Get(userId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(-1, matchId).Result;
+
+                return Operation<UserMatch[]>.Success(result: userMatches);
+            });
+
         List<Category> categories = new List<Category>
         {
             new Category(id: 0, name: ""),
@@ -621,7 +1035,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(
                 userId: userId,
                 matchId: matchId,

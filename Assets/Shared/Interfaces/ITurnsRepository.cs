@@ -8,5 +8,6 @@ namespace TopicTwister.Shared.Repositories
     public interface ITurnsRepository: ITurnsReadOnlyRepository
     {
         Operation<Turn> Insert(Turn turn);
+        Operation<Turn> Update(Turn turn);
     }
 }

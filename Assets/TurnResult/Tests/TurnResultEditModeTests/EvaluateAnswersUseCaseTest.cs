@@ -45,7 +45,7 @@ public class EvaluateAnswersUseCaseTest
         foreach (AnswerDto answer in turnAnswers)
         {
             expectedOperation.Add(new EvaluatedAnswerDto(
-                answer.Category,
+                answer.CategoryDto,
                 answer.UserInput,
                 isCorrect: false,
                 order: answer.Order));
@@ -80,7 +80,7 @@ public class EvaluateAnswersUseCaseTest
         foreach (AnswerDto answer in turnAnswers)
         {
             expectedOperation.Add(new EvaluatedAnswerDto(
-                answer.Category,
+                answer.CategoryDto,
                 answer.UserInput,
                 isCorrect: false,
                 order: answer.Order));
@@ -134,7 +134,7 @@ public class EvaluateAnswersUseCaseTest
                 foreach (AnswerDto answer in turnAnswers)
                 {
                     expectedOperation.Add(new EvaluatedAnswerDto(
-                        answer.Category,
+                        answer.CategoryDto,
                         answer.UserInput,
                         isCorrect: true,
                         order: answer.Order));
@@ -189,27 +189,27 @@ public class EvaluateAnswersUseCaseTest
             List<EvaluatedAnswerDto> expectedOperation = new List<EvaluatedAnswerDto>()
             {
                 new EvaluatedAnswerDto(
-                    category: turnAnswers[0].Category,
+                    category: turnAnswers[0].CategoryDto,
                     answer: turnAnswers[0].UserInput,
                     isCorrect: true,
                     order: turnAnswers[0].Order),
                 new EvaluatedAnswerDto(
-                    category: turnAnswers[1].Category,
+                    category: turnAnswers[1].CategoryDto,
                     answer: turnAnswers[1].UserInput,
                     isCorrect: false,
                     order: turnAnswers[1].Order),
                 new EvaluatedAnswerDto(
-                    category: turnAnswers[2].Category,
+                    category: turnAnswers[2].CategoryDto,
                     answer: turnAnswers[2].UserInput,
                     isCorrect: false,
                     order: turnAnswers[2].Order),
                 new EvaluatedAnswerDto(
-                    category: turnAnswers[3].Category,
+                    category: turnAnswers[3].CategoryDto,
                     answer: turnAnswers[3].UserInput,
                     isCorrect: false,
                     order: turnAnswers[3].Order),
                 new EvaluatedAnswerDto(
-                    category: turnAnswers[4].Category,
+                    category: turnAnswers[4].CategoryDto,
                     answer: turnAnswers[4].UserInput,
                     isCorrect: true,
                     order: turnAnswers[4].Order)

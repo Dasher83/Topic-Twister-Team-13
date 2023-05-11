@@ -17,7 +17,9 @@ namespace TopicTwister.Shared.Repositories
             {
                 new User(id: 0),
                 new User(id: 1),
-                new User(id: 2)
+                new User(id: 2),
+                new User(id: 3),
+                new User(id: 4),
             };
         }
 

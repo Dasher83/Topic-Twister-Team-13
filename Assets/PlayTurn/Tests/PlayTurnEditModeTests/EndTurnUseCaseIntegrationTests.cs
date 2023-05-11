@@ -35,6 +35,11 @@ public class EndTurnUseCaseIntegrationTests
     private IRoundsRepository _roundsRepository;
     private IUniqueIdGenerator _roundsIdGenerator;
     private IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
+    private IdtoMapper<Match, MatchDto> _matchDtoMapper;
+    private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
+    private IdtoMapper<Round, RoundDto> _roundDtoMapper;
+    private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
+    private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
 
     [SetUp]
     public void SetUp()
@@ -74,12 +79,16 @@ public class EndTurnUseCaseIntegrationTests
             resourceName: "TestData/Turns",
             turnDaoMapper: _turnDaoMapper);
 
-        _useCase = new EndTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository,
-            turnsRepository: _turnsRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+        _matchDtoMapper = new MatchDtoMapper();
+
+        _categoryDtoMapper = new CategoryDtoMapper();
+
+        _roundDtoMapper = new RoundDtoMapper();
+
+        _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper(
+            categoryDtoMapper: _categoryDtoMapper,
+            roundDtoMapper: _roundDtoMapper,
+            roundReadOnlyRepository: _roundsReadOnlyRepository);
 
         _matchesIdGenerator = new MatchesIdGenerator(
             matchesReadOnlyRepository: _matchesReadOnlyRepository);
@@ -89,6 +98,23 @@ public class EndTurnUseCaseIntegrationTests
             matchesIdGenerator: _matchesIdGenerator,
             matchDaoMapper: _matchDaoJsonMapper);
 
+        _userMatchDtoMapper = new UserMatchDtoMapper(
+            matchesRepository: _matchesRepository,
+            usersReadOnlyRepository: _usersReadOnlyRepository);
+
+        _turnDtoMapper = new TurnDtoMapper();
+
+        _useCase = new EndTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository,
+            turnsRepository: _turnsRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository,
+            matchDtoMapper: _matchDtoMapper,
+            roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
+            userMatchDtoMapper: _userMatchDtoMapper,
+            turnDtoMapper: _turnDtoMapper);
+
         _roundsIdGenerator = new RoundsIdGenerator(
             roundsReadOnlyRepository: _roundsReadOnlyRepository);
 
@@ -97,8 +123,6 @@ public class EndTurnUseCaseIntegrationTests
             roundsIdGenerator: _roundsIdGenerator,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
-
-        _categoryDtoMapper = new CategoryDtoMapper();
     }
 
     [TearDown]
@@ -117,7 +141,7 @@ public class EndTurnUseCaseIntegrationTests
     }
 
     [Test]
-    public void Test_ok_for_user_with_iniciative_outside_time_limit()
+    public void Test_ok_for_user_with_initiative_outside_time_limit()
     {
         throw new NotImplementedException();
     }
@@ -155,7 +179,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -176,7 +200,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -196,10 +220,28 @@ public class EndTurnUseCaseIntegrationTests
         User user = _usersReadOnlyRepository.Get(userId).Result;
         Match match = new Match();
         match = _matchesRepository.Insert(match).Result;
+
+        UserMatch userMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: _usersReadOnlyRepository.Get(Configuration.ExtraUserOneId).Result,
+            match: match);
+
+        _userMatchesRepository.Insert(userMatch);
+
+        userMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: _usersReadOnlyRepository.Get(Configuration.ExtraUserTwoId).Result,
+            match: match);
+
+        _userMatchesRepository.Insert(userMatch);
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
@@ -244,11 +286,21 @@ public class EndTurnUseCaseIntegrationTests
             hasInitiative: true,
             user: user,
             match: match);
+
         userMatch = _userMatchesRepository.Insert(userMatch).Result;
+
+        UserMatch botUserMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: _usersReadOnlyRepository.Get(Configuration.TestBotId).Result,
+            match: match);
+
+        _userMatchesRepository.Insert(botUserMatch);
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(
             userId: userMatch.User.Id,
             matchId: userMatch.Match.Id,
@@ -295,7 +347,16 @@ public class EndTurnUseCaseIntegrationTests
             hasInitiative: true,
             user: user,
             match: match);
+
         userMatch = _userMatchesRepository.Insert(userMatch).Result;
+
+        _userMatchesRepository.Insert(
+            new UserMatch(
+                score: 0,
+                isWinner: false,
+                hasInitiative: true,
+                user: _usersReadOnlyRepository.Get(Configuration.ExtraUserOneId).Result,
+                match: match));
 
         Turn turn = new Turn(
             user: user,
@@ -307,7 +368,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(
                 userId: userMatch.User.Id,
                 matchId: userMatch.Match.Id,
@@ -358,6 +419,15 @@ public class EndTurnUseCaseIntegrationTests
             match: match);
         userMatch = _userMatchesRepository.Insert(userMatch).Result;
 
+        UserMatch botUserMatch = new UserMatch(
+            score: 0,
+            isWinner: false,
+            hasInitiative: true,
+            user: _usersReadOnlyRepository.Get(Configuration.TestBotId).Result,
+            match: match);
+
+        _userMatchesRepository.Insert(botUserMatch);
+
         Turn turn = new Turn(
             user: userMatch.User,
             round: match.ActiveRound,
@@ -374,7 +444,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act & Assert --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
@@ -435,6 +505,14 @@ public class EndTurnUseCaseIntegrationTests
             match: match);
         userMatch = _userMatchesRepository.Insert(userMatch).Result;
 
+        _userMatchesRepository.Insert(
+            new UserMatch(
+                score: 0,
+                isWinner: false,
+                hasInitiative: true,
+                user: _usersReadOnlyRepository.Get(Configuration.ExtraUserOneId).Result,
+                match: match));
+
         Turn turn = new Turn(
             user: userMatch.User,
             round: match.ActiveRound,
@@ -456,7 +534,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<TurnWithEvaluatedAnswersDto> useCaseOperation = _useCase
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
             .Execute(
                 userId: turn.User.Id,
                 matchId: turn.Round.Match.Id,
