@@ -46,6 +46,7 @@ namespace TopicTwister.Shared.Mappers
             TurnDaoJson turnDaoJson = new TurnDaoJson(
                 userId: turn.User.Id,
                 roundId: turn.Round.Id,
+                points: turn.Points,
                 startDateTime: turn.StartDateTime.ToString("s"), //ISO 8601
                 endDateTime: endDateTime);
 

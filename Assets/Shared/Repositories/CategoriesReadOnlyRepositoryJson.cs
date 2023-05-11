@@ -67,5 +67,21 @@ namespace TopicTwister.Shared.Repositories
         {
             return Operation<bool>.Success(result: names.All(name => Exists(name).Result));
         }
+
+        public Operation<Category> Get(int id)
+        {
+            CategoryDaoJson categorydao = _readCache
+                .SingleOrDefault(categoryDao => categoryDao.Id == id);
+
+            if (categorydao == null)
+            {
+                Operation<List<Category>>.Failure(
+                    errorMessage: $"Category not found with id: {id}");
+            }
+
+            Category category = _categoryDaoMapper.FromDAO(categorydao);
+
+            return Operation<Category>.Success(result: category);
+        }
     }
 }

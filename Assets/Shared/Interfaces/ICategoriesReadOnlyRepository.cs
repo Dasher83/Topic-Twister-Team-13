@@ -9,6 +9,7 @@ namespace TopicTwister.Shared.Interfaces
     {
         Operation<List<Category>> GetRandomCategories(int numberOfCategories);
         Operation<List<Category>> GetMany(List<int> categoryIds);
+        Operation<Category> Get(int id);
         Operation<bool> Exists(string name);
         Operation<bool> Exists(string[] names);
     }

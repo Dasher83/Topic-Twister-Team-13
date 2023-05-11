@@ -147,6 +147,7 @@ public class StartTurnUseCaseUnitTests
                 TurnDto turnDto = new TurnDto(
                     userId: turn.User.Id,
                     roundId: turn.Round.Id,
+                    points: 0,
                     startDateTime: turn.StartDateTime,
                     endDateTime: turn.EndDateTime);
                 return turnDto;
@@ -161,6 +162,7 @@ public class StartTurnUseCaseUnitTests
         TurnDto expectedTurnDto = new TurnDto(
             userId: userWithIniciative.Id,
             roundId: match.ActiveRound.Id,
+            points: 0,
             startDateTime: DateTime.UtcNow,
             endDateTime: null);
 

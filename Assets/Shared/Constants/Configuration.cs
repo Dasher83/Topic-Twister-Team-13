@@ -5,6 +5,10 @@ namespace TopicTwister.Shared.Constants
     {
         public const float TurnDurationInSeconds = 60f;
 
+        public const float TurnToleranceInSeconds = 10f;
+
+        public const float TurnDurationInSecondsPlusTolerance = TurnDurationInSeconds + TurnToleranceInSeconds;
+
         public const int CategoriesPerRound = 5;
 
         public const int PlayersPerMatch = 2;

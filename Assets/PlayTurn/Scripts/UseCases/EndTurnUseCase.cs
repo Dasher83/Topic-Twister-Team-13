@@ -21,6 +21,7 @@ public class EndTurnUseCase : IEndTurnUseCase
     private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
     private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
+    private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
 
     public EndTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
@@ -31,7 +32,8 @@ public class EndTurnUseCase : IEndTurnUseCase
         IdtoMapper<Match, MatchDto> matchDtoMapper,
         IdtoMapper<Round, RoundWithCategoriesDto> roundWithCategoriesDtoMapper,
         IdtoMapper<UserMatch, UserMatchDto> userMatchDtoMapper,
-        IdtoMapper<Turn, TurnDto> turnDtoMapper)
+        IdtoMapper<Turn, TurnDto> turnDtoMapper,
+        IdtoMapper<Answer, AnswerDto> answerDtoMapper)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
@@ -42,6 +44,7 @@ public class EndTurnUseCase : IEndTurnUseCase
         _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         _userMatchDtoMapper = userMatchDtoMapper;
         _turnDtoMapper = turnDtoMapper;
+        _answerDtoMapper = answerDtoMapper;
     }
 
     public Operation<MatchFullStateDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
@@ -165,6 +168,39 @@ public class EndTurnUseCase : IEndTurnUseCase
             return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
         }
 
+        List<Answer> requesterAnswers = new List<Answer>();
+
+        turn = new Turn(
+            user: turn.User,
+            round: turn.Round,
+            startDateTime: turn.StartDateTime,
+            endDateTime: DateTime.UtcNow);
+
+        foreach (AnswerDto answerDto in answerDtos)
+        {
+            Answer answer = new Answer(
+                userInput: answerDto.UserInput,
+                order: answerDto.Order,
+                category: activeRound.Categories.Single(category => category.Id == answerDto.CategoryDto.Id),
+                turn: turn);
+
+            requesterAnswers.Add(answer);
+        }
+
+        turn = new Turn(
+            user: turn.User,
+            round: turn.Round,
+            startDateTime: turn.StartDateTime,
+            endDateTime: turn.EndDateTime,
+            answers: requesterAnswers);
+
+        Operation<Turn> updateTurnOperation = _turnsRepository.Update(turn);
+
+        if(updateTurnOperation.WasOk == false)
+        {
+            return Operation<MatchFullStateDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
+        }
+
         UserMatchDto userWithInitiativeMatchDto;
         UserMatchDto userWithoutInitiativeMatchDto;
 
@@ -178,7 +214,7 @@ public class EndTurnUseCase : IEndTurnUseCase
         {
             userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
             userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
-            answerDtosOfUserWithInitiative = answerDtos.ToList();
+            answerDtosOfUserWithInitiative = _answerDtoMapper.ToDTOs(requesterAnswers);
             answerDtosOfUserWithoutInitiative = new List<AnswerDto>();
             userWithInitiativeId = requesterUserMatch.User.Id;
             userWithoutInitiativeId = opponentUserMatch.User.Id;
@@ -188,22 +224,9 @@ public class EndTurnUseCase : IEndTurnUseCase
             userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
             userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
             answerDtosOfUserWithInitiative = new List<AnswerDto>();
-            answerDtosOfUserWithoutInitiative = answerDtos.ToList();
+            answerDtosOfUserWithoutInitiative = _answerDtoMapper.ToDTOs(requesterAnswers);
             userWithInitiativeId = opponentUserMatch.User.Id;
             userWithoutInitiativeId = requesterUserMatch.User.Id;
-        }
-
-        turn = new Turn(
-            user: turn.User,
-            round: turn.Round,
-            startDateTime: turn.StartDateTime,
-            endDateTime: DateTime.UtcNow);
-
-        Operation<Turn> updateTurnOperation = _turnsRepository.Update(turn);
-
-        if(updateTurnOperation.WasOk == false)
-        {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
         }
 
         Operation<List<Turn>> getTurnsWithIniciativeOperation = _turnsRepository.GetMany(userId: userWithInitiativeId, matchId: match.Id);

@@ -153,6 +153,7 @@ public class StartTurnUseCaseIntegrationTests
         TurnDto expectedTurnDto = new TurnDto(
             userId: userWithIniciative.Id,
             roundId: activeRound.Id,
+            points: 0,
             startDateTime: DateTime.UtcNow,
             endDateTime: null);
 

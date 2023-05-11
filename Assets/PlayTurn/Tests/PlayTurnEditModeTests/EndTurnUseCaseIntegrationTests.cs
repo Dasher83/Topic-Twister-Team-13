@@ -113,7 +113,8 @@ public class EndTurnUseCaseIntegrationTests
             matchDtoMapper: _matchDtoMapper,
             roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
             userMatchDtoMapper: _userMatchDtoMapper,
-            turnDtoMapper: _turnDtoMapper);
+            turnDtoMapper: _turnDtoMapper,
+            answerDtoMapper: null);
 
         _roundsIdGenerator = new RoundsIdGenerator(
             roundsReadOnlyRepository: _roundsReadOnlyRepository);
