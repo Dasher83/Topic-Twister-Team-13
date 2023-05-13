@@ -76,19 +76,21 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         UserMatch[] userMatches = getUserMatchesOperation.Result;
 
-        if (userMatches.Length < Configuration.PlayersPerMatch)
-        {
-            return Operation<MatchFullStateDto>.Failure(
-                errorMessage: $"Not enough UserMatches found for match with id {matchId}");
-        }
+        match = new Match(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime,
+            rounds: null,
+            userMatches: userMatches);
 
         UserMatch requesterUserMatch;
         UserMatch opponentUserMatch;
 
-        if (userMatches[0].User.Id != userId && userMatches[1].User.Id != userId)
+        Operation<bool> userIsInMatchOperation = match.UserIsInMatch(userId: userId);
+
+        if (userIsInMatchOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(
-                errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
+            return Operation<MatchFullStateDto>.Failure(errorMessage: userIsInMatchOperation.ErrorMessage);
         }
 
         if (userMatches[0].User.Id != userId)
@@ -130,10 +132,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (turn.HasEnded)
         {
-            string errorMessage = $"Turn already ended for user with id {user.Id} " +
-                    $"in round with id {activeRound.Id} in match with id {match.Id}";
-
-            return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
+            return Operation<MatchFullStateDto>.Failure(errorMessage: getTurnOperation.ErrorMessage);
         }
 
         List<AnswerDto> cleanAnswerDtos = answerDtos.Where(answerDto => answerDto != null).ToList();

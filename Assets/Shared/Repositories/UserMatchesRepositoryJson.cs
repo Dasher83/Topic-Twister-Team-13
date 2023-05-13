@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DAOs;
+using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
@@ -96,9 +98,16 @@ namespace TopicTwister.Shared.Repositories
                 .Select(_userMatchDaoMapper.FromDAO)
                 .ToArray();
 
-            if(userMatches.Length > 2)
+            if (userMatches.Length < Configuration.PlayersPerMatch)
             {
-                return Operation<UserMatch[]>.Failure(errorMessage: $"Too many UserMatch instances for match with id {matchId}");
+                return Operation<UserMatch[]>
+                    .Failure(errorMessage: $"Not enough UserMatches found for match with id {matchId}");
+            }
+
+            if (userMatches.Length > Configuration.PlayersPerMatch)
+            {
+                return Operation<UserMatch[]>
+                    .Failure(errorMessage: $"Too many UserMatch instances for match with id {matchId}");
             }
 
             return Operation<UserMatch[]>.Success(result: userMatches);

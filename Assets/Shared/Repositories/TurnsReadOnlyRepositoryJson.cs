@@ -44,6 +44,7 @@ namespace TopicTwister.Shared.Repositories
             {
                 return Operation<Turn>.Failure(errorMessage: $"Turn not found with userId: {userId} and roundId: {roundId}");
             }
+
             Turn turn = turnDaoMapper.FromDAO(turnDao);
 
             return Operation<Turn>.Success(result: turn);

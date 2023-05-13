@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.Shared.Models
@@ -10,18 +11,22 @@ namespace TopicTwister.Shared.Models
         private int _id;
         private string _startDateTime;
         private string _endDateTime;
-        private List<Round> _rounds = new List<Round>();
+        private List<Round> _rounds;
+        private UserMatch[] _userMatches;
 
         public int Id => _id;
         public DateTime StartDateTime => DateTime.Parse(_startDateTime);
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
         public List<Round> Rounds => _rounds.ToList();
+        public UserMatch[] UserMatch => _userMatches.ToArray();
 
         public Match()
         {
             _id = -1; // No id assigend yet
             _startDateTime = DateTime.UtcNow.ToString("s"); //ISO 8601
             _endDateTime = "";
+            _rounds = null;
+            _userMatches = null;
         }
 
         public Match(DateTime startDateTime, DateTime? endDateTime = null)
@@ -30,14 +35,18 @@ namespace TopicTwister.Shared.Models
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
             _rounds = null;
+            _userMatches = null;
         }
 
-        public Match(int id, DateTime startDateTime, DateTime? endDateTime = null, List<Round> rounds = null)
+        public Match(
+            int id, DateTime startDateTime, DateTime? endDateTime = null,
+            List<Round> rounds = null, UserMatch[] userMatches = null)
         {
             _id = id;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
             _rounds = rounds;
+            _userMatches = userMatches;
         }
 
         public bool IsActive => string.IsNullOrEmpty(_endDateTime);
@@ -62,6 +71,17 @@ namespace TopicTwister.Shared.Models
 
                 return _rounds.SingleOrDefault(round => round.IsActive);
             }
+        }
+
+        public Operation<bool> UserIsInMatch(int userId)
+        {
+            if (_userMatches == null || (_userMatches[0].User.Id != userId && _userMatches[1].User.Id != userId))
+            {
+                return Operation<bool>.Failure(
+                    errorMessage: $"User with id {userId} is not involved in match with id {_id}");
+            }
+
+            return Operation<bool>.Success(result: true);
         }
 
         public override bool Equals(object obj)
