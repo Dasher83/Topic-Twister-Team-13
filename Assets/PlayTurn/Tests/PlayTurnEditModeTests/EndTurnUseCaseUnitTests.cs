@@ -59,7 +59,335 @@ public class EndTurnUseCaseUnitTests
     [Test]
     public void Test_ok_for_user_with_iniciative_inside_time_limit()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userWithInitiativeId = Configuration.TestUserId;
+        int userWithoutInitiativeId = Configuration.TestBotId;
+        int matchId = 0;
+        int roundId = 0;
+        Match match;
+        Round round;
+
+        _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int lambdaUserId = (int)args[0];
+                return Operation<User>.Success(result: new User(id: lambdaUserId));
+            });
+
+        _matchesReadOnlyRepository.Get(matchId).Returns(
+            (args) =>
+            {
+                match = new Match(
+                    id: matchId,
+                    startDateTime: DateTime.UtcNow);
+
+                round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'j',
+                    isActive: true,
+                    match: match,
+                    categories: new List<Category>());
+
+                match = new Match(
+                    id: matchId,
+                    startDateTime: match.StartDateTime,
+                    endDateTime: null,
+                    rounds: new List<Round>() { round });
+
+                return Operation<Match>.Success(result: match);
+            });
+
+        _userMatchesRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
+            (args) =>
+            {
+                int lambdaUserId = (int)args[0];
+                int lambdaMatchId = (int)args[1];
+
+                UserMatch lambdaUserMatch = new UserMatch(
+                    score: 0,
+                    isWinner: false,
+                    hasInitiative: lambdaUserId == userWithInitiativeId,
+                    user: _usersReadOnlyRepository.Get(id: lambdaUserId).Result,
+                    match: _matchesReadOnlyRepository.Get(lambdaMatchId).Result);
+
+                return Operation<UserMatch>.Success(result: lambdaUserMatch);
+            });
+
+        _userMatchesRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                UserMatch[] userMatches = new UserMatch[2];
+                userMatches[0] = _userMatchesRepository.Get(userWithInitiativeId, matchId).Result;
+                userMatches[1] = _userMatchesRepository.Get(userWithoutInitiativeId, matchId).Result;
+
+                return Operation<UserMatch[]>.Success(result: userMatches);
+            });
+
+        List<Category> categories = new List<Category>
+        {
+            new Category(id: 0, name: ""),
+            new Category(id: 1, name: ""),
+            new Category(id: 2, name: ""),
+            new Category(id: 3, name: ""),
+            new Category(id: 4, name: "")
+        };
+
+        _roundsReadOnlyRepository.Get(roundId).Returns(
+            (args) =>
+            {
+                Round round = new Round(
+                    id: roundId,
+                    roundNumber: 0,
+                    initialLetter: 'f',
+                    isActive: true,
+                    match: _matchesReadOnlyRepository.Get(id: matchId).Result,
+                    categories: categories);
+
+                return Operation<Round>.Success(result: round);
+            });
+
+        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+            (args) =>
+            {
+                List<Round> rounds = new List<Round>();
+                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                rounds.Add(activeRound);
+                return Operation<List<Round>>.Success(result: rounds);
+            });
+
+        _turnsRepository.Get(userWithInitiativeId, roundId).Returns(
+            (args) =>
+            {
+                DateTime lamdaTurnStartDateTime = DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds);
+
+                Turn lambdaTurn = new Turn(
+                    user: _usersReadOnlyRepository.Get(id: userWithInitiativeId).Result,
+                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    startDateTime: lamdaTurnStartDateTime);
+
+                return Operation<Turn>.Success(result: lambdaTurn);
+            });
+
+        _turnsRepository.GetMany(Arg.Any<int>(), Arg.Any<Match>()).Returns(
+            (args) =>
+            {
+                int lambdaUserId = (int)args[0];
+
+                List<Turn> lambdaTurns;
+
+                if (lambdaUserId == userWithInitiativeId)
+                {
+                    lambdaTurns = new List<Turn>
+                    {
+                        _turnsRepository.Get(userWithInitiativeId, roundId).Result
+                    };
+                }
+                else
+                {
+                    lambdaTurns = new List<Turn>();
+                }
+
+                return Operation<List<Turn>>.Success(result: lambdaTurns);
+            });
+
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];
+
+        List<CategoryDto> categoryDtos = categories
+            .Select((category, index) => new CategoryDto(id: categories[index].Id, name: categories[index].Name))
+            .ToList();
+
+        for (int i = 0; i < answerDtos.Length; i++)
+        {
+            answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "Something", order: i);
+        }
+
+        _answerDtoMapper.ToDTO(Arg.Any<Answer>()).Returns(
+            (args) =>
+            {
+                Answer lambdaAnswer = (Answer)args[0];
+
+                AnswerDto lambdaAnswerDto = new AnswerDto(
+                    categoryDto: categoryDtos.Single(categoryDto => categoryDto.Id == lambdaAnswer.Category.Id),
+                    userInput: lambdaAnswer.UserInput,
+                    order: lambdaAnswer.Order);
+
+                return lambdaAnswerDto;
+            });
+
+        _answerDtoMapper.ToDTOs(Arg.Any<List<Answer>>()).Returns(
+            (args) =>
+            {
+                return ((List<Answer>)args[0]).Select(answer => _answerDtoMapper.ToDTO(answer)).ToList();
+            });
+
+        _turnsRepository.Update(Arg.Any<Turn>()).Returns(
+            (args) =>
+            {
+                Turn lambdaTurn = (Turn)args[0];
+
+                List<Answer> lambdaAnswers = answerDtos
+                .Select(
+                    answerDto =>
+                    new Answer(
+                        userInput: answerDto.UserInput,
+                        order: answerDto.Order,
+                        category: categories.Single(category => category.Id == answerDto.CategoryDto.Id),
+                        turn: lambdaTurn))
+                .ToList();
+
+                lambdaTurn = new Turn(
+                    user: lambdaTurn.User,
+                    round: lambdaTurn.Round,
+                    startDateTime: lambdaTurn.StartDateTime,
+                    endDateTime: DateTime.UtcNow,
+                    answers: lambdaAnswers);
+
+                return Operation<Turn>.Success(result: lambdaTurn);
+            });
+
+        _roundWithCategoriesDtoMapper.ToDTO(Arg.Any<Round>()).Returns(
+            (args) =>
+            {
+                Round round = (Round)args[0];
+
+                RoundDto roundDto = new RoundDto(
+                    id: round.Id,
+                    roundNumber: round.RoundNumber,
+                    initialLetter: round.InitialLetter,
+                    isActive: round.IsActive,
+                    matchId: round.Match.Id);
+
+                List<CategoryDto> categoryDtos = round.Categories
+                    .Select(category => new CategoryDto(id: category.Id, name: category.Name))
+                    .ToList();
+
+                return new RoundWithCategoriesDto(roundDto: roundDto, categoryDtos: categoryDtos);
+            });
+
+        _roundWithCategoriesDtoMapper.ToDTOs(Arg.Any<List<Round>>()).Returns(
+            (args) =>
+            {
+                List<Round> rounds = (List<Round>)args[0];
+                return rounds.Select(_roundWithCategoriesDtoMapper.ToDTO).ToList();
+            });
+
+        _turnDtoMapper.ToDTO(Arg.Any<Turn>()).Returns(
+            (args) =>
+            {
+                Turn turn = (Turn)args[0];
+
+                TurnDto turnDto = new TurnDto(
+                    userId: turn.User.Id,
+                    roundId: turn.Round.Id,
+                    points: turn.Points,
+                    startDateTime: turn.StartDateTime,
+                    endDateTime: turn.EndDateTime);
+
+                return turnDto;
+            });
+
+        _matchDtoMapper.ToDTO(Arg.Any<Match>()).Returns(
+            (args) =>
+            {
+                Match lambaMatch = (Match)args[0];
+                MatchDto lambaMatchDto = new MatchDto(
+                    id: lambaMatch.Id,
+                    startDateTime: lambaMatch.StartDateTime,
+                    endDateTime: lambaMatch.EndDateTime);
+                return lambaMatchDto;
+            });
+
+        _userMatchDtoMapper.ToDTO(Arg.Any<UserMatch>()).Returns(
+            (args) =>
+            {
+                UserMatch lambaUserMatch = (UserMatch)args[0];
+
+                UserMatchDto lambaUserMatchDto = new UserMatchDto(
+                    score: lambaUserMatch.Score,
+                    isWinner: lambaUserMatch.IsWinner,
+                    hasInitiative: lambaUserMatch.HasInitiative,
+                    userId: lambaUserMatch.User.Id,
+                    matchId: lambaUserMatch.Match.Id);
+
+                return lambaUserMatchDto;
+            });
+
+        _answersRepository.Insert(Arg.Any<Answer>()).Returns(
+            (args) =>
+            {
+                Answer answer = (Answer)args[0];
+                return Operation<Answer>.Success(result: answer);
+            });
+
+        match = _matchesReadOnlyRepository.Get(matchId).Result;
+
+        MatchDto matchDto = new MatchDto(
+            id: match.Id,
+            startDateTime: match.StartDateTime,
+            endDateTime: match.EndDateTime);
+
+        round = _roundsReadOnlyRepository.Get(matchId).Result;
+
+        RoundDto roundDto = new RoundDto(
+            id: round.Id,
+            roundNumber: round.RoundNumber,
+            initialLetter: round.InitialLetter,
+            isActive: round.IsActive,
+            matchId: round.Match.Id);
+
+        UserMatch userWithInitiativeMatch = _userMatchesRepository.Get(
+            userId: userWithInitiativeId, matchId: match.Id).Result;
+
+        UserMatchDto userWithInitiativeMatchDto = new UserMatchDto(
+            score: userWithInitiativeMatch.Score,
+            isWinner: userWithInitiativeMatch.IsWinner,
+            hasInitiative: userWithInitiativeMatch.HasInitiative,
+            userId: userWithInitiativeMatch.User.Id,
+            matchId: userWithInitiativeMatch.Match.Id);
+
+        UserMatch userWithoutInitiativeMatch = _userMatchesRepository.Get(
+            userId: userWithoutInitiativeId, matchId: match.Id).Result;
+
+        UserMatchDto userWithoutIniciativeMatchDto = new UserMatchDto(
+            score: userWithoutInitiativeMatch.Score,
+            isWinner: userWithoutInitiativeMatch.IsWinner,
+            hasInitiative: userWithoutInitiativeMatch.HasInitiative,
+            userId: userWithoutInitiativeMatch.User.Id,
+            matchId: userWithoutInitiativeMatch.Match.Id);
+
+        RoundWithCategoriesDto roundWithCategoriesDto = new RoundWithCategoriesDto(
+            roundDto: roundDto, categoryDtos: categoryDtos);
+
+        Turn turn = _turnsRepository.Get(userWithInitiativeId, roundId).Result;
+
+        TurnDto turnDto = _turnDtoMapper.ToDTO(turn);
+        #endregion
+
+        #region -- Act --
+        Operation<MatchFullStateDto> useCaseOperation = _useCase
+            .Execute(
+                userId: userWithInitiativeId,
+                matchId: matchId,
+                answerDtos: answerDtos);
+        #endregion
+
+        #region -- Assert --
+        MatchFullStateDto expectedDto = new MatchFullStateDto(
+            matchDto: matchDto,
+            roundWithCategoriesDtos: new List<RoundWithCategoriesDto>() { roundWithCategoriesDto },
+            userWithInitiativeMatchDto: userWithInitiativeMatchDto,
+            userWithoutInitiativeMatchDto: userWithoutIniciativeMatchDto,
+            userWithInitiativeRoundDtos: new List<UserRoundDto>(),
+            userWithoutInitiativeRoundDtos: new List<UserRoundDto>(),
+            answerDtosOfUserWithInitiative: answerDtos.ToList(),
+            answerDtosOfUserWithoutInitiative: new List<AnswerDto>(),
+            turnDtosOfUserWithInitiative: new List<TurnDto>() { turnDto },
+            turnDtosOfUserWithoutInitiative: new List<TurnDto>());
+
+        Assert.IsTrue(useCaseOperation.WasOk);
+        Assert.AreEqual(expected: expectedDto, actual: useCaseOperation.Result);
+        #endregion
     }
 
     [Test]
