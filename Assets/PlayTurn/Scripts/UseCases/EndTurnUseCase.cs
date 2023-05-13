@@ -132,7 +132,10 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (turn.HasEnded)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: getTurnOperation.ErrorMessage);
+            string errorMessage = $"Turn already ended for user with id {user.Id} " +
+                    $"in round with id {activeRound.Id} in match with id {match.Id}";
+
+            return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
         }
 
         List<AnswerDto> cleanAnswerDtos = answerDtos.Where(answerDto => answerDto != null).ToList();
@@ -175,6 +178,15 @@ public class EndTurnUseCase : IEndTurnUseCase
             startDateTime: turn.StartDateTime,
             endDateTime: DateTime.UtcNow);
 
+        Operation<Turn> updateTurnOperation = _turnsRepository.Update(turn);
+
+        if (updateTurnOperation.WasOk == false)
+        {
+            return Operation<MatchFullStateDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
+        }
+
+        turn = updateTurnOperation.Result;
+
         foreach (AnswerDto answerDto in answerDtos)
         {
             Answer answer = new Answer(
@@ -192,13 +204,6 @@ public class EndTurnUseCase : IEndTurnUseCase
             startDateTime: turn.StartDateTime,
             endDateTime: turn.EndDateTime,
             answers: requesterAnswers);
-
-        Operation<Turn> updateTurnOperation = _turnsRepository.Update(turn);
-
-        if(updateTurnOperation.WasOk == false)
-        {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
-        }
 
         UserMatchDto userWithInitiativeMatchDto;
         UserMatchDto userWithoutInitiativeMatchDto;
@@ -228,19 +233,23 @@ public class EndTurnUseCase : IEndTurnUseCase
             userWithoutInitiativeId = requesterUserMatch.User.Id;
         }
 
-        Operation<List<Turn>> getTurnsWithIniciativeOperation = _turnsRepository.GetMany(userId: userWithInitiativeId, matchId: match.Id);
+        Operation<List<Turn>> getTurnsWithIniciativeOperation = _turnsRepository
+            .GetMany(userId: userWithInitiativeId, match: match);
 
         List<TurnDto> turnDtosOfUserWithInitiative = getTurnsWithIniciativeOperation
             .Result
             .Select(turn => _turnDtoMapper.ToDTO(turn))
             .ToList();
 
-        Operation<List<Turn>> getTurnsWithoutInitiativeOperation = _turnsRepository.GetMany(userId: userWithoutInitiativeId, matchId: match.Id);
+        Operation<List<Turn>> getTurnsWithoutInitiativeOperation = _turnsRepository
+            .GetMany(userId: userWithoutInitiativeId, match: match);
 
         List<TurnDto> turnDtosOfUserWithoutInitiative = getTurnsWithoutInitiativeOperation
             .Result
             .Select(turn => _turnDtoMapper.ToDTO(turn))
             .ToList();
+
+        // TODO: falta guardar respuestas en repositorio, sino nunca se va a poder cargar en futuras iteraciones
 
         MatchFullStateDto matchFullStateDto = new MatchFullStateDto(
             matchDto: _matchDtoMapper.ToDTO(match),

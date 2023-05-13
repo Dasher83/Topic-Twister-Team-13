@@ -174,7 +174,7 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Turn>.Success(result: lambdaTurn);
             });
 
-        _turnsRepository.GetMany(Arg.Any<int>(), Arg.Any<int>()).Returns(
+        _turnsRepository.GetMany(Arg.Any<int>(), Arg.Any<Match>()).Returns(
             (args) =>
             {
                 int lambdaUserId = (int)args[0];

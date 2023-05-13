@@ -3,6 +3,7 @@ using TopicTwister.Shared.Models;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Utils;
+using System.Linq;
 
 
 namespace TopicTwister.Shared.Mappers
@@ -51,7 +52,7 @@ namespace TopicTwister.Shared.Mappers
 
         public List<RoundWithCategoriesDto> ToDTOs(List<Round> rounds)
         {
-            throw new System.NotImplementedException();
+            return rounds.Select(ToDTO).ToList();
         }
     }
 }

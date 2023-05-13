@@ -84,7 +84,8 @@ namespace TopicTwister.Shared.Repositories
             string data = new RoundDaosCollectionSerializer().Serialize(collection);
             File.WriteAllText(this._path, data);
             Operation<Round> getOperation = Get(roundDao.Id);
-            return getOperation.WasOk ? getOperation : Operation<Round>.Failure(errorMessage: "failure to update Round");
+            return getOperation.WasOk ? getOperation : Operation<Round>
+                .Failure(errorMessage: $"failure to update Round with id {round.Id}");
         }
     }
 }
