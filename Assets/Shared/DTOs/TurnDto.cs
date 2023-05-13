@@ -1,5 +1,4 @@
 using System;
-using TopicTwister.Shared.Models;
 
 
 namespace TopicTwister.Shared.DTOs

@@ -5,7 +5,7 @@ using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
 
 
-namespace TopicTwister.Repositories.IdGenerators
+namespace TopicTwister.Shared.Repositories.IdGenerators
 {
     public class RoundsIdGenerator : IUniqueIdGenerator
     {

@@ -22,6 +22,7 @@ public class EndTurnUseCase : IEndTurnUseCase
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
     private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
+    private IAnswersRepository _answersRepository;
 
     public EndTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
@@ -33,7 +34,8 @@ public class EndTurnUseCase : IEndTurnUseCase
         IdtoMapper<Round, RoundWithCategoriesDto> roundWithCategoriesDtoMapper,
         IdtoMapper<UserMatch, UserMatchDto> userMatchDtoMapper,
         IdtoMapper<Turn, TurnDto> turnDtoMapper,
-        IdtoMapper<Answer, AnswerDto> answerDtoMapper)
+        IdtoMapper<Answer, AnswerDto> answerDtoMapper,
+        IAnswersRepository answersRepository)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
@@ -45,6 +47,7 @@ public class EndTurnUseCase : IEndTurnUseCase
         _userMatchDtoMapper = userMatchDtoMapper;
         _turnDtoMapper = turnDtoMapper;
         _answerDtoMapper = answerDtoMapper;
+        _answersRepository = answersRepository;
     }
 
     public Operation<MatchFullStateDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
@@ -142,7 +145,6 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         List<int> answerCategoryIds = cleanAnswerDtos.Select(answerDto => answerDto.CategoryDto.Id).Distinct().ToList();
         
-        
         if(answerCategoryIds.Count > Configuration.CategoriesPerRound)
         {
             string errorMessage = $"Too many answers for turn of user with id {user.Id} " +
@@ -170,7 +172,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
         }
 
-        List<Answer> requesterAnswers = new List<Answer>();
+        List<Answer> requesterNewAnswers = new List<Answer>();
 
         turn = new Turn(
             user: turn.User,
@@ -195,7 +197,14 @@ public class EndTurnUseCase : IEndTurnUseCase
                 category: activeRound.Categories.Single(category => category.Id == answerDto.CategoryDto.Id),
                 turn: turn);
 
-            requesterAnswers.Add(answer);
+            Operation<Answer> insertAnswerOperation = _answersRepository.Insert(answer);
+
+            if(insertAnswerOperation.WasOk == false)
+            {
+                return Operation<MatchFullStateDto>.Failure(errorMessage: insertAnswerOperation.ErrorMessage);
+            }
+
+            requesterNewAnswers.Add(insertAnswerOperation.Result);
         }
 
         turn = new Turn(
@@ -203,7 +212,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             round: turn.Round,
             startDateTime: turn.StartDateTime,
             endDateTime: turn.EndDateTime,
-            answers: requesterAnswers);
+            answers: requesterNewAnswers);
 
         UserMatchDto userWithInitiativeMatchDto;
         UserMatchDto userWithoutInitiativeMatchDto;
@@ -218,7 +227,7 @@ public class EndTurnUseCase : IEndTurnUseCase
         {
             userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
             userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
-            answerDtosOfUserWithInitiative = _answerDtoMapper.ToDTOs(requesterAnswers);
+            answerDtosOfUserWithInitiative = _answerDtoMapper.ToDTOs(requesterNewAnswers);
             answerDtosOfUserWithoutInitiative = new List<AnswerDto>();
             userWithInitiativeId = requesterUserMatch.User.Id;
             userWithoutInitiativeId = opponentUserMatch.User.Id;
@@ -228,7 +237,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
             userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
             answerDtosOfUserWithInitiative = new List<AnswerDto>();
-            answerDtosOfUserWithoutInitiative = _answerDtoMapper.ToDTOs(requesterAnswers);
+            answerDtosOfUserWithoutInitiative = _answerDtoMapper.ToDTOs(requesterNewAnswers);
             userWithInitiativeId = opponentUserMatch.User.Id;
             userWithoutInitiativeId = requesterUserMatch.User.Id;
         }
@@ -248,8 +257,6 @@ public class EndTurnUseCase : IEndTurnUseCase
             .Result
             .Select(turn => _turnDtoMapper.ToDTO(turn))
             .ToList();
-
-        // TODO: falta guardar respuestas en repositorio, sino nunca se va a poder cargar en futuras iteraciones
 
         MatchFullStateDto matchFullStateDto = new MatchFullStateDto(
             matchDto: _matchDtoMapper.ToDTO(match),

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
-using TopicTwister.Repositories.IdGenerators;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
@@ -116,7 +115,8 @@ public class EndTurnUseCaseIntegrationTests
             roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
             userMatchDtoMapper: _userMatchDtoMapper,
             turnDtoMapper: _turnDtoMapper,
-            answerDtoMapper: _answerDtoMapper);
+            answerDtoMapper: _answerDtoMapper,
+            answersRepository: null);
 
         _roundsIdGenerator = new RoundsIdGenerator(
             roundsReadOnlyRepository: _roundsReadOnlyRepository);

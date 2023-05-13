@@ -7,7 +7,6 @@ using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
-using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Utils;
@@ -26,6 +25,7 @@ public class EndTurnUseCaseUnitTests
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
     private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
+    private IAnswersRepository _answersRepository;
 
     [SetUp]
     public void SetUp()
@@ -40,6 +40,7 @@ public class EndTurnUseCaseUnitTests
         _userMatchDtoMapper = Substitute.For<IdtoMapper<UserMatch, UserMatchDto>>();
         _turnDtoMapper = Substitute.For<IdtoMapper<Turn, TurnDto>>();
         _answerDtoMapper = Substitute.For<IdtoMapper<Answer, AnswerDto>>();
+        _answersRepository = Substitute.For<IAnswersRepository>();
 
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
@@ -51,7 +52,8 @@ public class EndTurnUseCaseUnitTests
             roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
             userMatchDtoMapper: _userMatchDtoMapper,
             turnDtoMapper: _turnDtoMapper,
-            answerDtoMapper: _answerDtoMapper);
+            answerDtoMapper: _answerDtoMapper,
+            answersRepository: _answersRepository);
     }
 
     [Test]
@@ -320,6 +322,13 @@ public class EndTurnUseCaseUnitTests
                     matchId: lambaUserMatch.Match.Id);
 
                 return lambaUserMatchDto;
+            });
+
+        _answersRepository.Insert(Arg.Any<Answer>()).Returns(
+            (args) =>
+            {
+                Answer answer = (Answer)args[0];
+                return Operation<Answer>.Success(result: answer);
             });
 
         match = _matchesReadOnlyRepository.Get(matchId).Result;

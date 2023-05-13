@@ -4,14 +4,13 @@ using TopicTwister.Home.Commands;
 using TopicTwister.Home.Services;
 using TopicTwister.Home.Shared.Interfaces;
 using TopicTwister.Home.UseCases;
-using TopicTwister.Repositories.IdGenerators;
+using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
-using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.UseCases;
 
 
