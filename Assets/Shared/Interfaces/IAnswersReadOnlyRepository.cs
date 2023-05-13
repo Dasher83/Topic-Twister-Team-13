@@ -7,7 +7,7 @@ namespace TopicTwister.Shared.Interfaces
 {
     public interface IAnswersReadOnlyRepository
     {
-        Operation<List<Answer>> GetMany(int roundId);
-        Operation<List<Answer>> GetMany(Match match);
+        Operation<List<Answer>> GetAll();
+        Operation<Answer> Get(int userId, int roundId, int categoryId);
     }
 }

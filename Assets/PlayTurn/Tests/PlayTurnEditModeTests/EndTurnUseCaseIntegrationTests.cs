@@ -39,6 +39,9 @@ public class EndTurnUseCaseIntegrationTests
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
     private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
+    private IAnswersRepository _answersRepository;
+    private IdaoMapper<Answer, AnswerDaoJson> _answerDaoJsonMapper;
+    private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
 
     [SetUp]
     public void SetUp()
@@ -105,6 +108,18 @@ public class EndTurnUseCaseIntegrationTests
 
         _answerDtoMapper = new AnswerDtoMapper(categoryDtoMapper: _categoryDtoMapper);
 
+        _turnsReadOnlyRepository = new TurnsReadOnlyRepositoryJson(
+            resourceName: "TestData/Turns",
+            turnDaoMapper: _turnDaoMapper);
+
+        _answerDaoJsonMapper = new AnswerDaoJsonMapper(
+            categoriesReadOnlyRepository: _categoriesReadOnlyRepository,
+            turnsReadOnlyRepository: _turnsReadOnlyRepository);
+
+        _answersRepository = new AnswersRepositoryJson(
+            resourceName: "TestData/Answers",
+            daoMapper: _answerDaoJsonMapper);
+
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
@@ -116,7 +131,7 @@ public class EndTurnUseCaseIntegrationTests
             userMatchDtoMapper: _userMatchDtoMapper,
             turnDtoMapper: _turnDtoMapper,
             answerDtoMapper: _answerDtoMapper,
-            answersRepository: null);
+            answersRepository: _answersRepository);
 
         _roundsIdGenerator = new RoundsIdGenerator(
             roundsReadOnlyRepository: _roundsReadOnlyRepository);
@@ -135,6 +150,7 @@ public class EndTurnUseCaseIntegrationTests
         new UserMatchesDeleteJson().Delete();
         new RoundsDeleteJson().Delete();
         new TurnsDeleteJson().Delete();
+        new AnswersDeleteJson().Delete();
     }
 
     [Test]
