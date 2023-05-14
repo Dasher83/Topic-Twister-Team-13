@@ -3,6 +3,7 @@ using TopicTwister.Shared.DTOs;
 using TopicTwister.TurnResult.Shared.Interfaces;
 using TopicTwister.TurnResult.Shared.DTOs;
 using TopicTwister.Shared.Utils;
+using TopicTwister.Shared.Interfaces;
 
 
 namespace TopicTwister.TurnResult.UseCases

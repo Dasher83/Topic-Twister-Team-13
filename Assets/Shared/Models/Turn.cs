@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using TopicTwister.Shared.Interfaces;
 
 namespace TopicTwister.Shared.Models
 {
@@ -20,14 +20,16 @@ namespace TopicTwister.Shared.Models
         public DateTime? EndDateTime => string.IsNullOrEmpty(_endDateTime) ? null : DateTime.Parse(_endDateTime);
 
         private Turn(){}
-        
-        public Turn(User user, Round round, DateTime startDateTime, DateTime? endDateTime = null, List<Answer> answers = null)
+
+        public Turn(
+            User user, Round round, DateTime startDateTime, DateTime? endDateTime = null,
+            List<Answer> answers = null, IWordsRepository wordsRepository = null)
         {
             _user = user;
             _round = round;
             _startDateTime = startDateTime.ToString("s"); //ISO 8601
             _endDateTime = endDateTime == null ? "" : ((DateTime)endDateTime).ToString("s"); //ISO 8601
-            _points = answers == null ? 0 : answers.Count(answer => answer.IsCorrect);
+            _points = answers == null ? 0 : answers.Count(answer => answer.IsCorrect(wordsRepository));
         }
 
         public bool HasEnded => string.IsNullOrEmpty(_endDateTime) == false;

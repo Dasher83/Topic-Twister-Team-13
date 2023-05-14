@@ -1,4 +1,5 @@
 using TopicTwister.Shared.Constants;
+using TopicTwister.Shared.Interfaces;
 
 
 namespace TopicTwister.Shared.Models
@@ -33,12 +34,12 @@ namespace TopicTwister.Shared.Models
             }
         }
 
-        public bool IsCorrect
+        public bool IsCorrect(IWordsRepository wordsRepository)
         {
-            get
-            {
-                return false;
-            }
+            return wordsRepository.Exists(
+                text: _userInput,
+                categoryId: _category.Id,
+                initialLetter: _turn.Round.InitialLetter).Result;
         }
     }
 }

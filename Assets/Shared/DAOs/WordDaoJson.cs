@@ -2,17 +2,17 @@ using System;
 using UnityEngine;
 
 
-namespace TopicTwister.Shared.DTOs
+namespace TopicTwister.Shared.DAOs
 {
     [Serializable]
-    public class WordDto
+    public class WordDaoJson
     {
         [SerializeField] private string _text;
         [SerializeField] private int _categoryId;
 
-        private WordDto() { }
+        private WordDaoJson() { }
 
-        public WordDto(string text, int categoryId)
+        public WordDaoJson(string text, int categoryId)
         {
             _text = text;
             _categoryId = categoryId;

@@ -26,6 +26,7 @@ public class EndTurnUseCaseUnitTests
     private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
     private IAnswersRepository _answersRepository;
+    private IWordsRepository _wordsRepository;
 
     [SetUp]
     public void SetUp()
@@ -41,6 +42,7 @@ public class EndTurnUseCaseUnitTests
         _turnDtoMapper = Substitute.For<IdtoMapper<Turn, TurnDto>>();
         _answerDtoMapper = Substitute.For<IdtoMapper<Answer, AnswerDto>>();
         _answersRepository = Substitute.For<IAnswersRepository>();
+        _wordsRepository = Substitute.For<IWordsRepository>();
 
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
@@ -53,7 +55,8 @@ public class EndTurnUseCaseUnitTests
             userMatchDtoMapper: _userMatchDtoMapper,
             turnDtoMapper: _turnDtoMapper,
             answerDtoMapper: _answerDtoMapper,
-            answersRepository: _answersRepository);
+            answersRepository: _answersRepository,
+            wordsRepository: _wordsRepository);
     }
 
     [Test]
@@ -169,18 +172,66 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Turn>.Success(result: lambdaTurn);
             });
 
+        _wordsRepository.Exists(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<char>()).Returns(
+            (args) =>
+            {
+                string text = (string)args[0];
+                char initialLetter = (char)args[2];
+                string other = $"{initialLetter} TEST".ToLower();
+                bool result = text.ToLower() == other;
+                return Operation<bool>.Success(result: result);
+            });
+
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];
+
+        List<CategoryDto> categoryDtos = categories
+            .Select((category, index) => new CategoryDto(id: categories[index].Id, name: categories[index].Name))
+            .ToList();
+
+        for (int i = 0; i < 3; i++)
+        {
+            answerDtos[i] = new AnswerDto(
+                categoryDto: categoryDtos[i],
+                userInput: $"{_roundsReadOnlyRepository.Get(roundId).Result.InitialLetter} TEST",
+                order: i);
+        }
+
+        for (int i = 3; i < answerDtos.Length; i++)
+        {
+            answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "Something", order: i);
+        }
+
         _turnsRepository.GetMany(Arg.Any<int>(), Arg.Any<Match>()).Returns(
             (args) =>
             {
                 int lambdaUserId = (int)args[0];
 
                 List<Turn> lambdaTurns;
+                Turn lambdaTurn = _turnsRepository.Update(_turnsRepository.Get(userWithInitiativeId, roundId).Result).Result;
+
+                List<Answer> lambdaAnswers = answerDtos
+                    .Select(
+                        answerDto =>
+                        new Answer(
+                            userInput: answerDto.UserInput,
+                            order: answerDto.Order,
+                            category: categories.Single(category => category.Id == answerDto.CategoryDto.Id),
+                            turn: lambdaTurn))
+                    .ToList();
+
+                lambdaTurn = new Turn(
+                    user: lambdaTurn.User,
+                    round: lambdaTurn.Round,
+                    startDateTime: lambdaTurn.StartDateTime,
+                    endDateTime: lambdaTurn.EndDateTime,
+                    answers: lambdaAnswers,
+                    wordsRepository: _wordsRepository);
 
                 if (lambdaUserId == userWithInitiativeId)
                 {
                     lambdaTurns = new List<Turn>
                     {
-                        _turnsRepository.Get(userWithInitiativeId, roundId).Result
+                        lambdaTurn
                     };
                 }
                 else
@@ -190,17 +241,6 @@ public class EndTurnUseCaseUnitTests
 
                 return Operation<List<Turn>>.Success(result: lambdaTurns);
             });
-
-        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];
-
-        List<CategoryDto> categoryDtos = categories
-            .Select((category, index) => new CategoryDto(id: categories[index].Id, name: categories[index].Name))
-            .ToList();
-
-        for (int i = 0; i < answerDtos.Length; i++)
-        {
-            answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "Something", order: i);
-        }
 
         _answerDtoMapper.ToDTO(Arg.Any<Answer>()).Returns(
             (args) =>
@@ -226,22 +266,11 @@ public class EndTurnUseCaseUnitTests
             {
                 Turn lambdaTurn = (Turn)args[0];
 
-                List<Answer> lambdaAnswers = answerDtos
-                .Select(
-                    answerDto =>
-                    new Answer(
-                        userInput: answerDto.UserInput,
-                        order: answerDto.Order,
-                        category: categories.Single(category => category.Id == answerDto.CategoryDto.Id),
-                        turn: lambdaTurn))
-                .ToList();
-
                 lambdaTurn = new Turn(
                     user: lambdaTurn.User,
                     round: lambdaTurn.Round,
                     startDateTime: lambdaTurn.StartDateTime,
-                    endDateTime: DateTime.UtcNow,
-                    answers: lambdaAnswers);
+                    endDateTime: DateTime.UtcNow);
 
                 return Operation<Turn>.Success(result: lambdaTurn);
             });
@@ -361,7 +390,12 @@ public class EndTurnUseCaseUnitTests
 
         Turn turn = _turnsRepository.Get(userWithInitiativeId, roundId).Result;
 
-        TurnDto turnDto = _turnDtoMapper.ToDTO(turn);
+        TurnDto turnDto = new TurnDto(
+            userId: userWithInitiativeId,
+            roundId: roundId,
+            points: 3,
+            startDateTime: turn.StartDateTime,
+            endDateTime: DateTime.UtcNow);
         #endregion
 
         #region -- Act --

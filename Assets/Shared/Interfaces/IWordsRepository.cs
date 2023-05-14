@@ -1,7 +1,7 @@
 using TopicTwister.Shared.Utils;
 
 
-namespace TopicTwister.TurnResult.Shared.Interfaces
+namespace TopicTwister.Shared.Interfaces
 {
     public interface IWordsRepository
     {

@@ -4,7 +4,7 @@ using TopicTwister.TurnResult.Commands;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.TurnResult.Services;
 using TopicTwister.TurnResult.UseCases;
-using TopicTwister.TurnResult.Repositories;
+using TopicTwister.Shared.Repositories;
 using TopicTwister.TurnResult.Shared.Interfaces;
 
 
@@ -19,7 +19,7 @@ namespace TopicTwister.TurnResult.Shared.Providers
                 new EvaluateAnswersCommand(
                     new AnswersEvaluationService(
                         new EvaluateAnswersUseCase(
-                            new WordsRepositoryJson("JSON/TestData/WordsTest"))))
+                            new WordsRepositoryJson("JSON/TestData/Words"))))
             }
         };
 

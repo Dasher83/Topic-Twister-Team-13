@@ -23,6 +23,7 @@ public class EndTurnUseCase : IEndTurnUseCase
     private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
     private IAnswersRepository _answersRepository;
+    private IWordsRepository _wordsRepository;
 
     public EndTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
@@ -35,7 +36,8 @@ public class EndTurnUseCase : IEndTurnUseCase
         IdtoMapper<UserMatch, UserMatchDto> userMatchDtoMapper,
         IdtoMapper<Turn, TurnDto> turnDtoMapper,
         IdtoMapper<Answer, AnswerDto> answerDtoMapper,
-        IAnswersRepository answersRepository)
+        IAnswersRepository answersRepository,
+        IWordsRepository wordsRepository)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
@@ -48,6 +50,7 @@ public class EndTurnUseCase : IEndTurnUseCase
         _turnDtoMapper = turnDtoMapper;
         _answerDtoMapper = answerDtoMapper;
         _answersRepository = answersRepository;
+        _wordsRepository = wordsRepository;
     }
 
     public Operation<MatchFullStateDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
@@ -212,7 +215,8 @@ public class EndTurnUseCase : IEndTurnUseCase
             round: turn.Round,
             startDateTime: turn.StartDateTime,
             endDateTime: turn.EndDateTime,
-            answers: requesterNewAnswers);
+            answers: requesterNewAnswers,
+            wordsRepository: _wordsRepository);
 
         UserMatchDto userWithInitiativeMatchDto;
         UserMatchDto userWithoutInitiativeMatchDto;

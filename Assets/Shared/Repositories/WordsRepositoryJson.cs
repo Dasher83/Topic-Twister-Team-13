@@ -1,23 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
-using TopicTwister.TurnResult.Shared.Interfaces;
-using TopicTwister.TurnResult.Shared.Serializers;
+using TopicTwister.Shared.Interfaces;
 using UnityEngine;
-using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Utils;
+using TopicTwister.Shared.DAOs;
+using TopicTwister.Shared.Serialization.Deserializers;
 
 
-namespace TopicTwister.TurnResult.Repositories
+namespace TopicTwister.Shared.Repositories
 {
     public class WordsRepositoryJson: IWordsRepository
     {
-        private readonly List<WordDto> _words;
+        private readonly List<WordDaoJson> _words;
 
-        public WordsRepositoryJson(string wordsResourceName)
+        public WordsRepositoryJson(string resourceName)
         {
-            string data = Resources.Load<TextAsset>(wordsResourceName).text;
+            string data = Resources.Load<TextAsset>(resourceName).text;
 
-            _words = JsonUtility.FromJson<WordsCollection>(data).Words;
+            _words = new WordDaosCollectionDeserializer().Deserialize(data).Words;
         }
 
         public Operation<bool> Exists(string text, int categoryId, char initialLetter)
