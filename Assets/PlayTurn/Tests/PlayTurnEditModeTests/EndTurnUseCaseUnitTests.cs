@@ -787,13 +787,37 @@ public class EndTurnUseCaseUnitTests
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_final_round_and_match()
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_final_round_and_match_win()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_final_round_and_match()
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_final_round_and_match_lose()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_inside_time_limit_end_of_final_round_and_match_draw()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_final_round_and_match_win()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_final_round_and_match_lose()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Test]
+    public void Test_ok_for_user_without_iniciative_outside_time_limit_end_of_final_round_and_match_draw()
     {
         throw new NotImplementedException();
     }
