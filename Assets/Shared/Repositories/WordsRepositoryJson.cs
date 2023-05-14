@@ -5,18 +5,20 @@ using UnityEngine;
 using TopicTwister.Shared.Utils;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.Serialization.Deserializers;
+using System.IO;
 
 
 namespace TopicTwister.Shared.Repositories
 {
     public class WordsRepositoryJson: IWordsRepository
     {
+        private readonly string _path;
         private readonly List<WordDaoJson> _words;
 
         public WordsRepositoryJson(string resourceName)
         {
-            string data = Resources.Load<TextAsset>(resourceName).text;
-
+            _path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
+            string data = File.ReadAllText(_path);
             _words = new WordDaosCollectionDeserializer().Deserialize(data).Words;
         }
 

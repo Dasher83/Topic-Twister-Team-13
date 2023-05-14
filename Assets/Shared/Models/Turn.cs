@@ -22,6 +22,16 @@ namespace TopicTwister.Shared.Models
         private Turn(){}
 
         public Turn(
+            User user, Round round, DateTime startDateTime, DateTime endDateTime, int points)
+        {
+            _user = user;
+            _round = round;
+            _startDateTime = startDateTime.ToString("s"); //ISO 8601
+            _endDateTime = endDateTime.ToString("s"); //ISO 8601
+            _points = points;
+        }
+
+        public Turn(
             User user, Round round, DateTime startDateTime, DateTime? endDateTime = null,
             List<Answer> answers = null, IWordsRepository wordsRepository = null)
         {

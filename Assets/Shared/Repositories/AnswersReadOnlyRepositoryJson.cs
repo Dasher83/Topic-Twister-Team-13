@@ -60,5 +60,24 @@ namespace TopicTwister.Shared.Repositories
             Answer answer = daoMapper.FromDAO(dao);
             return Operation<Answer>.Success(result: answer);
         }
+
+        public Operation<List<Answer>> GetMany(int userId, int roundId)
+        {
+            Operation<List<Answer>> getAllOperation = GetAll();
+
+            if (getAllOperation.WasOk == false)
+            {
+                return Operation<List<Answer>>.Failure(errorMessage: getAllOperation.ErrorMessage);
+            }
+
+            readCache = daoMapper.ToDAOs(getAllOperation.Result);
+
+            List<AnswerDaoJson> daos = readCache
+                .Where(dao => dao.UserId == userId && dao.RoundId == roundId)
+                .ToList();
+
+            List<Answer> answers = daoMapper.FromDAOs(daos);
+            return Operation<List<Answer>>.Success(result: answers);
+        }
     }
 }

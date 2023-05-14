@@ -42,6 +42,7 @@ public class EndTurnUseCaseIntegrationTests
     private IAnswersRepository _answersRepository;
     private IdaoMapper<Answer, AnswerDaoJson> _answerDaoJsonMapper;
     private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
+    private IWordsRepository _wordsRepository;
 
     [SetUp]
     public void SetUp()
@@ -73,13 +74,12 @@ public class EndTurnUseCaseIntegrationTests
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
 
+        _wordsRepository = new WordsRepositoryJson(
+                resourceName: "TestData/Words");
+
         _turnDaoMapper = new TurnDaoJsonMapper(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             roundsReadOnlyRepository: _roundsReadOnlyRepository);
-
-        _turnsRepository = new TurnsRepositoryJson(
-            resourceName: "TestData/Turns",
-            turnDaoMapper: _turnDaoMapper);
 
         _matchDtoMapper = new MatchDtoMapper();
 
@@ -120,6 +120,13 @@ public class EndTurnUseCaseIntegrationTests
             resourceName: "TestData/Answers",
             daoMapper: _answerDaoJsonMapper);
 
+        _wordsRepository = new WordsRepositoryJson(
+            resourceName: "TestData/Words");
+
+        _turnsRepository = new TurnsRepositoryJson(
+            resourceName: "TestData/Turns",
+            turnDaoMapper: _turnDaoMapper);
+
         _useCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
@@ -132,7 +139,7 @@ public class EndTurnUseCaseIntegrationTests
             turnDtoMapper: _turnDtoMapper,
             answerDtoMapper: _answerDtoMapper,
             answersRepository: _answersRepository,
-            wordsRepository: null);
+            wordsRepository: _wordsRepository);
 
         _roundsIdGenerator = new RoundsIdGenerator(
             roundsReadOnlyRepository: _roundsReadOnlyRepository);
@@ -204,9 +211,16 @@ public class EndTurnUseCaseIntegrationTests
             .Select((category, index) => new CategoryDto(id: categories[index].Id, name: categories[index].Name))
             .ToList();
 
-        for (int i = 0; i < answerDtos.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
             answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "Something", order: i);
+        }
+
+        for (int i = 3; i < answerDtos.Length; i++)
+        {
+            answerDtos[i] = new AnswerDto(
+                categoryDto: categoryDtos[i],
+                userInput: $"{round.InitialLetter} TEST", order: i);
         }
 
         MatchDto matchDto = new MatchDto(
@@ -238,13 +252,12 @@ public class EndTurnUseCaseIntegrationTests
         RoundWithCategoriesDto roundWithCategoriesDto = new RoundWithCategoriesDto(
             roundDto: roundDto, categoryDtos: categoryDtos);
 
-        turn = new Turn(
-            user: userWithInitiative,
-            round: round,
+        TurnDto turnDto = new TurnDto(
+            userId: userWithInitiative.Id,
+            roundId: round.Id,
+            points: 2,
             startDateTime: turn.StartDateTime,
             endDateTime: DateTime.UtcNow);
-
-        TurnDto turnDto = _turnDtoMapper.ToDTO(turn);
         #endregion
 
         #region -- Act --

@@ -25,11 +25,25 @@ namespace TopicTwister.Shared.Mappers
         {
             User user = _usersReadOnlyRepository.Get(id: turnDao.UserId).Result;
             Round round = _roundsReadOnlyRepository.Get(id: turnDao.RoundId).Result;
-            Turn turn = new Turn(
+            Turn turn;
+
+            if(turnDao.EndDateTime == null)
+            {
+                turn = new Turn(
+                user: user,
+                round: round,
+                startDateTime: turnDao.StartDateTime);
+            }
+            else
+            {
+                turn = new Turn(
                 user: user,
                 round: round,
                 startDateTime: turnDao.StartDateTime,
-                endDateTime: turnDao.EndDateTime);
+                endDateTime: (DateTime)turnDao.EndDateTime,
+                points: turnDao.Points);
+            }
+
             return turn;
         }
 

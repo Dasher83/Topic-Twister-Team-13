@@ -218,6 +218,15 @@ public class EndTurnUseCase : IEndTurnUseCase
             answers: requesterNewAnswers,
             wordsRepository: _wordsRepository);
 
+        updateTurnOperation = _turnsRepository.Update(turn);
+
+        if (updateTurnOperation.WasOk == false)
+        {
+            return Operation<MatchFullStateDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
+        }
+
+        turn = updateTurnOperation.Result;
+
         UserMatchDto userWithInitiativeMatchDto;
         UserMatchDto userWithoutInitiativeMatchDto;
 

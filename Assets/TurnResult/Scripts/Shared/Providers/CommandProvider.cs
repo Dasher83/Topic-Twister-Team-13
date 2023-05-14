@@ -19,7 +19,7 @@ namespace TopicTwister.TurnResult.Shared.Providers
                 new EvaluateAnswersCommand(
                     new AnswersEvaluationService(
                         new EvaluateAnswersUseCase(
-                            new WordsRepositoryJson("JSON/TestData/Words"))))
+                            new WordsRepositoryJson("TestData/Words"))))
             }
         };
 

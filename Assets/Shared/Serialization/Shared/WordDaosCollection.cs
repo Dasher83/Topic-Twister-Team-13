@@ -12,6 +12,21 @@ namespace TopicTwister.Shared.Serialization.Shared
     {
         [SerializeField] private WordDaoJson[] _words;
 
-        public List<WordDaoJson> Words => _words.ToList();
+        public WordDaosCollection(WordDaoJson[] words)
+        {
+            _words = words;
+        }
+
+        public List<WordDaoJson> Words
+        {
+            get
+            {
+                if (_words == null)
+                {
+                    return new List<WordDaoJson>();
+                }
+                return _words.ToList();
+            }
+        }
     }
 }

@@ -594,6 +594,16 @@ public class EndTurnUseCaseUnitTests
                 return ((List<Answer>)args[0]).Select(answer => _answerDtoMapper.ToDTO(answer)).ToList();
             });
 
+        _wordsRepository.Exists(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<char>()).Returns(
+            (args) =>
+            {
+                string text = (string)args[0];
+                char initialLetter = (char)args[2];
+                string other = $"{initialLetter} TEST".ToLower();
+                bool result = text.ToLower() == other;
+                return Operation<bool>.Success(result: result);
+            });
+
         _turnsRepository.Update(Arg.Any<Turn>()).Returns(
             (args) =>
             {
@@ -614,7 +624,8 @@ public class EndTurnUseCaseUnitTests
                     round: lambdaTurn.Round,
                     startDateTime: lambdaTurn.StartDateTime,
                     endDateTime: DateTime.UtcNow,
-                    answers: lambdaEmptyAnswers);
+                    answers: lambdaEmptyAnswers,
+                    wordsRepository: _wordsRepository);
 
                 return Operation<Turn>.Success(result: lambdaTurn);
             });

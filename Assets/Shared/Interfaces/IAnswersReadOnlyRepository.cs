@@ -9,5 +9,6 @@ namespace TopicTwister.Shared.Interfaces
     {
         Operation<List<Answer>> GetAll();
         Operation<Answer> Get(int userId, int roundId, int categoryId);
+        Operation<List<Answer>> GetMany(int userId, int roundId);
     }
 }
