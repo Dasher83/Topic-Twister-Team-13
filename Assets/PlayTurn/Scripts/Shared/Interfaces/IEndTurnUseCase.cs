@@ -6,6 +6,6 @@ namespace TopicTwister.PlayTurn.Shared.Interfaces
 {
     public interface IEndTurnUseCase
     {
-        Operation<MatchFullStateDto> Execute(int userId, int matchId, AnswerDto[] answerDtos);
+        Operation<EndOfTurnDto> Execute(int userId, int matchId, AnswerDto[] answerDtos);
     }
 }

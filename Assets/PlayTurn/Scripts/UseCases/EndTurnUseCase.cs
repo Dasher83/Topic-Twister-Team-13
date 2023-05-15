@@ -53,13 +53,13 @@ public class EndTurnUseCase : IEndTurnUseCase
         _wordsRepository = wordsRepository;
     }
 
-    public Operation<MatchFullStateDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
+    public Operation<EndOfTurnDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
     {
         Operation<User> getUserOperation = _usersReadOnlyRepository.Get(id: userId);
 
         if (getUserOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: getUserOperation.ErrorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: getUserOperation.ErrorMessage);
         }
 
         User user = getUserOperation.Result;
@@ -68,7 +68,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (getMatchOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: getMatchOperation.ErrorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: getMatchOperation.ErrorMessage);
         }
 
         Match match = getMatchOperation.Result;
@@ -77,7 +77,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (getUserMatchesOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: getUserMatchesOperation.ErrorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: getUserMatchesOperation.ErrorMessage);
         }
 
         UserMatch[] userMatches = getUserMatchesOperation.Result;
@@ -96,7 +96,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (userIsInMatchOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: userIsInMatchOperation.ErrorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: userIsInMatchOperation.ErrorMessage);
         }
 
         if (userMatches[0].User.Id != userId)
@@ -114,7 +114,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (getRoundsOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: getRoundsOperation.ErrorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: getRoundsOperation.ErrorMessage);
         }
 
         match = new Match(
@@ -129,7 +129,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (getTurnOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(
+            return Operation<EndOfTurnDto>.Failure(
                 errorMessage: $"Turn not found for user with id {user.Id} " +
                 $"in round with id {activeRound.Id} in match with id {match.Id}");
         }
@@ -141,7 +141,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             string errorMessage = $"Turn already ended for user with id {user.Id} " +
                     $"in round with id {activeRound.Id} in match with id {match.Id}";
 
-            return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: errorMessage);
         }
 
         List<AnswerDto> cleanAnswerDtos = answerDtos.Where(answerDto => answerDto != null).ToList();
@@ -153,7 +153,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             string errorMessage = $"Too many answers for turn of user with id {user.Id} " +
                 $"for round with id {activeRound.Id} for match with id {match.Id}";
 
-            return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: errorMessage);
         }
 
         if (answerCategoryIds.Count < Configuration.CategoriesPerRound)
@@ -161,7 +161,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             string errorMessage = $"Too few answers for turn of user with id {user.Id} " +
                 $"for round with id {activeRound.Id} for match with id {match.Id}";
 
-            return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: errorMessage);
         }
 
         List<int> roundCategoryIds = activeRound.Categories.Select(category => category.Id).Distinct().ToList();
@@ -172,7 +172,7 @@ public class EndTurnUseCase : IEndTurnUseCase
                 $"Some of your answers don't match the categories for " +
                 $"round with id {activeRound.Id} in match with id {match.Id}";
 
-            return Operation<MatchFullStateDto>.Failure(errorMessage: errorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: errorMessage);
         }
 
         List<Answer> requesterNewAnswers = new List<Answer>();
@@ -187,7 +187,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (updateTurnOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
         }
 
         turn = updateTurnOperation.Result;
@@ -204,7 +204,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
             if(insertAnswerOperation.WasOk == false)
             {
-                return Operation<MatchFullStateDto>.Failure(errorMessage: insertAnswerOperation.ErrorMessage);
+                return Operation<EndOfTurnDto>.Failure(errorMessage: insertAnswerOperation.ErrorMessage);
             }
 
             requesterNewAnswers.Add(insertAnswerOperation.Result);
@@ -222,7 +222,7 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         if (updateTurnOperation.WasOk == false)
         {
-            return Operation<MatchFullStateDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
+            return Operation<EndOfTurnDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
         }
 
         turn = updateTurnOperation.Result;
@@ -255,34 +255,16 @@ public class EndTurnUseCase : IEndTurnUseCase
             userWithoutInitiativeId = requesterUserMatch.User.Id;
         }
 
-        Operation<List<Turn>> getTurnsWithIniciativeOperation = _turnsRepository
-            .GetMany(userId: userWithInitiativeId, match: match);
-
-        List<TurnDto> turnDtosOfUserWithInitiative = getTurnsWithIniciativeOperation
-            .Result
-            .Select(turn => _turnDtoMapper.ToDTO(turn))
-            .ToList();
-
-        Operation<List<Turn>> getTurnsWithoutInitiativeOperation = _turnsRepository
-            .GetMany(userId: userWithoutInitiativeId, match: match);
-
-        List<TurnDto> turnDtosOfUserWithoutInitiative = getTurnsWithoutInitiativeOperation
-            .Result
-            .Select(turn => _turnDtoMapper.ToDTO(turn))
-            .ToList();
-
-        MatchFullStateDto matchFullStateDto = new MatchFullStateDto(
+        EndOfTurnDto matchFullStateDto = new EndOfTurnDto(
             matchDto: _matchDtoMapper.ToDTO(match),
-            roundWithCategoriesDtos: _roundWithCategoriesDtoMapper.ToDTOs(getRoundsOperation.Result),
+            roundWithCategoriesDto: _roundWithCategoriesDtoMapper.ToDTO(turn.Round),
             userWithInitiativeMatchDto: userWithInitiativeMatchDto,
             userWithoutInitiativeMatchDto: userWithoutInitiativeMatchDto,
             userWithInitiativeRoundDtos: new List<UserRoundDto>(),
             userWithoutInitiativeRoundDtos: new List<UserRoundDto>(),
             answerDtosOfUserWithInitiative: answerDtosOfUserWithInitiative,
-            answerDtosOfUserWithoutInitiative: answerDtosOfUserWithoutInitiative,
-            turnDtosOfUserWithInitiative: turnDtosOfUserWithInitiative,
-            turnDtosOfUserWithoutInitiative: turnDtosOfUserWithoutInitiative);
+            answerDtosOfUserWithoutInitiative: answerDtosOfUserWithoutInitiative);
 
-        return Operation<MatchFullStateDto>.Success(result: matchFullStateDto);
+        return Operation<EndOfTurnDto>.Success(result: matchFullStateDto);
     }
 }

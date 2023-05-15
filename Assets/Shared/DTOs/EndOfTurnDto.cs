@@ -5,47 +5,41 @@ using System.Linq;
 
 namespace TopicTwister.Shared.DTOs
 {
-    public class MatchFullStateDto
+    public class EndOfTurnDto
     {
         private MatchDto _matchDto;
-        private List<RoundWithCategoriesDto> _roundWithCategoriesDtos;
+        private RoundWithCategoriesDto _roundWithCategoriesDto;
         private UserMatchDto _userWithInitiativeMatchDto;
         private UserMatchDto _userWithoutInitiativeMatchDto;
         private List<UserRoundDto> _userWithInitiativeRoundDtos;
         private List<UserRoundDto> _userWithoutInitiativeRoundDtos;
         private List<AnswerDto> _answerDtosOfUserWithInitiative;
         private List<AnswerDto> _answerDtosOfUserWithoutInitiative;
-        private List<TurnDto> _turnDtosOfUserWithInitiative;
-        private List<TurnDto> _turnDtosOfUserWithoutInitiative;
 
-        private MatchFullStateDto() {}
+        private EndOfTurnDto() {}
 
-        public MatchFullStateDto(
+        public EndOfTurnDto(
             MatchDto matchDto,
-            List<RoundWithCategoriesDto> roundWithCategoriesDtos,
+            RoundWithCategoriesDto roundWithCategoriesDto,
             UserMatchDto userWithInitiativeMatchDto,
             UserMatchDto userWithoutInitiativeMatchDto,
             List<UserRoundDto> userWithInitiativeRoundDtos,
             List<UserRoundDto> userWithoutInitiativeRoundDtos,
             List<AnswerDto> answerDtosOfUserWithInitiative,
-            List<AnswerDto> answerDtosOfUserWithoutInitiative,
-            List<TurnDto> turnDtosOfUserWithInitiative,
-            List<TurnDto> turnDtosOfUserWithoutInitiative)
+            List<AnswerDto> answerDtosOfUserWithoutInitiative)
         {
             _matchDto = matchDto;
-            _roundWithCategoriesDtos = roundWithCategoriesDtos;
+            _roundWithCategoriesDto = roundWithCategoriesDto;
             _userWithInitiativeMatchDto = userWithInitiativeMatchDto;
             _userWithoutInitiativeMatchDto = userWithoutInitiativeMatchDto;
             _userWithInitiativeRoundDtos = userWithInitiativeRoundDtos;
             _userWithoutInitiativeRoundDtos = userWithoutInitiativeRoundDtos;
             _answerDtosOfUserWithInitiative = answerDtosOfUserWithInitiative;
             _answerDtosOfUserWithoutInitiative = answerDtosOfUserWithoutInitiative;
-            _turnDtosOfUserWithInitiative = turnDtosOfUserWithInitiative;
-            _turnDtosOfUserWithoutInitiative = turnDtosOfUserWithoutInitiative;
         }
 
         public MatchDto MatchDto => _matchDto;
-        public List<RoundWithCategoriesDto> RoundWithCategoriesDtos => _roundWithCategoriesDtos.ToList();
+        public RoundWithCategoriesDto RoundWithCategoriesDtos => _roundWithCategoriesDto;
         public UserMatchDto UserWithIniciativeMatchDto => _userWithInitiativeMatchDto;
         public UserMatchDto UserWithoutIniciativeMatchDto => _userWithoutInitiativeMatchDto;
         public List<UserRoundDto> UserWithIniciativeUserRoundDtos => _userWithInitiativeRoundDtos;
@@ -58,12 +52,11 @@ namespace TopicTwister.Shared.DTOs
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            MatchFullStateDto other = (MatchFullStateDto)obj;
+            EndOfTurnDto other = (EndOfTurnDto)obj;
 
             bool matchDtoEquals = _matchDto.Equals(other._matchDto);
 
-            bool roundWithCategoriesDtosEquals = Enumerable
-                .SequenceEqual(_roundWithCategoriesDtos, other._roundWithCategoriesDtos);
+            bool roundWithCategoriesDtoEquals = _roundWithCategoriesDto.Equals(other._roundWithCategoriesDto);
 
             bool userWithInitiativeMatchDtoEquals = _userWithInitiativeMatchDto
                 .Equals(other._userWithInitiativeMatchDto);
@@ -83,33 +76,21 @@ namespace TopicTwister.Shared.DTOs
             bool answerDtosOfUserWithoutInitiativeEquals = Enumerable
                 .SequenceEqual(_answerDtosOfUserWithoutInitiative, other._answerDtosOfUserWithoutInitiative);
 
-            bool turnDtosOfUserWithInitiativeEquals = Enumerable
-                .SequenceEqual(_turnDtosOfUserWithInitiative, other._turnDtosOfUserWithInitiative);
-
-            bool turnDtosOfUserWithoutInitiative = Enumerable
-                .SequenceEqual(_turnDtosOfUserWithoutInitiative, other._turnDtosOfUserWithoutInitiative);
-
             return matchDtoEquals &&
-                roundWithCategoriesDtosEquals &&
+                roundWithCategoriesDtoEquals &&
                 userWithInitiativeMatchDtoEquals &&
                 userWithoutInitiativeMatchDtoEquals &&
                 userWithInitiativeRoundDtoEquals &&
                 userWithoutInitiativeRoundDtoEquals &&
                 answerDtosOfUserWithInitiativeEquals &&
-                answerDtosOfUserWithoutInitiativeEquals &&
-                turnDtosOfUserWithInitiativeEquals &&
-                turnDtosOfUserWithoutInitiative;
+                answerDtosOfUserWithoutInitiativeEquals;
         }
 
         public override int GetHashCode()
         {
-            int firstPart = HashCode.Combine(_matchDto, _roundWithCategoriesDtos, _userWithInitiativeMatchDto,
+            return HashCode.Combine(_matchDto, _roundWithCategoriesDto, _userWithInitiativeMatchDto,
                 _userWithoutInitiativeMatchDto, _userWithInitiativeRoundDtos, _userWithoutInitiativeRoundDtos,
                 _answerDtosOfUserWithInitiative, _answerDtosOfUserWithoutInitiative);
-
-            int secondPart = HashCode.Combine(_turnDtosOfUserWithInitiative, _turnDtosOfUserWithoutInitiative);
-
-            return HashCode.Combine(firstPart, secondPart);
         }
     }
 }

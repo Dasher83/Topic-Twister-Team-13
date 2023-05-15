@@ -387,19 +387,10 @@ public class EndTurnUseCaseUnitTests
 
         RoundWithCategoriesDto roundWithCategoriesDto = new RoundWithCategoriesDto(
             roundDto: roundDto, categoryDtos: categoryDtos);
-
-        Turn turn = _turnsRepository.Get(userWithInitiativeId, roundId).Result;
-
-        TurnDto turnDto = new TurnDto(
-            userId: userWithInitiativeId,
-            roundId: roundId,
-            points: 3,
-            startDateTime: turn.StartDateTime,
-            endDateTime: DateTime.UtcNow);
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(
                 userId: userWithInitiativeId,
                 matchId: matchId,
@@ -407,17 +398,15 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Assert --
-        MatchFullStateDto expectedDto = new MatchFullStateDto(
+        EndOfTurnDto expectedDto = new EndOfTurnDto(
             matchDto: matchDto,
-            roundWithCategoriesDtos: new List<RoundWithCategoriesDto>() { roundWithCategoriesDto },
+            roundWithCategoriesDto: roundWithCategoriesDto,
             userWithInitiativeMatchDto: userWithInitiativeMatchDto,
             userWithoutInitiativeMatchDto: userWithoutIniciativeMatchDto,
             userWithInitiativeRoundDtos: new List<UserRoundDto>(),
             userWithoutInitiativeRoundDtos: new List<UserRoundDto>(),
             answerDtosOfUserWithInitiative: answerDtos.ToList(),
-            answerDtosOfUserWithoutInitiative: new List<AnswerDto>(),
-            turnDtosOfUserWithInitiative: new List<TurnDto>() { turnDto },
-            turnDtosOfUserWithoutInitiative: new List<TurnDto>());
+            answerDtosOfUserWithoutInitiative: new List<AnswerDto>());
 
         Assert.IsTrue(useCaseOperation.WasOk);
         Assert.AreEqual(expected: expectedDto, actual: useCaseOperation.Result);
@@ -742,14 +731,10 @@ public class EndTurnUseCaseUnitTests
 
         RoundWithCategoriesDto roundWithCategoriesDto = new RoundWithCategoriesDto(
             roundDto: roundDto, categoryDtos: categoryDtos);
-
-        Turn turn = _turnsRepository.Get(userWithInitiativeId, roundId).Result;
-
-        TurnDto turnDto = _turnDtoMapper.ToDTO(turn);
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(
                 userId: userWithInitiativeId,
                 matchId: matchId,
@@ -757,17 +742,15 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Assert --
-        MatchFullStateDto expectedDto = new MatchFullStateDto(
+        EndOfTurnDto expectedDto = new EndOfTurnDto(
             matchDto: matchDto,
-            roundWithCategoriesDtos: new List<RoundWithCategoriesDto>() { roundWithCategoriesDto },
+            roundWithCategoriesDto: roundWithCategoriesDto,
             userWithInitiativeMatchDto: userWithInitiativeMatchDto,
             userWithoutInitiativeMatchDto: userWithoutIniciativeMatchDto,
             userWithInitiativeRoundDtos: new List<UserRoundDto>(),
             userWithoutInitiativeRoundDtos: new List<UserRoundDto>(),
             answerDtosOfUserWithInitiative: emptyAnswerDtos,
-            answerDtosOfUserWithoutInitiative: new List<AnswerDto>(),
-            turnDtosOfUserWithInitiative: new List<TurnDto>() { turnDto },
-            turnDtosOfUserWithoutInitiative: new List<TurnDto>());
+            answerDtosOfUserWithoutInitiative: new List<AnswerDto>());
 
         Assert.IsTrue(useCaseOperation.WasOk);
         Assert.AreEqual(expected: expectedDto, actual: useCaseOperation.Result);
@@ -813,7 +796,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -846,7 +829,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -907,7 +890,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -1030,7 +1013,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -1155,7 +1138,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -1296,7 +1279,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act & Assert --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(
                 userId: userId,
                 matchId: matchId,
@@ -1454,7 +1437,7 @@ public class EndTurnUseCaseUnitTests
         #endregion
 
         #region -- Act --
-        Operation<MatchFullStateDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _useCase
             .Execute(
                 userId: userId,
                 matchId: matchId,
