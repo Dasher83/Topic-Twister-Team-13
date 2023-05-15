@@ -20,7 +20,7 @@ public class EndTurnUseCaseUnitTests
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IUserMatchesRepository _userMatchesRepository;
     private ITurnsRepository _turnsRepository;
-    private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
+    private IRoundsRepository _roundsRepository;
     private IdtoMapper<Match, MatchDto> _matchDtoMapper;
     private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
@@ -38,7 +38,7 @@ public class EndTurnUseCaseUnitTests
         _matchesReadOnlyRepository = Substitute.For<IMatchesReadOnlyRepository>();
         _userMatchesRepository = Substitute.For<IUserMatchesRepository>();
         _turnsRepository = Substitute.For<ITurnsRepository>();
-        _roundsReadOnlyRepository = Substitute.For<IRoundsReadOnlyRepository>();
+        _roundsRepository = Substitute.For<IRoundsRepository>();
         _matchDtoMapper = Substitute.For<IdtoMapper<Match, MatchDto>>();
         _roundWithCategoriesDtoMapper = Substitute.For<IdtoMapper<Round, RoundWithCategoriesDto>>();
         _userMatchDtoMapper = Substitute.For<IdtoMapper<UserMatch, UserMatchDto>>();
@@ -54,7 +54,7 @@ public class EndTurnUseCaseUnitTests
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository,
             turnsRepository: _turnsRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository,
+            roundsRepository: _roundsRepository,
             matchDtoMapper: _matchDtoMapper,
             roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
             userMatchDtoMapper: _userMatchDtoMapper,
@@ -142,7 +142,7 @@ public class EndTurnUseCaseUnitTests
             new Category(id: 4, name: "")
         };
 
-        _roundsReadOnlyRepository.Get(roundId).Returns(
+        _roundsRepository.Get(roundId).Returns(
             (args) =>
             {
                 Round round = new Round(
@@ -156,11 +156,11 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Round>.Success(result: round);
             });
 
-        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+        _roundsRepository.GetMany(matchId).Returns(
             (args) =>
             {
                 List<Round> rounds = new List<Round>();
-                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                Round activeRound = _roundsRepository.Get(roundId).Result;
                 rounds.Add(activeRound);
                 return Operation<List<Round>>.Success(result: rounds);
             });
@@ -172,7 +172,7 @@ public class EndTurnUseCaseUnitTests
 
                 Turn lambdaTurn = new Turn(
                     user: _usersReadOnlyRepository.Get(id: userWithInitiativeId).Result,
-                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    round: _roundsRepository.Get(id: roundId).Result,
                     startDateTime: lamdaTurnStartDateTime);
 
                 return Operation<Turn>.Success(result: lambdaTurn);
@@ -198,7 +198,7 @@ public class EndTurnUseCaseUnitTests
         {
             answerDtos[i] = new AnswerDto(
                 categoryDto: categoryDtos[i],
-                userInput: $"{_roundsReadOnlyRepository.Get(roundId).Result.InitialLetter} TEST",
+                userInput: $"{_roundsRepository.Get(roundId).Result.InitialLetter} TEST",
                 order: i);
         }
 
@@ -321,7 +321,7 @@ public class EndTurnUseCaseUnitTests
             startDateTime: match.StartDateTime,
             endDateTime: match.EndDateTime);
 
-        round = _roundsReadOnlyRepository.Get(matchId).Result;
+        round = _roundsRepository.Get(matchId).Result;
 
         RoundDto roundDto = new RoundDto(
             id: round.Id,
@@ -455,7 +455,7 @@ public class EndTurnUseCaseUnitTests
             new Category(id: 4, name: "")
         };
 
-        _roundsReadOnlyRepository.Get(roundId).Returns(
+        _roundsRepository.Get(roundId).Returns(
             (args) =>
             {
                 Round round = new Round(
@@ -469,11 +469,11 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Round>.Success(result: round);
             });
 
-        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+        _roundsRepository.GetMany(matchId).Returns(
             (args) =>
             {
                 List<Round> rounds = new List<Round>();
-                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                Round activeRound = _roundsRepository.Get(roundId).Result;
                 rounds.Add(activeRound);
                 return Operation<List<Round>>.Success(result: rounds);
             });
@@ -486,7 +486,7 @@ public class EndTurnUseCaseUnitTests
 
                 Turn lambdaTurn = new Turn(
                     user: _usersReadOnlyRepository.Get(id: userWithInitiativeId).Result,
-                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    round: _roundsRepository.Get(id: roundId).Result,
                     startDateTime: lamdaTurnStartDateTime);
 
                 return Operation<Turn>.Success(result: lambdaTurn);
@@ -643,7 +643,7 @@ public class EndTurnUseCaseUnitTests
             startDateTime: match.StartDateTime,
             endDateTime: match.EndDateTime);
 
-        round = _roundsReadOnlyRepository.Get(matchId).Result;
+        round = _roundsRepository.Get(matchId).Result;
 
         RoundDto roundDto = new RoundDto(
             id: round.Id,
@@ -777,7 +777,7 @@ public class EndTurnUseCaseUnitTests
             new Category(id: 4, name: "")
         };
 
-        _roundsReadOnlyRepository.Get(roundId).Returns(
+        _roundsRepository.Get(roundId).Returns(
             (args) =>
             {
                 Round round = new Round(
@@ -791,13 +791,29 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Round>.Success(result: round);
             });
 
-        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+        _roundsRepository.GetMany(matchId).Returns(
             (args) =>
             {
                 List<Round> rounds = new List<Round>();
-                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                Round activeRound = _roundsRepository.Get(roundId).Result;
                 rounds.Add(activeRound);
                 return Operation<List<Round>>.Success(result: rounds);
+            });
+
+        _roundsRepository.Update(Arg.Any<Round>()).Returns(
+            (args) =>
+            {
+                Round lambdaRound = (Round)args[0];
+
+                Round updatedLambdaRound = new Round(
+                    id: roundId,
+                    roundNumber: lambdaRound.RoundNumber,
+                    initialLetter: lambdaRound.InitialLetter,
+                    isActive: lambdaRound.IsActive,
+                    match: lambdaRound.Match,
+                    categories: lambdaRound.Categories);
+
+                return Operation<Round>.Success(result: updatedLambdaRound);
             });
 
         _turnsRepository.Get(Arg.Any<int>(), Arg.Any<int>()).Returns(
@@ -812,7 +828,7 @@ public class EndTurnUseCaseUnitTests
 
                     Turn lambdaTurn = new Turn(
                         user: _usersReadOnlyRepository.Get(id: userWithInitiativeId).Result,
-                        round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                        round: _roundsRepository.Get(id: roundId).Result,
                         startDateTime: lamdaTurnStartDateTime,
                         endDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds),
                         points: 3);
@@ -826,7 +842,7 @@ public class EndTurnUseCaseUnitTests
 
                     Turn lambdaTurn = new Turn(
                         user: _usersReadOnlyRepository.Get(id: userWithoutInitiativeId).Result,
-                        round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                        round: _roundsRepository.Get(id: roundId).Result,
                         startDateTime: lamdaTurnStartDateTime);
 
                     return Operation<Turn>.Success(result: lambdaTurn);
@@ -853,7 +869,7 @@ public class EndTurnUseCaseUnitTests
         {
             answerDtos[i] = new AnswerDto(
                 categoryDto: categoryDtos[i],
-                userInput: $"{_roundsReadOnlyRepository.Get(roundId).Result.InitialLetter} TEST",
+                userInput: $"{_roundsRepository.Get(roundId).Result.InitialLetter} TEST",
                 order: i);
         }
 
@@ -889,7 +905,7 @@ public class EndTurnUseCaseUnitTests
 
                 Turn lambdaTurn = new Turn(
                         user: _usersReadOnlyRepository.Get(id: userWithoutInitiativeId).Result,
-                        round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                        round: _roundsRepository.Get(id: roundId).Result,
                         startDateTime: lamdaTurnStartDateTime,
                         endDateTime: DateTime.UtcNow,
                         points: 3);
@@ -1014,7 +1030,7 @@ public class EndTurnUseCaseUnitTests
                 {
                     UserRound lambdaUserRound = new UserRound(
                         user: _usersReadOnlyRepository.Get(id: userWithInitiativeId).Result,
-                        round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                        round: _roundsRepository.Get(id: roundId).Result,
                         isWinner: true,
                         points: 3);
 
@@ -1024,7 +1040,7 @@ public class EndTurnUseCaseUnitTests
                 {
                     UserRound lambdaUserRound = new UserRound(
                         user: _usersReadOnlyRepository.Get(id: userWithoutInitiativeId).Result,
-                        round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                        round: _roundsRepository.Get(id: roundId).Result,
                         isWinner: true,
                         points: 3);
 
@@ -1060,13 +1076,13 @@ public class EndTurnUseCaseUnitTests
             startDateTime: match.StartDateTime,
             endDateTime: match.EndDateTime);
 
-        round = _roundsReadOnlyRepository.Get(matchId).Result;
+        round = _roundsRepository.Get(matchId).Result;
 
         RoundDto roundDto = new RoundDto(
             id: round.Id,
             roundNumber: round.RoundNumber,
             initialLetter: round.InitialLetter,
-            isActive: round.IsActive,
+            isActive: false,
             matchId: round.Match.Id);
 
         UserMatch userWithInitiativeMatch = _userMatchesRepository.Get(
@@ -1362,7 +1378,7 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch[]>.Success(result: userMatches);
             });
 
-        _roundsReadOnlyRepository.Get(roundId).Returns(
+        _roundsRepository.Get(roundId).Returns(
             (args) =>
             {
                 Round round = new Round(
@@ -1376,11 +1392,11 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Round>.Success(result: round);
             });
 
-        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+        _roundsRepository.GetMany(matchId).Returns(
             (args) =>
             {
                 List<Round> rounds = new List<Round>();
-                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                Round activeRound = _roundsRepository.Get(roundId).Result;
                 rounds.Add(activeRound);
                 return Operation<List<Round>>.Success(result: rounds);
             });
@@ -1485,7 +1501,7 @@ public class EndTurnUseCaseUnitTests
                 return Operation<UserMatch[]>.Success(result: userMatches);
             });
 
-        _roundsReadOnlyRepository.Get(roundId).Returns(
+        _roundsRepository.Get(roundId).Returns(
             (args) =>
             {
                 Round round = new Round(
@@ -1499,11 +1515,11 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Round>.Success(result: round);
             });
 
-        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+        _roundsRepository.GetMany(matchId).Returns(
             (args) =>
             {
                 List<Round> rounds = new List<Round>();
-                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                Round activeRound = _roundsRepository.Get(roundId).Result;
                 rounds.Add(activeRound);
                 return Operation<List<Round>>.Success(result: rounds);
             });
@@ -1513,7 +1529,7 @@ public class EndTurnUseCaseUnitTests
             {
                 Turn turn = new Turn(
                     user: _usersReadOnlyRepository.Get(id: userId).Result,
-                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    round: _roundsRepository.Get(id: roundId).Result,
                     startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds),
                     endDateTime: DateTime.UtcNow);
 
@@ -1619,7 +1635,7 @@ public class EndTurnUseCaseUnitTests
         categories.Add(new Category(id: 4, name: ""));
         categories.Add(new Category(id: 5, name: ""));
         
-        _roundsReadOnlyRepository.Get(roundId).Returns(
+        _roundsRepository.Get(roundId).Returns(
             (args) =>
             {
                 Round round = new Round(
@@ -1633,11 +1649,11 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Round>.Success(result: round);
             });
 
-        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+        _roundsRepository.GetMany(matchId).Returns(
             (args) =>
             {
                 List<Round> rounds = new List<Round>();
-                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                Round activeRound = _roundsRepository.Get(roundId).Result;
                 rounds.Add(activeRound);
                 return Operation<List<Round>>.Success(result: rounds);
             });
@@ -1647,7 +1663,7 @@ public class EndTurnUseCaseUnitTests
             {
                 Turn turn = new Turn(
                     user: _usersReadOnlyRepository.Get(id: userId).Result,
-                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    round: _roundsRepository.Get(id: roundId).Result,
                     startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds));
 
                 return Operation<Turn>.Success(result: turn);
@@ -1774,7 +1790,7 @@ public class EndTurnUseCaseUnitTests
             new Category(id: 4, name: "")
         };
 
-        _roundsReadOnlyRepository.Get(roundId).Returns(
+        _roundsRepository.Get(roundId).Returns(
             (args) =>
             {
                 Round round = new Round(
@@ -1788,11 +1804,11 @@ public class EndTurnUseCaseUnitTests
                 return Operation<Round>.Success(result: round);
             });
 
-        _roundsReadOnlyRepository.GetMany(matchId).Returns(
+        _roundsRepository.GetMany(matchId).Returns(
             (args) =>
             {
                 List<Round> rounds = new List<Round>();
-                Round activeRound = _roundsReadOnlyRepository.Get(roundId).Result;
+                Round activeRound = _roundsRepository.Get(roundId).Result;
                 rounds.Add(activeRound);
                 return Operation<List<Round>>.Success(result: rounds);
             });
@@ -1802,7 +1818,7 @@ public class EndTurnUseCaseUnitTests
             {
                 Turn turn = new Turn(
                     user: _usersReadOnlyRepository.Get(id: userId).Result,
-                    round: _roundsReadOnlyRepository.Get(id: roundId).Result,
+                    round: _roundsRepository.Get(id: roundId).Result,
                     startDateTime: DateTime.UtcNow - TimeSpan.FromSeconds(Configuration.TurnDurationInSeconds));
 
                 return Operation<Turn>.Success(result: turn);

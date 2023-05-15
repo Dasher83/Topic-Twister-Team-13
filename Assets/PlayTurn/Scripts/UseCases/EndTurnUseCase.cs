@@ -16,7 +16,7 @@ public class EndTurnUseCase : IEndTurnUseCase
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IUserMatchesRepository _userMatchesRepository;
     private ITurnsRepository _turnsRepository;
-    private IRoundsReadOnlyRepository _roundsReadOnlyRepository;
+    private IRoundsRepository _roundsRepository;
     private IdtoMapper<Match, MatchDto> _matchDtoMapper;
     private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
@@ -31,7 +31,7 @@ public class EndTurnUseCase : IEndTurnUseCase
         IMatchesReadOnlyRepository matchesReadOnlyRepository,
         IUserMatchesRepository userMatchesRepository,
         ITurnsRepository turnsRepository,
-        IRoundsReadOnlyRepository roundsReadOnlyRepository,
+        IRoundsRepository roundsRepository,
         IdtoMapper<Match, MatchDto> matchDtoMapper,
         IdtoMapper<Round, RoundWithCategoriesDto> roundWithCategoriesDtoMapper,
         IdtoMapper<UserMatch, UserMatchDto> userMatchDtoMapper,
@@ -45,7 +45,7 @@ public class EndTurnUseCase : IEndTurnUseCase
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
         _userMatchesRepository = userMatchesRepository;
         _turnsRepository = turnsRepository;
-        _roundsReadOnlyRepository = roundsReadOnlyRepository;
+        _roundsRepository = roundsRepository;
         _matchDtoMapper = matchDtoMapper;
         _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         _userMatchDtoMapper = userMatchDtoMapper;
@@ -113,7 +113,7 @@ public class EndTurnUseCase : IEndTurnUseCase
             opponentUserMatch = userMatches[1];
         }
 
-        Operation<List<Round>> getRoundsOperation = _roundsReadOnlyRepository.GetMany(matchId: match.Id);
+        Operation<List<Round>> getRoundsOperation = _roundsRepository.GetMany(matchId: match.Id);
 
         if (getRoundsOperation.WasOk == false)
         {
@@ -303,11 +303,20 @@ public class EndTurnUseCase : IEndTurnUseCase
                 userId: userWithoutInitiativeId, roundIds: match.Rounds.Select(round => round.Id).ToList()).Result;
 
             userWithoutInitiativeRoundDtos = _userRoundDtoMapper.ToDTOs(userWithoutInitiativeRounds);
+
+            Round updatedActiveRound = new Round(
+                roundNumber: activeRound.RoundNumber,
+                initialLetter: activeRound.InitialLetter,
+                isActive: false,
+                match: activeRound.Match,
+                categories: activeRound.Categories);
+
+            activeRound = _roundsRepository.Update(updatedActiveRound).Result;
         }
 
         EndOfTurnDto matchFullStateDto = new EndOfTurnDto(
             matchDto: _matchDtoMapper.ToDTO(match),
-            roundWithCategoriesDto: _roundWithCategoriesDtoMapper.ToDTO(requesterTurn.Round),
+            roundWithCategoriesDto: _roundWithCategoriesDtoMapper.ToDTO(activeRound),
             userWithInitiativeMatchDto: userWithInitiativeMatchDto,
             userWithoutInitiativeMatchDto: userWithoutInitiativeMatchDto,
             userWithInitiativeRoundDtos: userWithInitiativeRoundDtos,

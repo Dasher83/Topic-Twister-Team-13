@@ -124,21 +124,6 @@ public class EndTurnUseCaseIntegrationTests
             resourceName: "TestData/Turns",
             turnDaoMapper: _turnDaoMapper);
 
-        _useCase = new EndTurnUseCase(
-            usersReadOnlyRepository: _usersReadOnlyRepository,
-            matchesReadOnlyRepository: _matchesReadOnlyRepository,
-            userMatchesRepository: _userMatchesRepository,
-            turnsRepository: _turnsRepository,
-            roundsReadOnlyRepository: _roundsReadOnlyRepository,
-            matchDtoMapper: _matchDtoMapper,
-            roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
-            userMatchDtoMapper: _userMatchDtoMapper,
-            answerDtoMapper: _answerDtoMapper,
-            answersRepository: _answersRepository,
-            wordsRepository: _wordsRepository,
-            userRoundsRepository: null,
-            userRoundDtoMapper: null);
-
         _roundsIdGenerator = new RoundsIdGenerator(
             roundsReadOnlyRepository: _roundsReadOnlyRepository);
 
@@ -147,6 +132,21 @@ public class EndTurnUseCaseIntegrationTests
             roundsIdGenerator: _roundsIdGenerator,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
+
+        _useCase = new EndTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository,
+            turnsRepository: _turnsRepository,
+            roundsRepository: _roundsRepository,
+            matchDtoMapper: _matchDtoMapper,
+            roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
+            userMatchDtoMapper: _userMatchDtoMapper,
+            answerDtoMapper: _answerDtoMapper,
+            answersRepository: _answersRepository,
+            wordsRepository: _wordsRepository,
+            userRoundsRepository: null,
+            userRoundDtoMapper: null);
     }
 
     [TearDown]
