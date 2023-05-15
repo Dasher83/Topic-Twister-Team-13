@@ -64,7 +64,7 @@ namespace TopicTwister.Shared.DTOs
             bool userWithoutInitiativeMatchDtoEquals = _userWithoutInitiativeMatchDto
                 .Equals(other._userWithoutInitiativeMatchDto);
 
-            bool userWithInitiativeRoundDtoEquals = Enumerable
+            bool userWithInitiativeRoundDtosEquals = Enumerable
                 .SequenceEqual(_userWithInitiativeRoundDtos, other._userWithInitiativeRoundDtos);
 
             bool userWithoutInitiativeRoundDtoEquals = Enumerable
@@ -80,7 +80,7 @@ namespace TopicTwister.Shared.DTOs
                 roundWithCategoriesDtoEquals &&
                 userWithInitiativeMatchDtoEquals &&
                 userWithoutInitiativeMatchDtoEquals &&
-                userWithInitiativeRoundDtoEquals &&
+                userWithInitiativeRoundDtosEquals &&
                 userWithoutInitiativeRoundDtoEquals &&
                 answerDtosOfUserWithInitiativeEquals &&
                 answerDtosOfUserWithoutInitiativeEquals;

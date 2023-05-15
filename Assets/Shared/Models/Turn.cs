@@ -44,6 +44,13 @@ namespace TopicTwister.Shared.Models
 
         public bool HasEnded => string.IsNullOrEmpty(_endDateTime) == false;
 
-        public float DurationInSeconds => (float)((TimeSpan)(EndDateTime - StartDateTime)).TotalSeconds;
+        public float DurationInSeconds
+        {
+            get
+            {
+                TimeSpan turnTimeSpan = (TimeSpan)(EndDateTime - StartDateTime);
+                return (float)turnTimeSpan.TotalSeconds;
+            }
+        }
     }
 }

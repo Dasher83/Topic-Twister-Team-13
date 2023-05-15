@@ -23,6 +23,8 @@ public class EndTurnUseCase : IEndTurnUseCase
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
     private IAnswersRepository _answersRepository;
     private IWordsRepository _wordsRepository;
+    private IUserRoundsRepository _userRoundsRepository;
+    private IdtoMapper<UserRound, UserRoundDto> _userRoundDtoMapper;
 
     public EndTurnUseCase(
         IUsersReadOnlyRepository usersReadOnlyRepository,
@@ -35,7 +37,9 @@ public class EndTurnUseCase : IEndTurnUseCase
         IdtoMapper<UserMatch, UserMatchDto> userMatchDtoMapper,
         IdtoMapper<Answer, AnswerDto> answerDtoMapper,
         IAnswersRepository answersRepository,
-        IWordsRepository wordsRepository)
+        IWordsRepository wordsRepository,
+        IUserRoundsRepository userRoundsRepository,
+        IdtoMapper<UserRound, UserRoundDto> userRoundDtoMapper)
     {
         _usersReadOnlyRepository = usersReadOnlyRepository;
         _matchesReadOnlyRepository = matchesReadOnlyRepository;
@@ -48,6 +52,8 @@ public class EndTurnUseCase : IEndTurnUseCase
         _answerDtoMapper = answerDtoMapper;
         _answersRepository = answersRepository;
         _wordsRepository = wordsRepository;
+        _userRoundsRepository = userRoundsRepository;
+        _userRoundDtoMapper = userRoundDtoMapper;
     }
 
     public Operation<EndOfTurnDto> Execute(int userId, int matchId, AnswerDto[] answerDtos)
@@ -131,9 +137,9 @@ public class EndTurnUseCase : IEndTurnUseCase
                 $"in round with id {activeRound.Id} in match with id {match.Id}");
         }
 
-        Turn turn = getTurnOperation.Result;
+        Turn requesterTurn = getTurnOperation.Result;
 
-        if (turn.HasEnded)
+        if (requesterTurn.HasEnded)
         {
             string errorMessage = $"Turn already ended for user with id {user.Id} " +
                     $"in round with id {activeRound.Id} in match with id {match.Id}";
@@ -174,20 +180,20 @@ public class EndTurnUseCase : IEndTurnUseCase
 
         List<Answer> requesterNewAnswers = new List<Answer>();
 
-        turn = new Turn(
-            user: turn.User,
-            round: turn.Round,
-            startDateTime: turn.StartDateTime,
+        requesterTurn = new Turn(
+            user: requesterTurn.User,
+            round: requesterTurn.Round,
+            startDateTime: requesterTurn.StartDateTime,
             endDateTime: DateTime.UtcNow);
 
-        Operation<Turn> updateTurnOperation = _turnsRepository.Update(turn);
+        Operation<Turn> updateTurnOperation = _turnsRepository.Update(requesterTurn);
 
         if (updateTurnOperation.WasOk == false)
         {
             return Operation<EndOfTurnDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
         }
 
-        turn = updateTurnOperation.Result;
+        requesterTurn = updateTurnOperation.Result;
 
         foreach (AnswerDto answerDto in answerDtos)
         {
@@ -195,7 +201,7 @@ public class EndTurnUseCase : IEndTurnUseCase
                 userInput: answerDto.UserInput,
                 order: answerDto.Order,
                 category: activeRound.Categories.Single(category => category.Id == answerDto.CategoryDto.Id),
-                turn: turn);
+                turn: requesterTurn);
 
             Operation<Answer> insertAnswerOperation = _answersRepository.Insert(answer);
 
@@ -207,22 +213,22 @@ public class EndTurnUseCase : IEndTurnUseCase
             requesterNewAnswers.Add(insertAnswerOperation.Result);
         }
 
-        turn = new Turn(
-            user: turn.User,
-            round: turn.Round,
-            startDateTime: turn.StartDateTime,
-            endDateTime: turn.EndDateTime,
+        requesterTurn = new Turn(
+            user: requesterTurn.User,
+            round: requesterTurn.Round,
+            startDateTime: requesterTurn.StartDateTime,
+            endDateTime: requesterTurn.EndDateTime,
             answers: requesterNewAnswers,
             wordsRepository: _wordsRepository);
 
-        updateTurnOperation = _turnsRepository.Update(turn);
+        updateTurnOperation = _turnsRepository.Update(requesterTurn);
 
         if (updateTurnOperation.WasOk == false)
         {
             return Operation<EndOfTurnDto>.Failure(errorMessage: updateTurnOperation.ErrorMessage);
         }
 
-        turn = updateTurnOperation.Result;
+        requesterTurn = updateTurnOperation.Result;
 
         UserMatchDto userWithInitiativeMatchDto;
         UserMatchDto userWithoutInitiativeMatchDto;
@@ -233,32 +239,79 @@ public class EndTurnUseCase : IEndTurnUseCase
         int userWithInitiativeId;
         int userWithoutInitiativeId;
 
+        List <UserRoundDto> userWithInitiativeRoundDtos = new List<UserRoundDto>();
+        List <UserRoundDto> userWithoutInitiativeRoundDtos = new List<UserRoundDto>();
+
         if (requesterUserMatch.HasInitiative)
         {
+            userWithInitiativeId = requesterUserMatch.User.Id;
+            userWithoutInitiativeId = opponentUserMatch.User.Id;
+
             userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
             userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
             answerDtosOfUserWithInitiative = _answerDtoMapper.ToDTOs(requesterNewAnswers);
             answerDtosOfUserWithoutInitiative = new List<AnswerDto>();
-            userWithInitiativeId = requesterUserMatch.User.Id;
-            userWithoutInitiativeId = opponentUserMatch.User.Id;
         }
         else
         {
-            userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
-            userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
-            answerDtosOfUserWithInitiative = new List<AnswerDto>();
-            answerDtosOfUserWithoutInitiative = _answerDtoMapper.ToDTOs(requesterNewAnswers);
             userWithInitiativeId = opponentUserMatch.User.Id;
             userWithoutInitiativeId = requesterUserMatch.User.Id;
+
+            userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
+            userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
+
+            answerDtosOfUserWithInitiative = _answerDtoMapper.ToDTOs(
+                _answersRepository.GetMany(userId: userWithInitiativeId, roundId: requesterTurn.Round.Id).Result);
+            
+            answerDtosOfUserWithoutInitiative = _answerDtoMapper.ToDTOs(requesterNewAnswers);
+
+            Turn turnOfOpponent = _turnsRepository
+                .Get(userId: opponentUserMatch.User.Id, roundId: requesterTurn.Round.Id).Result;
+
+            UserRound userWithInitiativeRound = new UserRound(
+                user: opponentUserMatch.User,
+                round: requesterTurn.Round,
+                isWinner: turnOfOpponent.Points >= requesterTurn.Points,
+                points: requesterTurn.Points);
+
+            Operation<UserRound> insertUserRoundOperation = _userRoundsRepository.Insert(userRound: userWithInitiativeRound);
+
+            if(insertUserRoundOperation.WasOk == false)
+            {
+                return Operation<EndOfTurnDto>.Failure(errorMessage: insertUserRoundOperation.ErrorMessage);
+            }
+
+            UserRound userWithoutInitiativeRound = new UserRound(
+                user: requesterUserMatch.User,
+                round: requesterTurn.Round,
+                isWinner: requesterTurn.Points >= turnOfOpponent.Points,
+                points: requesterTurn.Points);
+
+            insertUserRoundOperation = _userRoundsRepository.Insert(userRound: userWithoutInitiativeRound);
+
+            if (insertUserRoundOperation.WasOk == false)
+            {
+                return Operation<EndOfTurnDto>.Failure(errorMessage: insertUserRoundOperation.ErrorMessage);
+            }
+
+            List<UserRound> userWithInitiativeRounds = _userRoundsRepository.GetMany(
+                userId: userWithInitiativeId, roundIds: match.Rounds.Select(round => round.Id).ToList()).Result;
+
+            userWithInitiativeRoundDtos = _userRoundDtoMapper.ToDTOs(userWithInitiativeRounds);
+
+            List<UserRound> userWithoutInitiativeRounds = _userRoundsRepository.GetMany(
+                userId: userWithoutInitiativeId, roundIds: match.Rounds.Select(round => round.Id).ToList()).Result;
+
+            userWithoutInitiativeRoundDtos = _userRoundDtoMapper.ToDTOs(userWithoutInitiativeRounds);
         }
 
         EndOfTurnDto matchFullStateDto = new EndOfTurnDto(
             matchDto: _matchDtoMapper.ToDTO(match),
-            roundWithCategoriesDto: _roundWithCategoriesDtoMapper.ToDTO(turn.Round),
+            roundWithCategoriesDto: _roundWithCategoriesDtoMapper.ToDTO(requesterTurn.Round),
             userWithInitiativeMatchDto: userWithInitiativeMatchDto,
             userWithoutInitiativeMatchDto: userWithoutInitiativeMatchDto,
-            userWithInitiativeRoundDtos: new List<UserRoundDto>(),
-            userWithoutInitiativeRoundDtos: new List<UserRoundDto>(),
+            userWithInitiativeRoundDtos: userWithInitiativeRoundDtos,
+            userWithoutInitiativeRoundDtos: userWithoutInitiativeRoundDtos,
             answerDtosOfUserWithInitiative: answerDtosOfUserWithInitiative,
             answerDtosOfUserWithoutInitiative: answerDtosOfUserWithoutInitiative);
 
