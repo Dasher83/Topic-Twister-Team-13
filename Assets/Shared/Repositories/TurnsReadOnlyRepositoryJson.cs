@@ -57,24 +57,5 @@ namespace TopicTwister.Shared.Repositories
             List<Turn> turns = daoMapper.FromDAOs(readCache.ToList());
             return Operation<List<Turn>>.Success(result: turns);
         }
-
-        public Operation<List<Turn>> GetMany(int userId, Match match)
-        {
-            Operation<List<Turn>> GetAllOperationResult = GetAll();
-            if (GetAllOperationResult.WasOk == false)
-            {
-                return Operation<List<Turn>>.Failure(errorMessage: GetAllOperationResult.ErrorMessage);
-            }
-
-            readCache = daoMapper.ToDAOs(GetAllOperationResult.Result);
-
-            List<Turn> turns = readCache
-                .Where(dao => dao.UserId == userId && match.Rounds.Select(round => round.Id).Contains(dao.RoundId))
-                .Distinct()
-                .Select(daoMapper.FromDAO)
-                .ToList();
-
-            return Operation<List<Turn>>.Success(result: turns);
-        }
     }
 }

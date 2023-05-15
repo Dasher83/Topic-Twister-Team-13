@@ -53,7 +53,6 @@ public class EndTurnUseCaseUnitTests
             matchDtoMapper: _matchDtoMapper,
             roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
             userMatchDtoMapper: _userMatchDtoMapper,
-            turnDtoMapper: _turnDtoMapper,
             answerDtoMapper: _answerDtoMapper,
             answersRepository: _answersRepository,
             wordsRepository: _wordsRepository);
@@ -200,47 +199,6 @@ public class EndTurnUseCaseUnitTests
         {
             answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "Something", order: i);
         }
-
-        _turnsRepository.GetMany(Arg.Any<int>(), Arg.Any<Match>()).Returns(
-            (args) =>
-            {
-                int lambdaUserId = (int)args[0];
-
-                List<Turn> lambdaTurns;
-                Turn lambdaTurn = _turnsRepository.Update(_turnsRepository.Get(userWithInitiativeId, roundId).Result).Result;
-
-                List<Answer> lambdaAnswers = answerDtos
-                    .Select(
-                        answerDto =>
-                        new Answer(
-                            userInput: answerDto.UserInput,
-                            order: answerDto.Order,
-                            category: categories.Single(category => category.Id == answerDto.CategoryDto.Id),
-                            turn: lambdaTurn))
-                    .ToList();
-
-                lambdaTurn = new Turn(
-                    user: lambdaTurn.User,
-                    round: lambdaTurn.Round,
-                    startDateTime: lambdaTurn.StartDateTime,
-                    endDateTime: lambdaTurn.EndDateTime,
-                    answers: lambdaAnswers,
-                    wordsRepository: _wordsRepository);
-
-                if (lambdaUserId == userWithInitiativeId)
-                {
-                    lambdaTurns = new List<Turn>
-                    {
-                        lambdaTurn
-                    };
-                }
-                else
-                {
-                    lambdaTurns = new List<Turn>();
-                }
-
-                return Operation<List<Turn>>.Success(result: lambdaTurns);
-            });
 
         _answerDtoMapper.ToDTO(Arg.Any<Answer>()).Returns(
             (args) =>
@@ -525,28 +483,6 @@ public class EndTurnUseCaseUnitTests
                     startDateTime: lamdaTurnStartDateTime);
 
                 return Operation<Turn>.Success(result: lambdaTurn);
-            });
-
-        _turnsRepository.GetMany(Arg.Any<int>(), Arg.Any<Match>()).Returns(
-            (args) =>
-            {
-                int lambdaUserId = (int)args[0];
-
-                List<Turn> lambdaTurns;
-
-                if (lambdaUserId == userWithInitiativeId)
-                {
-                    lambdaTurns = new List<Turn>
-                    {
-                        _turnsRepository.Get(userWithInitiativeId, roundId).Result
-                    };
-                }
-                else
-                {
-                    lambdaTurns = new List<Turn>();
-                }
-
-                return Operation<List<Turn>>.Success(result: lambdaTurns);
             });
 
         AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];

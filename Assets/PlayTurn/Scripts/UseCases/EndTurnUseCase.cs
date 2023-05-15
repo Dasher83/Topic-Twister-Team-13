@@ -20,7 +20,6 @@ public class EndTurnUseCase : IEndTurnUseCase
     private IdtoMapper<Match, MatchDto> _matchDtoMapper;
     private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
-    private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
     private IAnswersRepository _answersRepository;
     private IWordsRepository _wordsRepository;
@@ -34,7 +33,6 @@ public class EndTurnUseCase : IEndTurnUseCase
         IdtoMapper<Match, MatchDto> matchDtoMapper,
         IdtoMapper<Round, RoundWithCategoriesDto> roundWithCategoriesDtoMapper,
         IdtoMapper<UserMatch, UserMatchDto> userMatchDtoMapper,
-        IdtoMapper<Turn, TurnDto> turnDtoMapper,
         IdtoMapper<Answer, AnswerDto> answerDtoMapper,
         IAnswersRepository answersRepository,
         IWordsRepository wordsRepository)
@@ -47,7 +45,6 @@ public class EndTurnUseCase : IEndTurnUseCase
         _matchDtoMapper = matchDtoMapper;
         _roundWithCategoriesDtoMapper = roundWithCategoriesDtoMapper;
         _userMatchDtoMapper = userMatchDtoMapper;
-        _turnDtoMapper = turnDtoMapper;
         _answerDtoMapper = answerDtoMapper;
         _answersRepository = answersRepository;
         _wordsRepository = wordsRepository;

@@ -37,7 +37,6 @@ public class EndTurnUseCaseIntegrationTests
     private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
     private IdtoMapper<Round, RoundDto> _roundDtoMapper;
     private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
-    private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
     private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
     private IAnswersRepository _answersRepository;
     private IdaoMapper<Answer, AnswerDaoJson> _answerDaoJsonMapper;
@@ -104,8 +103,6 @@ public class EndTurnUseCaseIntegrationTests
             matchesRepository: _matchesRepository,
             usersReadOnlyRepository: _usersReadOnlyRepository);
 
-        _turnDtoMapper = new TurnDtoMapper();
-
         _answerDtoMapper = new AnswerDtoMapper(categoryDtoMapper: _categoryDtoMapper);
 
         _turnsReadOnlyRepository = new TurnsReadOnlyRepositoryJson(
@@ -136,7 +133,6 @@ public class EndTurnUseCaseIntegrationTests
             matchDtoMapper: _matchDtoMapper,
             roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
             userMatchDtoMapper: _userMatchDtoMapper,
-            turnDtoMapper: _turnDtoMapper,
             answerDtoMapper: _answerDtoMapper,
             answersRepository: _answersRepository,
             wordsRepository: _wordsRepository);
@@ -361,14 +357,6 @@ public class EndTurnUseCaseIntegrationTests
 
         RoundWithCategoriesDto roundWithCategoriesDto = new RoundWithCategoriesDto(
             roundDto: roundDto, categoryDtos: categoryDtos);
-
-        turn = new Turn(
-            user: userWithInitiative,
-            round: round,
-            startDateTime: turn.StartDateTime,
-            endDateTime: DateTime.UtcNow);
-
-        TurnDto turnDto = _turnDtoMapper.ToDTO(turn);
         #endregion
 
         #region -- Act --
