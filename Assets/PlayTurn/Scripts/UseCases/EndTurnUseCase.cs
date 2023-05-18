@@ -245,9 +245,6 @@ namespace TopicTwister.PlayTurn.UseCases
 
             if (requesterUserMatch.HasInitiative)
             {
-                userWithInitiativeId = requesterUserMatch.User.Id;
-                userWithoutInitiativeId = opponentUserMatch.User.Id;
-
                 userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(requesterUserMatch);
                 userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(opponentUserMatch);
                 answerDtosOfUserWithInitiative = _answerDtoMapper.ToDTOs(requesterNewAnswers);
@@ -314,6 +311,33 @@ namespace TopicTwister.PlayTurn.UseCases
                     categories: activeRound.Categories);
 
                 activeRound = _roundsRepository.Update(updatedActiveRound).Result;
+
+                if(activeRound.RoundNumber == Configuration.RoundsPerMatch - 1)
+                {
+                    UserMatch userWithInitiativeMatch = _userMatchDtoMapper.FromDTO(userWithInitiativeMatchDto);
+
+                    userWithInitiativeMatch = new UserMatch(
+                        score: userWithInitiativeRounds.Count(userRound => userRound.IsWinner),
+                        isWinner: true,
+                        hasInitiative: userWithInitiativeMatch.HasInitiative,
+                        user: userWithInitiativeMatch.User,
+                        match: userWithInitiativeMatch.Match);
+
+                    userWithInitiativeMatch = _userMatchesRepository.Update(userWithInitiativeMatch).Result;
+                    userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(userWithInitiativeMatch);
+
+                    UserMatch userWithoutInitiativeMatch = _userMatchDtoMapper.FromDTO(userWithoutInitiativeMatchDto);
+
+                    userWithoutInitiativeMatch = new UserMatch(
+                        score: userWithoutInitiativeRounds.Count(userRound => userRound.IsWinner),
+                        isWinner: true,
+                        hasInitiative: userWithoutInitiativeMatch.HasInitiative,
+                        user: userWithoutInitiativeMatch.User,
+                        match: userWithoutInitiativeMatch.Match);
+
+                    userWithoutInitiativeMatch = _userMatchesRepository.Update(userWithoutInitiativeMatch).Result;
+                    userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(userWithoutInitiativeMatch);
+                }
             }
 
             EndOfTurnDto matchFullStateDto = new EndOfTurnDto(

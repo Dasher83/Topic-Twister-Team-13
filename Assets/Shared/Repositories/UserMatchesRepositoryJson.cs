@@ -110,5 +110,10 @@ namespace TopicTwister.Shared.Repositories
 
             return Operation<UserMatch[]>.Success(result: userMatches);
         }
+
+        public Operation<UserMatch> Update(UserMatch userMatch)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

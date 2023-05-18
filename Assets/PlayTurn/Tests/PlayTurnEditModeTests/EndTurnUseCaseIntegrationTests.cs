@@ -209,7 +209,7 @@ public class EndTurnUseCaseIntegrationTests
     }
 
     [Test]
-    public void Test_ok_for_user_with_iniciative_inside_time_limit()
+    public void Test_ok_for_user_with_initiative_inside_time_limit()
     {
         #region -- Arrange --
         int userWithInitiativeId = Configuration.TestUserId;
@@ -432,7 +432,7 @@ public class EndTurnUseCaseIntegrationTests
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_end_of_non_final_round()
+    public void Test_ok_for_user_without_initiative_end_of_non_final_round()
     {
         #region -- Arrange --
         int userWithInitiativeId = Configuration.TestUserId;
@@ -526,19 +526,19 @@ public class EndTurnUseCaseIntegrationTests
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_end_of_final_round_and_match_win()
+    public void Test_ok_for_user_without_initiative_end_of_final_round_and_match_win()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_end_of_final_round_and_match_lose()
+    public void Test_ok_for_user_without_initiative_end_of_final_round_and_match_lose()
     {
         throw new NotImplementedException();
     }
 
     [Test]
-    public void Test_ok_for_user_without_iniciative_end_of_final_round_and_match_draw()
+    public void Test_ok_for_user_without_initiative_end_of_final_round_and_match_draw()
     {
         throw new NotImplementedException();
     }

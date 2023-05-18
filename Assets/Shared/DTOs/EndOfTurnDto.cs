@@ -64,17 +64,19 @@ namespace TopicTwister.Shared.DTOs
             bool userWithoutInitiativeMatchDtoEquals = _userWithoutInitiativeMatchDto
                 .Equals(other._userWithoutInitiativeMatchDto);
 
-            bool userWithInitiativeRoundDtosEquals = Enumerable
-                .SequenceEqual(_userWithInitiativeRoundDtos, other._userWithInitiativeRoundDtos);
+            bool userWithInitiativeRoundDtosEquals =
+                _userWithInitiativeRoundDtos.Except(other._userWithInitiativeRoundDtos).Any() == false &&
+                other._userWithInitiativeRoundDtos.Except(_userWithInitiativeRoundDtos).Any() == false;
 
-            bool userWithoutInitiativeRoundDtoEquals = Enumerable
-                .SequenceEqual(_userWithoutInitiativeRoundDtos, other._userWithoutInitiativeRoundDtos);
+            bool userWithoutInitiativeRoundDtoEquals =
+                _userWithoutInitiativeRoundDtos.Except(other._userWithoutInitiativeRoundDtos).Any() == false &&
+                other._userWithoutInitiativeRoundDtos.Except(_userWithoutInitiativeRoundDtos).Any() == false;
 
             bool answerDtosOfUserWithInitiativeEquals = Enumerable
                 .SequenceEqual(_answerDtosOfUserWithInitiative, other._answerDtosOfUserWithInitiative);
 
             bool answerDtosOfUserWithoutInitiativeEquals = Enumerable
-                .SequenceEqual(_answerDtosOfUserWithoutInitiative, other._answerDtosOfUserWithoutInitiative);
+            .SequenceEqual(_answerDtosOfUserWithoutInitiative, other._answerDtosOfUserWithoutInitiative);
 
             return matchDtoEquals &&
                 roundWithCategoriesDtoEquals &&
