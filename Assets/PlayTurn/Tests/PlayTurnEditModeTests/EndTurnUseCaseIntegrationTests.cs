@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using TopicTwister.Home.Shared.Interfaces;
+using TopicTwister.Home.UseCases;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.PlayTurn.UseCases;
 using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
@@ -12,12 +15,14 @@ using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.TestUtils;
+using TopicTwister.Shared.UseCases;
 using TopicTwister.Shared.Utils;
 
 
 public class EndTurnUseCaseIntegrationTests
 {
-    private IEndTurnUseCase _useCase;
+    private IEndTurnUseCase _testTargetUseCase;
+
     private IUsersReadOnlyRepository _usersReadOnlyRepository;
     private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
     private IdaoMapper<Match, MatchDaoJson> _matchDaoJsonMapper;
@@ -42,6 +47,14 @@ public class EndTurnUseCaseIntegrationTests
     private IdaoMapper<Answer, AnswerDaoJson> _answerDaoJsonMapper;
     private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
     private IWordsRepository _wordsRepository;
+    private IUserRoundsRepository _userRoundsRepository;
+    private IdtoMapper<UserRound,  UserRoundDto> _userRoundDtoMapper;
+    private IStartTurnUseCase _startTurnUseCase;
+    private ICreateRoundSubUseCase _createRoundSubUseCase;
+    private ICreateMatchSubUseCase _createMatchSubUseCase;
+    private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
+    private ILetterReadOnlyRepository _letterReadOnlyRepository;
+    private IdaoMapper<UserRound, UserRoundDaoJson> _userRoundDaoJsonMapper;
 
     [SetUp]
     public void SetUp()
@@ -133,7 +146,17 @@ public class EndTurnUseCaseIntegrationTests
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
 
-        _useCase = new EndTurnUseCase(
+        _userRoundDaoJsonMapper = new UserRoundDaoJsonMapper(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository);
+
+        _userRoundsRepository = new UserRoundsRepository(
+            resourceName: "TestData/UserRounds",
+            userRoundDaoJsonMapper: _userRoundDaoJsonMapper);
+
+        _userRoundDtoMapper = new UserRoundDtoMapper();
+
+        _testTargetUseCase = new EndTurnUseCase(
             usersReadOnlyRepository: _usersReadOnlyRepository,
             matchesReadOnlyRepository: _matchesReadOnlyRepository,
             userMatchesRepository: _userMatchesRepository,
@@ -145,9 +168,34 @@ public class EndTurnUseCaseIntegrationTests
             answerDtoMapper: _answerDtoMapper,
             answersRepository: _answersRepository,
             wordsRepository: _wordsRepository,
-            userRoundsRepository: null,
-            userRoundDtoMapper: null);
-    }
+            userRoundsRepository: _userRoundsRepository,
+            userRoundDtoMapper: _userRoundDtoMapper);
+
+        _turnDtoMapper = new TurnDtoMapper();
+
+        _startTurnUseCase = new StartTurnUseCase(
+            usersReadOnlyRepository: _usersReadOnlyRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            userMatchesRepository: _userMatchesRepository,
+            turnsRepository: _turnsRepository,
+            roundsReadOnlyRepository: _roundsReadOnlyRepository,
+            turnDtoMapper: _turnDtoMapper);
+
+        _letterReadOnlyRepository = new LetterReadOnlyRepositoryInMemory();
+
+        _createRoundSubUseCase = new CreateRoundSubUseCase(
+            roundsRepository: _roundsRepository,
+            matchesReadOnlyRepository: _matchesReadOnlyRepository,
+            categoryReadOnlyRepository: _categoriesReadOnlyRepository,
+            letterReadOnlyRepository: _letterReadOnlyRepository,
+            roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper);
+
+        _createMatchSubUseCase = new CreateMatchSubUseCase(
+            matchesRepository: _matchesRepository,
+            userMatchesRepository: _userMatchesRepository,
+            usersReadOnlyRespository: _usersReadOnlyRepository,
+            matchDtoMapper: _matchDtoMapper);
+}
 
     [TearDown]
     public void TearDown()
@@ -157,6 +205,7 @@ public class EndTurnUseCaseIntegrationTests
         new RoundsDeleteJson().Delete();
         new TurnsDeleteJson().Delete();
         new AnswersDeleteJson().Delete();
+        new UserRoundsDeleteJson().Delete();
     }
 
     [Test]
@@ -252,7 +301,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(userId: userWithInitiativeId, matchId: match.Id, answerDtos: answerDtos);
         #endregion
 
@@ -362,7 +411,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(userId: userWithInitiativeId, matchId: match.Id, answerDtos: answerDtos);
         #endregion
 
@@ -385,8 +434,97 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_ok_for_user_without_iniciative_end_of_non_final_round()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userWithInitiativeId = Configuration.TestUserId;
+        int userWithoutInitiativeId = Configuration.TestBotId;
+
+        MatchDto matchDto = _createMatchSubUseCase.Create(
+            userWithInitiativeId: userWithInitiativeId,
+            userWithoutInitiativeId: userWithoutInitiativeId).Result;
+
+        RoundWithCategoriesDto roundWithCategoriesDto = _createRoundSubUseCase.Execute(matchDto: matchDto).Result;
+
+        _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
+        _startTurnUseCase.Execute(userId: userWithoutInitiativeId, matchId: matchDto.Id);
+
+        AnswerDto[] answerDtos = new AnswerDto[Configuration.CategoriesPerRound];
+
+        for (int i = 0; i < 3; i++)
+        {
+            answerDtos[i] = new AnswerDto(
+                categoryDto: roundWithCategoriesDto.CategoryDtos[i],
+                userInput: $"{roundWithCategoriesDto.RoundDto.InitialLetter} TEST",
+                order: i);
+        }
+
+        for (int i = 3; i < answerDtos.Length; i++)
+        {
+            answerDtos[i] = new AnswerDto(
+                categoryDto: roundWithCategoriesDto.CategoryDtos[i],
+                userInput: "Something",
+                order: i);
+        }
+
+        Assert.IsTrue(_testTargetUseCase.Execute(userId: userWithInitiativeId, matchDto.Id, answerDtos: answerDtos).WasOk);
+
+        UserMatch userWithInitiativeMatch = _userMatchesRepository
+            .Get(userId: userWithInitiativeId, matchId: matchDto.Id).Result;
+
+        UserMatchDto userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(userWithInitiativeMatch);
+
+        UserMatch userWithoutInitiativeMatch = _userMatchesRepository
+            .Get(userId: userWithoutInitiativeId, matchId: matchDto.Id).Result;
+
+        UserMatchDto userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(userWithoutInitiativeMatch);
+
+        UserRoundDto userWithInitiativeRoundDto = new UserRoundDto(
+            userId: userWithInitiativeId,
+            roundId: roundWithCategoriesDto.RoundDto.Id,
+            isWinner: true,
+            points: 3);
+
+        UserRoundDto userWithoutInitiativeRoundDto = new UserRoundDto(
+            userId: userWithoutInitiativeId,
+            roundId: roundWithCategoriesDto.RoundDto.Id,
+            isWinner: true,
+            points: 3);
+
+        RoundDto roundDto = new RoundDto(
+            id: roundWithCategoriesDto.RoundDto.Id,
+            roundNumber: roundWithCategoriesDto.RoundDto.RoundNumber,
+            initialLetter: roundWithCategoriesDto.RoundDto.InitialLetter,
+            isActive: false,
+            matchId: roundWithCategoriesDto.RoundDto.MatchId);
+
+        RoundWithCategoriesDto updatedRoundWithCategoriesDto = new RoundWithCategoriesDto(
+            roundDto: roundDto,
+            categoryDtos: roundWithCategoriesDto.CategoryDtos);
+        #endregion
+
+        #region -- Act --
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
+            .Execute(
+                userId: userWithoutInitiativeId,
+                matchId: matchDto.Id,
+                answerDtos: answerDtos);
+        #endregion
+
+        #region -- Assert --
+        EndOfTurnDto expectedDto = new EndOfTurnDto(
+            matchDto: matchDto,
+            roundWithCategoriesDto: updatedRoundWithCategoriesDto,
+            userWithInitiativeMatchDto: userWithInitiativeMatchDto,
+            userWithoutInitiativeMatchDto: userWithoutInitiativeMatchDto,
+            userWithInitiativeRoundDtos: new List<UserRoundDto>() { userWithInitiativeRoundDto },
+            userWithoutInitiativeRoundDtos: new List<UserRoundDto>() { userWithoutInitiativeRoundDto },
+            answerDtosOfUserWithInitiative: answerDtos.ToList(),
+            answerDtosOfUserWithoutInitiative: answerDtos.ToList());
+
+        Assert.IsTrue(useCaseOperation.WasOk);
+        Assert.AreEqual(expected: expectedDto, actual: useCaseOperation.Result);
+        #endregion
     }
+
     [Test]
     public void Test_ok_for_user_without_iniciative_end_of_final_round_and_match_win()
     {
@@ -414,7 +552,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -435,7 +573,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(userId: userId, matchId: matchId, answerDtos: new AnswerDto[Configuration.CategoriesPerRound]);
         #endregion
 
@@ -476,7 +614,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
@@ -535,7 +673,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(
             userId: userMatch.User.Id,
             matchId: userMatch.Match.Id,
@@ -603,7 +741,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(
                 userId: userMatch.User.Id,
                 matchId: userMatch.Match.Id,
@@ -679,7 +817,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act & Assert --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
@@ -691,7 +829,7 @@ public class EndTurnUseCaseIntegrationTests
                 $"for round with id {turn.Round.Id} for match with id {turn.Round.Match.Id}",
             actual: useCaseOperation.ErrorMessage);
 
-        useCaseOperation = _useCase
+        useCaseOperation = _testTargetUseCase
             .Execute(
                 userId: user.Id,
                 matchId: match.Id,
@@ -769,7 +907,7 @@ public class EndTurnUseCaseIntegrationTests
         #endregion
 
         #region -- Act --
-        Operation<EndOfTurnDto> useCaseOperation = _useCase
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
             .Execute(
                 userId: turn.User.Id,
                 matchId: turn.Round.Match.Id,

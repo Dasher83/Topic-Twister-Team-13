@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "PlayTurn",
-        "Shared"
+        "Shared",
+        "Home"
     ],
     "includePlatforms": [
         "Editor"

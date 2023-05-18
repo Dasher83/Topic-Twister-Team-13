@@ -23,7 +23,7 @@ namespace TopicTwister.Home.UseCases
         public Operation<MatchDto> Execute(int userId)
         {
             Operation<MatchDto> createMatchSubUseCaseOperation = _createMatchSubUseCase.Create(
-                userWithIniciative: userId, userWithoutIniciative: BotId);
+                userWithInitiativeId: userId, userWithoutInitiativeId: BotId);
 
             if(createMatchSubUseCaseOperation.WasOk == false)
             {
