@@ -270,7 +270,7 @@ namespace TopicTwister.PlayTurn.UseCases
                     user: opponentUserMatch.User,
                     round: requesterTurn.Round,
                     isWinner: turnOfOpponent.Points >= requesterTurn.Points,
-                    points: requesterTurn.Points);
+                    points: turnOfOpponent.Points);
 
                 Operation<UserRound> insertUserRoundOperation = _userRoundsRepository.Insert(userRound: userWithInitiativeRound);
 
