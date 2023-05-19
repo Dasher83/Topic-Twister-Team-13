@@ -316,9 +316,12 @@ namespace TopicTwister.PlayTurn.UseCases
                 {
                     UserMatch userWithInitiativeMatch = _userMatchDtoMapper.FromDTO(userWithInitiativeMatchDto);
 
+                    bool isWinner = userWithInitiativeRounds.Count(userRound => userRound.IsWinner) >=
+                        userWithoutInitiativeRounds.Count(userRound => userRound.IsWinner);
+
                     userWithInitiativeMatch = new UserMatch(
                         score: userWithInitiativeRounds.Count(userRound => userRound.IsWinner),
-                        isWinner: true,
+                        isWinner: isWinner,
                         hasInitiative: userWithInitiativeMatch.HasInitiative,
                         user: userWithInitiativeMatch.User,
                         match: userWithInitiativeMatch.Match);
@@ -328,9 +331,12 @@ namespace TopicTwister.PlayTurn.UseCases
 
                     UserMatch userWithoutInitiativeMatch = _userMatchDtoMapper.FromDTO(userWithoutInitiativeMatchDto);
 
+                    isWinner = userWithoutInitiativeRounds.Count(userRound => userRound.IsWinner) >=
+                        userWithInitiativeMatch.Score;
+
                     userWithoutInitiativeMatch = new UserMatch(
                         score: userWithoutInitiativeRounds.Count(userRound => userRound.IsWinner),
-                        isWinner: true,
+                        isWinner: isWinner,
                         hasInitiative: userWithoutInitiativeMatch.HasInitiative,
                         user: userWithoutInitiativeMatch.User,
                         match: userWithoutInitiativeMatch.Match);
