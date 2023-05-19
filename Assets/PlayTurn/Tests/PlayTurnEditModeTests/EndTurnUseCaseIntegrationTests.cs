@@ -537,7 +537,161 @@ public class EndTurnUseCaseIntegrationTests
     [Test]
     public void Test_ok_for_user_without_initiative_end_of_final_round_and_match_win()
     {
-        throw new NotImplementedException();
+        #region -- Arrange --
+        int userWithInitiativeId = Configuration.TestUserId;
+        int userWithoutInitiativeId = Configuration.TestBotId;
+
+        MatchDto matchDto = _createMatchSubUseCase.Create(
+            userWithInitiativeId: userWithInitiativeId,
+            userWithoutInitiativeId: userWithoutInitiativeId).Result;
+
+        AnswerDto[] commonAnswerDtos = new AnswerDto[Configuration.CategoriesPerRound];
+
+        RoundWithCategoriesDto activeRoundWithCategoriesDto;
+        List<RoundWithCategoriesDto> roundWithCategoriesDtos = new List<RoundWithCategoriesDto>();
+
+        for (int i = 0; i < Configuration.RoundsPerMatch - 1; i++)
+        {
+            activeRoundWithCategoriesDto = _resumeMatchUseCase.Execute(matchDto).Result;
+            roundWithCategoriesDtos.Add(activeRoundWithCategoriesDto);
+
+            for (int j = 0; j < 2; j++)
+            {
+                commonAnswerDtos[j] = new AnswerDto(
+                    categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
+                    userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
+                    order: j);
+            }
+
+            for (int j = 2; j < commonAnswerDtos.Length; j++)
+            {
+                commonAnswerDtos[j] = new AnswerDto(
+                    categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
+                    userInput: "Something",
+                    order: j);
+            }
+
+            _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
+            Assert.IsTrue(_testTargetUseCase.Execute(userId: userWithInitiativeId, matchDto.Id, answerDtos: commonAnswerDtos).WasOk);
+
+            _startTurnUseCase.Execute(userId: userWithoutInitiativeId, matchId: matchDto.Id);
+            Assert.IsTrue(_testTargetUseCase.Execute(userId: userWithoutInitiativeId, matchDto.Id, answerDtos: commonAnswerDtos).WasOk);
+        }
+
+        activeRoundWithCategoriesDto = _resumeMatchUseCase.Execute(matchDto).Result;
+        roundWithCategoriesDtos.Add(activeRoundWithCategoriesDto);
+
+        for (int i = 0; i < 2; i++)
+        {
+            commonAnswerDtos[i] = new AnswerDto(
+                categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
+                userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
+                order: i);
+        }
+
+        for (int i = 2; i < commonAnswerDtos.Length; i++)
+        {
+            commonAnswerDtos[i] = new AnswerDto(
+                categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
+                userInput: "Something",
+                order: i);
+        }
+
+        _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
+        Assert.IsTrue(_testTargetUseCase.Execute(userId: userWithInitiativeId, matchDto.Id, answerDtos: commonAnswerDtos).WasOk);
+
+        List<AnswerDto> userWithInitiativeAnswersDtos = commonAnswerDtos.ToList();
+        List<AnswerDto> userWithoutInitiativeAnswersDtos = commonAnswerDtos.ToList();
+
+        userWithoutInitiativeAnswersDtos[^1] = new AnswerDto(
+                categoryDto: activeRoundWithCategoriesDto.CategoryDtos[^1],
+                userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
+                order: userWithoutInitiativeAnswersDtos.Count - 1);
+
+        _startTurnUseCase.Execute(userId: userWithoutInitiativeId, matchId: matchDto.Id);
+
+        UserMatch userWithInitiativeMatch = _userMatchesRepository
+            .Get(userId: userWithInitiativeId, matchId: matchDto.Id).Result;
+
+        userWithInitiativeMatch = new UserMatch(
+            score: Configuration.RoundsPerMatch - 1,
+            isWinner: false,
+            hasInitiative: userWithInitiativeMatch.HasInitiative,
+            user: userWithInitiativeMatch.User,
+            match: userWithInitiativeMatch.Match);
+
+        UserMatchDto userWithInitiativeMatchDto = _userMatchDtoMapper.ToDTO(userWithInitiativeMatch);
+
+        UserMatch userWithoutInitiativeMatch = _userMatchesRepository
+            .Get(userId: userWithoutInitiativeId, matchId: matchDto.Id).Result;
+
+        userWithoutInitiativeMatch = new UserMatch(
+            score: Configuration.RoundsPerMatch,
+            isWinner: true,
+            hasInitiative: userWithoutInitiativeMatch.HasInitiative,
+            user: userWithoutInitiativeMatch.User,
+            match: userWithoutInitiativeMatch.Match);
+
+        UserMatchDto userWithoutInitiativeMatchDto = _userMatchDtoMapper.ToDTO(userWithoutInitiativeMatch);
+
+        List<UserRoundDto> userWithInitiativeRoundDtos = new List<UserRoundDto>();
+        List<UserRoundDto> userWithoutInitiativeRoundDtos = new List<UserRoundDto>();
+
+        foreach (RoundWithCategoriesDto roundWithCategoriesDto in roundWithCategoriesDtos)
+        {
+            bool isLastRound = roundWithCategoriesDto.RoundDto.RoundNumber == Configuration.RoundsPerMatch - 1;
+
+            UserRoundDto userWithInitiativeRoundDto = new UserRoundDto(
+                userId: userWithInitiativeId,
+                roundId: roundWithCategoriesDto.RoundDto.Id,
+                isWinner: isLastRound == false,
+                points: 2);
+
+            userWithInitiativeRoundDtos.Add(userWithInitiativeRoundDto);
+
+            UserRoundDto userWithoutInitiativeRoundDto = new UserRoundDto(
+                userId: userWithoutInitiativeId,
+                roundId: roundWithCategoriesDto.RoundDto.Id,
+                isWinner: true,
+                points: isLastRound ? 3 : 2);
+
+            userWithoutInitiativeRoundDtos.Add(userWithoutInitiativeRoundDto);
+        }
+
+        RoundDto roundDto = new RoundDto(
+            id: activeRoundWithCategoriesDto.RoundDto.Id,
+            roundNumber: Configuration.RoundsPerMatch - 1,
+            initialLetter: activeRoundWithCategoriesDto.RoundDto.InitialLetter,
+            isActive: false,
+            matchId: activeRoundWithCategoriesDto.RoundDto.MatchId);
+
+        RoundWithCategoriesDto updatedRoundWithCategoriesDto = new RoundWithCategoriesDto(
+            roundDto: roundDto,
+            categoryDtos: activeRoundWithCategoriesDto.CategoryDtos);
+        #endregion
+
+        #region -- Act --
+        Operation<EndOfTurnDto> useCaseOperation = _testTargetUseCase
+            .Execute(
+                userId: userWithoutInitiativeId,
+                matchId: matchDto.Id,
+                answerDtos: userWithoutInitiativeAnswersDtos.ToArray());
+        #endregion
+
+        #region -- Assert --
+        EndOfTurnDto expectedDto = new EndOfTurnDto(
+            matchDto: matchDto,
+            roundWithCategoriesDto: updatedRoundWithCategoriesDto,
+            userWithInitiativeMatchDto: userWithInitiativeMatchDto,
+            userWithoutInitiativeMatchDto: userWithoutInitiativeMatchDto,
+            userWithInitiativeRoundDtos: userWithInitiativeRoundDtos,
+            userWithoutInitiativeRoundDtos: userWithoutInitiativeRoundDtos,
+            answerDtosOfUserWithInitiative: userWithInitiativeAnswersDtos,
+            answerDtosOfUserWithoutInitiative: userWithoutInitiativeAnswersDtos);
+
+        Assert.IsTrue(useCaseOperation.WasOk);
+        Assert.AreEqual(expected: expectedDto, actual: useCaseOperation.Result);
+        #endregion
     }
 
     [Test]
