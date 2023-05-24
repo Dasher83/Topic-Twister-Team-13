@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TopicTwister.Shared.DTOs;
 
 
@@ -8,11 +9,7 @@ namespace TopicTwister.Shared.Constants
         public static class IPlayTurnView
         {
             public delegate void LoadEventHandler(int userId, int matchId);
-        }
-
-        public static class ITurnResultView
-        {
-            public delegate void LoadEventHandler();
+            public delegate void EndTurnEventHandler(int userId, int roundId, AnswerDto[] answerDtos);
         }
 
         public static class IResumeMatchView

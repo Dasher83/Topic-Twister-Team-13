@@ -119,7 +119,9 @@ public class EndTurnUseCaseIntegrationTests
             matchesRepository: _matchesRepository,
             usersReadOnlyRepository: _usersReadOnlyRepository);
 
-        _answerDtoMapper = new AnswerDtoMapper(categoryDtoMapper: _categoryDtoMapper);
+        _answerDtoMapper = new AnswerDtoMapper(
+            categoryDtoMapper: _categoryDtoMapper,
+            wordsRepository: _wordsRepository);
 
         _turnsReadOnlyRepository = new TurnsReadOnlyRepositoryJson(
             resourceName: "TestData/Turns",
@@ -269,14 +271,20 @@ public class EndTurnUseCaseIntegrationTests
 
         for (int i = 0; i < 3; i++)
         {
-            answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "Something", order: i);
+            answerDtos[i] = new AnswerDto(
+                categoryDto: categoryDtos[i],
+                userInput: "Something",
+                order: i,
+                isCorrect: false);
         }
 
         for (int i = 3; i < answerDtos.Length; i++)
         {
             answerDtos[i] = new AnswerDto(
                 categoryDto: categoryDtos[i],
-                userInput: $"{round.InitialLetter} TEST", order: i);
+                userInput: $"{round.InitialLetter} TEST",
+                order: i,
+                isCorrect: true);
         }
 
         MatchDto matchDto = new MatchDto(
@@ -382,11 +390,19 @@ public class EndTurnUseCaseIntegrationTests
 
         for (int i = 0; i < answerDtos.Length; i++)
         {
-            answerDtos[i] = new AnswerDto(categoryDto: categoryDtos[i], userInput: "Something", order: i);
+            answerDtos[i] = new AnswerDto(
+                categoryDto: categoryDtos[i],
+                userInput: "Something",
+                order: i,
+                isCorrect: false);
         }
 
         List<AnswerDto> emptyAnswerDtos = answerDtos
-            .Select(answerDto => new AnswerDto(categoryDto: answerDto.CategoryDto, userInput: "", order: answerDto.Order))
+            .Select(answerDto => new AnswerDto(
+                categoryDto: answerDto.CategoryDto,
+                userInput: "",
+                order: answerDto.Order,
+                isCorrect: false))
             .ToList();
 
         MatchDto matchDto = new MatchDto(
@@ -463,7 +479,8 @@ public class EndTurnUseCaseIntegrationTests
             answerDtos[i] = new AnswerDto(
                 categoryDto: roundWithCategoriesDto.CategoryDtos[i],
                 userInput: $"{roundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                order: i);
+                order: i,
+                isCorrect: true);
         }
 
         for (int i = 3; i < answerDtos.Length; i++)
@@ -471,7 +488,8 @@ public class EndTurnUseCaseIntegrationTests
             answerDtos[i] = new AnswerDto(
                 categoryDto: roundWithCategoriesDto.CategoryDtos[i],
                 userInput: "Something",
-                order: i);
+                order: i,
+                isCorrect: false);
         }
 
         Assert.IsTrue(_testTargetUseCase.Execute(userId: userWithInitiativeId, matchDto.Id, answerDtos: answerDtos).WasOk);
@@ -560,7 +578,8 @@ public class EndTurnUseCaseIntegrationTests
                 commonAnswerDtos[j] = new AnswerDto(
                     categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
                     userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                    order: j);
+                    order: j,
+                    isCorrect: true);
             }
 
             for (int j = 2; j < commonAnswerDtos.Length; j++)
@@ -568,7 +587,8 @@ public class EndTurnUseCaseIntegrationTests
                 commonAnswerDtos[j] = new AnswerDto(
                     categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
                     userInput: "Something",
-                    order: j);
+                    order: j,
+                    isCorrect: false);
             }
 
             _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
@@ -586,7 +606,8 @@ public class EndTurnUseCaseIntegrationTests
             commonAnswerDtos[i] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
                 userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                order: i);
+                order: i,
+                isCorrect: true);
         }
 
         for (int i = 2; i < commonAnswerDtos.Length; i++)
@@ -594,7 +615,8 @@ public class EndTurnUseCaseIntegrationTests
             commonAnswerDtos[i] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
                 userInput: "Something",
-                order: i);
+                order: i,
+                isCorrect: false);
         }
 
         _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
@@ -606,7 +628,8 @@ public class EndTurnUseCaseIntegrationTests
         userWithoutInitiativeAnswersDtos[^1] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[^1],
                 userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                order: userWithoutInitiativeAnswersDtos.Count - 1);
+                order: userWithoutInitiativeAnswersDtos.Count - 1,
+                isCorrect: true);
 
         _startTurnUseCase.Execute(userId: userWithoutInitiativeId, matchId: matchDto.Id);
 
@@ -720,7 +743,8 @@ public class EndTurnUseCaseIntegrationTests
                 commonAnswerDtos[j] = new AnswerDto(
                     categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
                     userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                    order: j);
+                    order: j,
+                    isCorrect: true);
             }
 
             for (int j = 2; j < commonAnswerDtos.Length; j++)
@@ -728,7 +752,8 @@ public class EndTurnUseCaseIntegrationTests
                 commonAnswerDtos[j] = new AnswerDto(
                     categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
                     userInput: "Something",
-                    order: j);
+                    order: j,
+                    isCorrect: false);
             }
 
             _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
@@ -746,7 +771,8 @@ public class EndTurnUseCaseIntegrationTests
             commonAnswerDtos[i] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
                 userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                order: i);
+                order: i,
+                isCorrect: true);
         }
 
         for (int i = 2; i < commonAnswerDtos.Length; i++)
@@ -754,7 +780,8 @@ public class EndTurnUseCaseIntegrationTests
             commonAnswerDtos[i] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
                 userInput: "Something",
-                order: i);
+                order: i,
+                isCorrect: false);
         }
 
         _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
@@ -766,7 +793,8 @@ public class EndTurnUseCaseIntegrationTests
         userWithoutInitiativeAnswersDtos[0] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[0],
                 userInput: "Something",
-                order: 0);
+                order: 0,
+                isCorrect: false);
 
         _startTurnUseCase.Execute(userId: userWithoutInitiativeId, matchId: matchDto.Id);
 
@@ -880,7 +908,8 @@ public class EndTurnUseCaseIntegrationTests
                 answerDtos[j] = new AnswerDto(
                     categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
                     userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                    order: j);
+                    order: j,
+                    isCorrect: true);
             }
 
             for (int j = 2; j < answerDtos.Length; j++)
@@ -888,7 +917,8 @@ public class EndTurnUseCaseIntegrationTests
                 answerDtos[j] = new AnswerDto(
                     categoryDto: activeRoundWithCategoriesDto.CategoryDtos[j],
                     userInput: "Something",
-                    order: j);
+                    order: j,
+                    isCorrect: false);
             }
 
             _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
@@ -906,7 +936,8 @@ public class EndTurnUseCaseIntegrationTests
             answerDtos[i] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
                 userInput: $"{activeRoundWithCategoriesDto.RoundDto.InitialLetter} TEST",
-                order: i);
+                order: i,
+                isCorrect: true);
         }
 
         for (int i = 2; i < answerDtos.Length; i++)
@@ -914,7 +945,8 @@ public class EndTurnUseCaseIntegrationTests
             answerDtos[i] = new AnswerDto(
                 categoryDto: activeRoundWithCategoriesDto.CategoryDtos[i],
                 userInput: "Something",
-                order: i);
+                order: i,
+                isCorrect: false);
         }
 
         _startTurnUseCase.Execute(userId: userWithInitiativeId, matchId: matchDto.Id);
@@ -1273,7 +1305,9 @@ public class EndTurnUseCaseIntegrationTests
         {
             answerDtos[i] = new AnswerDto(
                 categoryDto: _categoryDtoMapper.ToDTO(categories[i]),
-                userInput: "", order: i);
+                userInput: "",
+                order: i,
+                isCorrect: false);
         }
         #endregion
 
@@ -1359,12 +1393,16 @@ public class EndTurnUseCaseIntegrationTests
         {
             answerDtos[i] = new AnswerDto(
                 categoryDto: _categoryDtoMapper.ToDTO(categories[i]),
-                userInput: "", order: i);
+                userInput: "",
+                order: i,
+                isCorrect: false);
         }
 
         answerDtos[^1] = new AnswerDto(
             categoryDto: new CategoryDto(id: -1, name: ""),
-            userInput: "", order: answerDtos.Length - 1);
+            userInput: "",
+            order: answerDtos.Length - 1,
+            isCorrect: false);
         #endregion
 
         #region -- Act --

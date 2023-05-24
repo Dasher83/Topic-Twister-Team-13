@@ -10,12 +10,14 @@ namespace TopicTwister.Shared.Mappers
     public class AnswerDtoMapper : IdtoMapper<Answer, AnswerDto>
     {
         private IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
+        private IWordsRepository _wordsRepository;
 
         private AnswerDtoMapper() { }
 
-        public AnswerDtoMapper(IdtoMapper<Category, CategoryDto> categoryDtoMapper)
+        public AnswerDtoMapper(IdtoMapper<Category, CategoryDto> categoryDtoMapper, IWordsRepository wordsRepository)
         {
             _categoryDtoMapper = categoryDtoMapper;
+            _wordsRepository = wordsRepository;
         }
 
         public Answer FromDTO(AnswerDto DTO)
@@ -33,7 +35,8 @@ namespace TopicTwister.Shared.Mappers
             AnswerDto answerDto = new AnswerDto(
                 categoryDto: _categoryDtoMapper.ToDTO(answer.Category),
                 userInput: answer.UserInput,
-                order: answer.Order);
+                order: answer.Order,
+                isCorrect: answer.IsCorrect(wordsRepository: _wordsRepository));
 
             return answerDto;
         }

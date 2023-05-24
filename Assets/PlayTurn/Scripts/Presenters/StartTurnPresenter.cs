@@ -30,7 +30,7 @@ namespace TopicTwister.PlayTurn.Presenters
 
         public void UpdateView(TurnDto turnDto)
         {
-            _view.ReceiveUpdate(turnDto);
+            _view.ReceiveUpdateFromStartTurn(turnDto);
         }
     }
 }

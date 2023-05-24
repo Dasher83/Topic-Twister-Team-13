@@ -1,6 +1,6 @@
 using TMPro;
 using TopicTwister.MatchResult.Shared.ScriptableObjects;
-using TopicTwister.Shared.ScriptableObjects.FakeMatch;
+using TopicTwister.Shared.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +10,7 @@ namespace TopicTwister.MatchResult.UI
     public class LoadMatchResult : MonoBehaviour
     {
         [SerializeField]
-        private FakeMatchScriptable _matchData;
+        private MatchCacheScriptable _matchCacheData;
 
         [SerializeField]
         private MatchImageResultScriptable _matchImageReferences;
@@ -24,16 +24,21 @@ namespace TopicTwister.MatchResult.UI
         private void Start()
         {
             _header.Find("PlayerOne").Find("Points")
-                .GetComponentInChildren<TextMeshProUGUI>().text = _matchData.UserPoints.ToString();
+                .GetComponentInChildren<TextMeshProUGUI>()
+                .text = _matchCacheData.EndOfTurnDto.UserWithIniciativeMatchDto.Score.ToString();
 
             _header.Find("PlayerTwo").Find("Points")
-                .GetComponentInChildren<TextMeshProUGUI>().text = _matchData.BotPoints.ToString();
+                .GetComponentInChildren<TextMeshProUGUI>()
+                .text = _matchCacheData.EndOfTurnDto.UserWithoutIniciativeMatchDto.Score.ToString();
 
-            if(_matchData.UserPoints > _matchData.BotPoints)
+            bool userWithInitiativeWon = _matchCacheData.EndOfTurnDto.UserWithIniciativeMatchDto.IsWinner;
+            bool userWithoutInitiativeWon = _matchCacheData.EndOfTurnDto.UserWithoutIniciativeMatchDto.IsWinner;
+
+            if (userWithInitiativeWon && userWithoutInitiativeWon == false)
             {
                 _resultMatchImage.sprite = _matchImageReferences.wonMatch;
             }
-            else if(_matchData.BotPoints > _matchData.UserPoints)
+            else if(userWithoutInitiativeWon && userWithInitiativeWon == false)
             {
                 _resultMatchImage.sprite = _matchImageReferences.lostMatch;
             }

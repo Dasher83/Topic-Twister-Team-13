@@ -16,6 +16,7 @@ namespace TopicTwister.Shared.ScriptableObjects
         [SerializeField] private RoundWithCategoriesDto _roundWithCategoriesDto;
         [SerializeField] private TurnDto _turnDto;
         [SerializeField] private List<AnswerDraftDto> _turnAnswerDrafts;
+        [SerializeField] private EndOfTurnDto _endOfTurnDto;
 
         public void Initialize()
         {
@@ -23,11 +24,17 @@ namespace TopicTwister.Shared.ScriptableObjects
             _roundWithCategoriesDto = null;
             _turnDto = null;
             _turnAnswerDrafts = new List<AnswerDraftDto>();
+            _endOfTurnDto = null;
         }
 
-        public void Initialize(AnswerDraftDto[] turnAnswerDrafts)
+        public void UpdateDraftAnswers(AnswerDraftDto[] turnAnswerDrafts)
         {
             _turnAnswerDrafts = turnAnswerDrafts.ToList();
+        }
+
+        public void UpdateEndOfTurn(EndOfTurnDto endOfTurnDto)
+        {
+            _endOfTurnDto = endOfTurnDto;
         }
 
         public MatchDto MatchDto
@@ -49,6 +56,8 @@ namespace TopicTwister.Shared.ScriptableObjects
             get => _turnDto;
             set => _turnDto = value;
         }
+
+        public EndOfTurnDto EndOfTurnDto => _endOfTurnDto;
 
         public void AddUserInput(string userInput, int index)
         {
