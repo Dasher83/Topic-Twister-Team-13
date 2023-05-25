@@ -13,7 +13,7 @@ using TopicTwister.Shared.Repositories;
 
 namespace TopicTwister.PlayTurn.Shared.Providers
 {
-    public class CommandProvider<Command> where Command : ICommand<IStartTurnPresenter>
+    public class CommandProvider<Command> 
     {
         private readonly Dictionary<Type, object> _commands;
 
@@ -85,7 +85,11 @@ namespace TopicTwister.PlayTurn.Shared.Providers
                 {
                     typeof(StartTurnCommand),
                     new StartTurnCommand(gatewayService: _startTurnGatewayService)
-                } 
+                },
+                {
+                    typeof(EndTurnCommand),
+                    new EndTurnCommand()
+                }
             };
         }
 

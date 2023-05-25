@@ -62,7 +62,7 @@ namespace TopicTwister.Shared.Models
             }
         }
         public bool AreAllRoundsCreated => _rounds.Count == 3;
-
+        
         public Round? ActiveRound
         {
             get

@@ -1,7 +1,6 @@
 using TopicTwister.PlayTurn.Commands;
 using TopicTwister.PlayTurn.Shared.Interfaces;
 using TopicTwister.PlayTurn.Shared.Providers;
-using TopicTwister.PlayTurn.Views;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 
@@ -23,8 +22,7 @@ namespace TopicTwister.PlayTurn.Presenters
 
         public void LoadEventHandler(int userId, int matchId)
         {
-            ((StartTurnCommand)_startTurnCommand).UserId = userId;
-            ((StartTurnCommand)_startTurnCommand).MatchId = matchId;
+            ((StartTurnCommand)_startTurnCommand).Configure(userId, matchId);
             _startTurnCommand.Execute();
         }
 
