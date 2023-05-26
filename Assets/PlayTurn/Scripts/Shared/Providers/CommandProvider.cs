@@ -11,6 +11,7 @@ using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
 using TopicTwister.Shared.Repositories.IdGenerators;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.PlayTurn.Shared.Providers
@@ -34,7 +35,6 @@ namespace TopicTwister.PlayTurn.Shared.Providers
         private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
         private IdaoMapper<Category, CategoryDaoJson> _categoryDaoJsonMapper;
         private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
-
         private IRoundsRepository _roundsRepository;
         private IUniqueIdGenerator _roundsIdGenerator;
         private IUniqueIdGenerator _matchesIdGenerator;
@@ -44,6 +44,7 @@ namespace TopicTwister.PlayTurn.Shared.Providers
         private IAnswersRepository _answersRepository;
         private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
         private IUserRoundsRepository _userRoundsRepository;
+        private IBotAnswerDtosGenerator _botAnswerDtosGenerator;
         private IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
         private IdtoMapper<Round, RoundDto> _roundDtoMapper;
         private IdtoMapper<Match, MatchDto> _matchDtoMapper;
@@ -172,7 +173,12 @@ namespace TopicTwister.PlayTurn.Shared.Providers
                 userRoundsRepository: _userRoundsRepository,
                 userRoundDtoMapper: _userRoundDtoMapper);
 
-            _endTurnGatewayService = new EndTurnGategayService(useCase: _endTurnUseCase);
+            _botAnswerDtosGenerator = new BotAnswerDtosGenerator();
+
+            _endTurnGatewayService = new EndTurnGatewayService(
+                endTurnUseCase: _endTurnUseCase,
+                startTurnUseCase: _startTurnUseCase,
+                botAnswerDtosGenerator: _botAnswerDtosGenerator);
 
             _commands = new Dictionary<Type, object>
             {

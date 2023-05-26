@@ -27,8 +27,6 @@ namespace TopicTwister.TurnResult.Views
         [SerializeField]
         private LoadSceneEventScriptable _eventContainer;
 
-        private EvaluatedAnswerDto _evaluatedAnswer;
-
         void Start()
         {
             _header.Find("InitialLetter").GetComponentInChildren<TextMeshProUGUI>()
