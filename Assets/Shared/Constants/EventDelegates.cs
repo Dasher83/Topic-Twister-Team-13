@@ -9,7 +9,7 @@ namespace TopicTwister.Shared.Constants
         public static class IPlayTurnView
         {
             public delegate void LoadEventHandler(int userId, int matchId);
-            public delegate void EndTurnEventHandler(int userId, int roundId, AnswerDto[] answerDtos);
+            public delegate void EndTurnEventHandler(int userId, int matchId, AnswerDto[] answerDtos);
         }
 
         public static class IResumeMatchView

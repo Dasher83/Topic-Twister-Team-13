@@ -18,7 +18,9 @@ namespace TopicTwister.PlayTurn.Services
 
         public EndOfTurnDto EndTurn(int userId, int matchId, AnswerDto[] answerDtos)
         {
-            Operation<EndOfTurnDto> useCaseOperation = _useCase.Execute(userId: userId, matchId: matchId, answerDtos: answerDtos);
+            Operation<EndOfTurnDto> useCaseOperation = _useCase
+                .Execute(userId: userId, matchId: matchId, answerDtos: answerDtos);
+
             return useCaseOperation.WasOk ? useCaseOperation.Result : null;
         }
     }

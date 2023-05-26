@@ -20,9 +20,9 @@ namespace TopicTwister.PlayTurn.Presenters
             _endTurnCommand.Presenter = this;
         }
 
-        public void EndTurnEventHandler(int userId, int roundId, AnswerDto[] answerDtos)
+        public void EndTurnEventHandler(int userId, int matchId, AnswerDto[] answerDtos)
         {
-            ((EndTurnCommand)_endTurnCommand).Configure(userId, roundId, answerDtos);
+            ((EndTurnCommand)_endTurnCommand).Configure(userId, matchId, answerDtos);
             _endTurnCommand.Execute();
         }
 

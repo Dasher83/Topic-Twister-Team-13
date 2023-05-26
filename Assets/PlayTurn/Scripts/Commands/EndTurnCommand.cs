@@ -38,8 +38,11 @@ namespace TopicTwister.PlayTurn.Commands
         public void Execute()
         {
             CheckConfiguration();
+
             EndOfTurnDto endOfTurnDto = _gatewayService
                 .EndTurn(userId: (int)_userId, matchId: (int)_matchId, answerDtos: _answerDtos);
+
+            _presenter.UpdateView(endOfTurnDto: endOfTurnDto);
         }
 
         private void CheckConfiguration()

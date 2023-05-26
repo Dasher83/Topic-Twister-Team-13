@@ -35,10 +35,12 @@ namespace TopicTwister.PlayTurn.Views
         private Transform _categoryListRoot;
         public event EventDelegates.IPlayTurnView.LoadEventHandler Load;
         public event EventDelegates.IPlayTurnView.EndTurnEventHandler EndTurn;
+        private IEndTurnPresenter _endTurnPresenter;
 
         private void Start()
         {
             new StartTurnPresenter(this);
+            _endTurnPresenter = new EndTurnPresenter(this);
             _categoryListRoot = GameObject.Find("CategoryInputList").transform;
             _userInputTexts = new List<TextMeshProUGUI>();
 
@@ -97,7 +99,7 @@ namespace TopicTwister.PlayTurn.Views
 
             EndTurn?.Invoke(
                 userId: Configuration.TestUserId,
-                roundId: _matchCacheData.RoundWithCategoriesDto.RoundDto.RoundNumber,
+                matchId: _matchCacheData.MatchDto.Id,
                 answerDtos: answerDtos);
         }
 
