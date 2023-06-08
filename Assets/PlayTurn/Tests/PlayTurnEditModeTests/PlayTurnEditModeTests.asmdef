@@ -5,7 +5,9 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "PlayTurn",
-        "Shared"
+        "Shared",
+        "Home",
+        "NewRound"
     ],
     "includePlatforms": [
         "Editor"

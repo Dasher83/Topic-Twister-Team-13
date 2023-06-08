@@ -18,14 +18,10 @@ namespace TopicTwister.PlayTurn.Commands
             _gatewayService = gatewayService;
         }
 
-        public int UserId
+        public void Configure(int userId, int matchId)
         {
-            set => _userId = value;
-        }
-
-        public int MatchId
-        {
-            set => _matchId = value;
+            _userId = userId;
+            _matchId = matchId;
         }
 
         public IStartTurnPresenter Presenter
@@ -35,12 +31,20 @@ namespace TopicTwister.PlayTurn.Commands
 
         public void Execute()
         {
-            if (_userId == null || _matchId == null) throw new ArgumentNullException();
+            CheckConfiguration();
 
             TurnDto turnDto = _gatewayService.StartTurn(
                 userId: (int)_userId, matchId: (int)_matchId);
 
             _presenter.UpdateView(turnDto);
+        }
+        
+        private void CheckConfiguration()
+        {
+            if (_presenter == null) 
+                throw new ArgumentException();
+            if (_userId == null || _matchId == null) 
+                throw new ArgumentNullException();
         }
     }
 }

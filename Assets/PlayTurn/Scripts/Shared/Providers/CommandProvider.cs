@@ -3,22 +3,27 @@ using System.Collections.Generic;
 using TopicTwister.PlayTurn.Commands;
 using TopicTwister.PlayTurn.Services;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.PlayTurn.UseCases;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Mappers;
 using TopicTwister.Shared.Models;
 using TopicTwister.Shared.Repositories;
+using TopicTwister.Shared.Repositories.IdGenerators;
+using TopicTwister.Shared.Utils;
 
 
 namespace TopicTwister.PlayTurn.Shared.Providers
 {
-    public class CommandProvider<Command> where Command : ICommand<IStartTurnPresenter>
+    public class CommandProvider<Command> 
     {
         private readonly Dictionary<Type, object> _commands;
 
         private IStartTurnGatewayService _startTurnGatewayService;
         private IStartTurnUseCase _startTurnUseCase;
+        private IEndTurnGatewayService _endTurnGatewayService;
+        private IEndTurnUseCase _endTurnUseCase;
         private IUsersReadOnlyRepository _usersReadOnlyRepository;
         private IMatchesReadOnlyRepository _matchesReadOnlyRepository;
         private IdaoMapper<Match, MatchDaoJson> _matchDaoMapper;
@@ -30,6 +35,24 @@ namespace TopicTwister.PlayTurn.Shared.Providers
         private ICategoriesReadOnlyRepository _categoriesReadOnlyRepository;
         private IdaoMapper<Category, CategoryDaoJson> _categoryDaoJsonMapper;
         private IdtoMapper<Turn, TurnDto> _turnDtoMapper;
+        private IRoundsRepository _roundsRepository;
+        private IUniqueIdGenerator _roundsIdGenerator;
+        private IUniqueIdGenerator _matchesIdGenerator;
+        private IMatchesRepository _matchesRepository;
+        private IdtoMapper<Round, RoundWithCategoriesDto> _roundWithCategoriesDtoMapper;
+        private IWordsRepository _wordsRepository;
+        private IAnswersRepository _answersRepository;
+        private ITurnsReadOnlyRepository _turnsReadOnlyRepository;
+        private IUserRoundsRepository _userRoundsRepository;
+        private IBotAnswerDtosGenerator _botAnswerDtosGenerator;
+        private IdtoMapper<Category, CategoryDto> _categoryDtoMapper;
+        private IdtoMapper<Round, RoundDto> _roundDtoMapper;
+        private IdtoMapper<Match, MatchDto> _matchDtoMapper;
+        private IdtoMapper<UserMatch, UserMatchDto> _userMatchDtoMapper;
+        private IdtoMapper<Answer, AnswerDto> _answerDtoMapper;
+        private IdtoMapper<UserRound, UserRoundDto> _userRoundDtoMapper;
+        private IdaoMapper<Answer, AnswerDaoJson> _answerDaoMapper;
+        private IdaoMapper<UserRound, UserRoundDaoJson> _userRoundDaoJsonMapper;
 
         public CommandProvider()
         {
@@ -79,13 +102,94 @@ namespace TopicTwister.PlayTurn.Shared.Providers
                 turnDtoMapper: _turnDtoMapper);
 
             _startTurnGatewayService = new StartTurnGatewayService(useCase: _startTurnUseCase);
+            _roundsIdGenerator = new RoundsIdGenerator(roundsReadOnlyRepository: _roundsReadOnlyRepository);
+
+            _roundsRepository = new RoundsRepositoryJson(
+                resourceName: "DevelopmentData/Rounds",
+                roundsIdGenerator: _roundsIdGenerator,
+                matchesReadOnlyRepository: _matchesReadOnlyRepository,
+                categoriesReadOnlyRepository: _categoriesReadOnlyRepository);
+
+            _categoryDtoMapper = new CategoryDtoMapper();
+            _roundDtoMapper = new RoundDtoMapper();
+
+            _roundWithCategoriesDtoMapper = new RoundWithCategoriesDtoMapper(
+                categoryDtoMapper: _categoryDtoMapper,
+                roundDtoMapper: _roundDtoMapper,
+                roundReadOnlyRepository: _roundsReadOnlyRepository);
+
+            _matchesIdGenerator = new MatchesIdGenerator(matchesReadOnlyRepository: _matchesReadOnlyRepository);
+
+            _matchesRepository = new MatchesRepositoryJson(
+                resourceName: "DevelopmentData/Matches",
+                matchesIdGenerator: _matchesIdGenerator,
+                matchDaoMapper: _matchDaoMapper);
+
+            _userMatchDtoMapper = new UserMatchDtoMapper(
+                matchesRepository: _matchesRepository,
+                usersReadOnlyRepository: _usersReadOnlyRepository);
+
+            _wordsRepository = new WordsRepositoryJson(resourceName: "DevelopmentData/Words");
+
+            _answerDtoMapper = new AnswerDtoMapper(
+                categoryDtoMapper: _categoryDtoMapper,
+                wordsRepository: _wordsRepository);
+
+            _turnsReadOnlyRepository = new TurnsReadOnlyRepositoryJson(
+                resourceName: "DevelopmentData/Turns",
+                turnDaoMapper: _turnDaoJsonMapper);
+
+            _answerDaoMapper = new AnswerDaoJsonMapper(
+                categoriesReadOnlyRepository: _categoriesReadOnlyRepository,
+                turnsReadOnlyRepository: _turnsReadOnlyRepository);
+
+            _answersRepository = new AnswersRepositoryJson(
+                resourceName: "DevelopmentData/Answers",
+                daoMapper: _answerDaoMapper);
+
+            _userRoundDtoMapper = new UserRoundDtoMapper();
+            _matchDtoMapper = new MatchDtoMapper();
+
+            _userRoundDaoJsonMapper = new UserRoundDaoJsonMapper(
+                usersReadOnlyRepository: _usersReadOnlyRepository,
+                roundsReadOnlyRepository: _roundsReadOnlyRepository);
+
+            _userRoundsRepository = new UserRoundsRepository(
+                resourceName: "DevelopmentData/UserRounds",
+                userRoundDaoJsonMapper: _userRoundDaoJsonMapper);
+
+            _endTurnUseCase = new EndTurnUseCase(
+                usersReadOnlyRepository: _usersReadOnlyRepository,
+                matchesReadOnlyRepository: _matchesReadOnlyRepository,
+                userMatchesRepository: _userMatchesRepository,
+                turnsRepository: _turnsRepository,
+                roundsRepository: _roundsRepository,
+                matchDtoMapper: _matchDtoMapper,
+                roundWithCategoriesDtoMapper: _roundWithCategoriesDtoMapper,
+                userMatchDtoMapper: _userMatchDtoMapper,
+                answerDtoMapper: _answerDtoMapper,
+                answersRepository: _answersRepository,
+                wordsRepository: _wordsRepository,
+                userRoundsRepository: _userRoundsRepository,
+                userRoundDtoMapper: _userRoundDtoMapper);
+
+            _botAnswerDtosGenerator = new BotAnswerDtosGenerator();
+
+            _endTurnGatewayService = new EndTurnGatewayService(
+                endTurnUseCase: _endTurnUseCase,
+                startTurnUseCase: _startTurnUseCase,
+                botAnswerDtosGenerator: _botAnswerDtosGenerator);
 
             _commands = new Dictionary<Type, object>
             {
                 {
                     typeof(StartTurnCommand),
                     new StartTurnCommand(gatewayService: _startTurnGatewayService)
-                } 
+                },
+                {
+                    typeof(EndTurnCommand),
+                    new EndTurnCommand(gatewayService: _endTurnGatewayService)
+                }
             };
         }
 

@@ -50,6 +50,14 @@ public class StartTurnUseCase : IStartTurnUseCase
         }
 
         Match match = getMatchOperation.Result;
+
+        Operation<UserMatch> getUserMatchOperation = _userMatchesRepository.Get(userId: userId, matchId: match.Id);
+
+        if(getUserMatchOperation.WasOk == false)
+        {
+            return Operation<TurnDto>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
+        }
+
         List<Round> rounds = _roundsReadOnlyRepository.GetMany(match.Id).Result;
 
         match = new Match(
@@ -59,13 +67,6 @@ public class StartTurnUseCase : IStartTurnUseCase
             rounds: rounds);
 
         int activeRoundId = match.ActiveRound.Id;
-
-        Operation<UserMatch> getUserMatchOperation = _userMatchesRepository.Get(userId: userId, matchId: matchId);
-
-        if(getUserMatchOperation.WasOk == false)
-        {
-            return Operation<TurnDto>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
-        }
 
         Operation<Turn> getTurnOperation = _turnsRepository.Get(userId: userId, roundId: activeRoundId);
         

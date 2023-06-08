@@ -1,4 +1,3 @@
-
 namespace TopicTwister.Shared.Interfaces
 {
     public interface ICommand<P>

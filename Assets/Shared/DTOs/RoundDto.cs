@@ -47,8 +47,9 @@ namespace TopicTwister.Shared.DTOs
             bool roundNumberEquals = _roundNumber == other._roundNumber;
             bool initialLetterEquals = _initialLetter == other._initialLetter;
             bool isActiveEquals = _isActive == other._isActive;
+            bool isMatchIdEquals = _matchId == other._matchId;
 
-            return idEquals && roundNumberEquals && initialLetterEquals && isActiveEquals;
+            return idEquals && roundNumberEquals && initialLetterEquals && isActiveEquals && isMatchIdEquals;
         }
 
         public override int GetHashCode()

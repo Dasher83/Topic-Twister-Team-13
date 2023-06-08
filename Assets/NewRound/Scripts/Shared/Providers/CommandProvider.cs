@@ -4,7 +4,7 @@ using TopicTwister.NewRound.Commands;
 using TopicTwister.NewRound.Services;
 using TopicTwister.NewRound.Shared.Interfaces;
 using TopicTwister.NewRound.UseCases;
-using TopicTwister.Repositories.IdGenerators;
+using TopicTwister.Shared.Repositories.IdGenerators;
 using TopicTwister.Shared.DAOs;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;

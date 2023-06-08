@@ -119,10 +119,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b9d17cbcf9144469448e28a634f816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fakeMatchData: {fileID: 11400000, guid: 8090573c1f2c9634caef05091a6b6ec0, type: 2}
   _matchCacheData: {fileID: 11400000, guid: 7dd6362091babca41b6ffb0cda03e6c0, type: 2}
   _answerImageResultReferences: {fileID: 11400000, guid: a81fb45d5eeb7cb449b8d084b8020325, type: 2}
-  _cateoryResultList: {fileID: 8048381748721852719}
+  _categoryResultList: {fileID: 8048381748721852719}
   _header: {fileID: 8048381748144389257}
 --- !u!1 &1439583390528542520
 GameObject:

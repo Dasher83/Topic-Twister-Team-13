@@ -15,7 +15,7 @@ namespace TopicTwister.Shared.Repositories
     public class TurnsReadOnlyRepositoryJson : ITurnsReadOnlyRepository
     {
         protected readonly string path;
-        protected readonly IdaoMapper<Turn, TurnDaoJson> turnDaoMapper;
+        protected readonly IdaoMapper<Turn, TurnDaoJson> daoMapper;
         protected List<TurnDaoJson> readCache;
 
         public TurnsReadOnlyRepositoryJson(
@@ -23,8 +23,8 @@ namespace TopicTwister.Shared.Repositories
             IdaoMapper<Turn, TurnDaoJson> turnDaoMapper)
         {
             path = $"{Application.dataPath}/Resources/JSON/{resourceName}.json";
-            this.turnDaoMapper = turnDaoMapper;
-            readCache = this.turnDaoMapper.ToDAOs(GetAll().Result);
+            this.daoMapper = turnDaoMapper;
+            readCache = this.daoMapper.ToDAOs(GetAll().Result);
         }
 
         public Operation<Turn> Get(int userId, int roundId)
@@ -35,7 +35,7 @@ namespace TopicTwister.Shared.Repositories
                 return Operation<Turn>.Failure(errorMessage: GetAllOperation.ErrorMessage);
             }
 
-            readCache = turnDaoMapper.ToDAOs(GetAllOperation.Result);
+            readCache = daoMapper.ToDAOs(GetAllOperation.Result);
 
             TurnDaoJson turnDao = readCache.SingleOrDefault(
                 turn => turn.UserId == userId && turn.RoundId == roundId);
@@ -44,7 +44,8 @@ namespace TopicTwister.Shared.Repositories
             {
                 return Operation<Turn>.Failure(errorMessage: $"Turn not found with userId: {userId} and roundId: {roundId}");
             }
-            Turn turn = turnDaoMapper.FromDAO(turnDao);
+
+            Turn turn = daoMapper.FromDAO(turnDao);
 
             return Operation<Turn>.Success(result: turn);
         }
@@ -53,7 +54,7 @@ namespace TopicTwister.Shared.Repositories
         {
             string data = File.ReadAllText(path);
             readCache = new TurnDaosCollectionDeserializer().Deserialize(data).Turns;
-            List<Turn> turns = turnDaoMapper.FromDAOs(readCache.ToList());
+            List<Turn> turns = daoMapper.FromDAOs(readCache.ToList());
             return Operation<List<Turn>>.Success(result: turns);
         }
     }

@@ -23,6 +23,7 @@ namespace TopicTwister.Shared.Mappers
             return new TurnDto(
                 userId: turn.User.Id,
                 roundId: turn.Round.Id,
+                points: turn.Points,
                 startDateTime: turn.StartDateTime,
                 endDateTime: turn.EndDateTime);
         }

@@ -15,19 +15,26 @@ namespace TopicTwister.Shared.ScriptableObjects
         [SerializeField] private MatchDto _matchDto;
         [SerializeField] private RoundWithCategoriesDto _roundWithCategoriesDto;
         [SerializeField] private TurnDto _turnDto;
-        [SerializeField] private List<TurnAnswerDraftDto> _turnAnswerDrafts;
+        [SerializeField] private List<AnswerDraftDto> _turnAnswerDrafts;
+        [SerializeField] private EndOfTurnDto _endOfTurnDto;
 
         public void Initialize()
         {
             _matchDto = null;
             _roundWithCategoriesDto = null;
             _turnDto = null;
-            _turnAnswerDrafts = new List<TurnAnswerDraftDto>();
+            _turnAnswerDrafts = new List<AnswerDraftDto>();
+            _endOfTurnDto = null;
         }
 
-        public void Initialize(TurnAnswerDraftDto[] turnAnswerDrafts)
+        public void UpdateDraftAnswers(AnswerDraftDto[] turnAnswerDrafts)
         {
             _turnAnswerDrafts = turnAnswerDrafts.ToList();
+        }
+
+        public void UpdateEndOfTurn(EndOfTurnDto endOfTurnDto)
+        {
+            _endOfTurnDto = endOfTurnDto;
         }
 
         public MatchDto MatchDto
@@ -42,13 +49,15 @@ namespace TopicTwister.Shared.ScriptableObjects
             set => _roundWithCategoriesDto = value;
         }
 
-        public List<TurnAnswerDraftDto> TurnAnswerDrafts => _turnAnswerDrafts.ToList();
+        public List<AnswerDraftDto> TurnAnswerDrafts => _turnAnswerDrafts.ToList();
 
         public TurnDto TurnDto
         {
             get => _turnDto;
             set => _turnDto = value;
         }
+
+        public EndOfTurnDto EndOfTurnDto => _endOfTurnDto;
 
         public void AddUserInput(string userInput, int index)
         {

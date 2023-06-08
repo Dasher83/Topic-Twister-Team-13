@@ -22,7 +22,11 @@ namespace TopicTwister.PlayTurn.UI
             _timerText = GetComponentInChildren<TextMeshProUGUI>();
             _numericTime = float.Parse(_timerText.text);
             _invokedTimedOut = false;
-            _interruptTurnEventContainer.InterruptTurn += InterruptTurnEventHandler;
+            if (!_interruptTurnEventContainer.isSubscribedTimer)
+            {
+                _interruptTurnEventContainer.isSubscribedTimer = true;
+                _interruptTurnEventContainer.InterruptTurn += InterruptTurnEventHandler;
+            }
             _initialDateTime = DateTime.UtcNow;
         }
 
@@ -42,7 +46,7 @@ namespace TopicTwister.PlayTurn.UI
 
         void Update()
         {
-            SubstractTime();
+            //SubstractTime();
         }
 
 

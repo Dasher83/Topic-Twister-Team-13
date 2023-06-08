@@ -27,7 +27,10 @@ namespace TopicTwister.Shared.DTOs
             RoundWithCategoriesDto other = (RoundWithCategoriesDto)obj;
 
             bool roundDtoEqual = _roundDto.Equals(other._roundDto);
-            bool categoryDtosEquals = Enumerable.SequenceEqual(_categoryDtos, other._categoryDtos);
+
+            bool categoryDtosEquals =
+                _categoryDtos.Except(other._categoryDtos).Any() == false &&
+                other._categoryDtos.Except(_categoryDtos).Any() == false;
 
             return roundDtoEqual && categoryDtosEquals;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using TopicTwister.PlayTurn.Shared.Interfaces;
+using TopicTwister.Shared.Constants;
 using TopicTwister.Shared.DTOs;
 using TopicTwister.Shared.Interfaces;
 using TopicTwister.Shared.Models;
@@ -146,6 +147,7 @@ public class StartTurnUseCaseUnitTests
                 TurnDto turnDto = new TurnDto(
                     userId: turn.User.Id,
                     roundId: turn.Round.Id,
+                    points: 0,
                     startDateTime: turn.StartDateTime,
                     endDateTime: turn.EndDateTime);
                 return turnDto;
@@ -160,6 +162,7 @@ public class StartTurnUseCaseUnitTests
         TurnDto expectedTurnDto = new TurnDto(
             userId: userWithIniciative.Id,
             roundId: match.ActiveRound.Id,
+            points: 0,
             startDateTime: DateTime.UtcNow,
             endDateTime: null);
 
@@ -199,7 +202,7 @@ public class StartTurnUseCaseUnitTests
     public void Test_fail_due_to_unknown_match()
     {
         #region -- Arrange --
-        int userId = 0;
+        int userId = Configuration.TestUserId;
         int matchId = -1;
 
         _usersReadOnlyRepository.Get(Arg.Any<int>()).Returns(
@@ -256,23 +259,6 @@ public class StartTurnUseCaseUnitTests
                 int userId = (int)args[0];
                 int matchId = (int)args[1];
                 return Operation<UserMatch>.Failure(errorMessage: $"User with id {userId} is not involved in match with id {matchId}");
-            });
-
-        _roundsReadOnlyRepository.GetMany(Arg.Any<int>()).Returns(
-            (args) =>
-            {
-                Match match = _matchesReadOnlyRepository.Get(matchId).Result;
-                List<Round> rounds = new List<Round>()
-                {
-                    new Round(
-                        id: 0,
-                        roundNumber: 0,
-                        initialLetter: 'A',
-                        isActive: true,
-                        match: match,
-                        categories: new List<Category>())
-                };
-                return Operation<List<Round>>.Success(result: rounds);
             });
         #endregion
 

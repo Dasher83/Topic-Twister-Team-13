@@ -6,6 +6,6 @@ namespace TopicTwister.Home.Shared.Interfaces
 {
     public interface ICreateMatchSubUseCase
     {
-        Operation<MatchDto> Create(int userWithIniciative, int userWithoutIniciative);
+        Operation<MatchDto> Create(int userWithInitiativeId, int userWithoutInitiativeId);
     }
 }
