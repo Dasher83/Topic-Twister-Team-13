@@ -46,7 +46,7 @@ namespace TopicTwister.PlayTurn.UI
 
         void Update()
         {
-            //SubstractTime();
+            SubstractTime();
         }
 
 
