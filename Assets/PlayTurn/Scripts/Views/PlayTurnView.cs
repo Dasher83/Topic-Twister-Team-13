@@ -50,8 +50,12 @@ namespace TopicTwister.PlayTurn.Views
             }
 
             LoadRoundData();
-            _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
-            _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
+            if (!_interruptTurnEventContainer.isSubscribedPlayTurn)
+            {
+                _interruptTurnEventContainer.isSubscribedPlayTurn = true;
+                _timeOutEventContainer.TimeOut += CaptureAndSaveDataEventHandler;
+                _interruptTurnEventContainer.InterruptTurn += CaptureAndSaveDataEventHandler;
+            }
 
             Load?.Invoke(
                 userId: Configuration.TestUserId,
@@ -90,7 +94,7 @@ namespace TopicTwister.PlayTurn.Views
 
                 answerDtos[index] = new AnswerDto(
                     categoryDto: _matchCacheData.RoundWithCategoriesDto.CategoryDtos[index],
-                    userInput: userInput,
+                    userInput: _matchCacheData.TurnAnswerDrafts[index].UserInput,
                     order: index,
                     isCorrect: false);
 
