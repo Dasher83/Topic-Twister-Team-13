@@ -46,11 +46,9 @@ namespace TopicTwister.PlayTurn.UI
 
         void Update()
         {
-            //SubstractTime();
+            SubstractTime();
         }
 
-
-        
         private void SubstractTime()
         {
             _elapsedTime = DateTime.UtcNow.Subtract(_initialDateTime);
@@ -76,4 +74,3 @@ namespace TopicTwister.PlayTurn.UI
         private void UpdateTimerText() => _timerText.text = string.Format("{0:0}", _numericTime);
     }
 }
-
