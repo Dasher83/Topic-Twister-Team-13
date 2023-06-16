@@ -10,13 +10,13 @@ EditorBuildSettings:
     guid: db7a0066d1a450a409aa26383d1827d1
   - enabled: 1
     path: Assets/Scenes/BeginRoundScene.unity
-    guid: cd5aea03cbf74c34ab97818bf581204d
+    guid: ba2d50160a3d75e4e9a32a865b10651d
   - enabled: 1
     path: Assets/Scenes/PlayTurn.unity
     guid: c100d384b0caa88468c53d78ca98ab9a
   - enabled: 1
     path: Assets/Scenes/TurnResultScene.unity
-    guid: d3867efa0d18a90429b979c11272cea9
+    guid: 0e9baeda39db1c24694ba8d81de266ca
   - enabled: 1
     path: Assets/Scenes/RoundResults.unity
     guid: fba4e973a67716248972cebc57e2a173
